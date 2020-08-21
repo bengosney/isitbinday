@@ -23,6 +23,7 @@ class Task(models.Model):
     title = models.CharField(_('Title'), max_length=255)
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
     effort = models.IntegerField(_('Effort'), default=0)
+    blocked_by = models.OneToOneField('Task', on_delete=models.SET_NULL, null=True, blank=True)
 
     state = FSMField(_('State'), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
 
