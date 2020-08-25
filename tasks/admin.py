@@ -6,13 +6,13 @@ from .models import Task, Sprint
 
 
 class TaskAdmin(FSMTransitionMixin, admin.ModelAdmin):
-    list_display = ['title', 'effort', 'due_date', 'state']
+    list_display = ['title', 'effort', 'due_date', 'state', 'owner']
     readonly_fields = ['state', 'created', 'last_updated']
     fsm_field = ['state']
 
 
 class SprintAdmin(FSMTransitionMixin, admin.ModelAdmin):
-    list_display = ['title', 'state']
+    list_display = ['title', 'state', 'owner']
     readonly_fields = ['state', 'started', 'finished', 'created', 'last_updated']
     fsm_field = ['state']
 

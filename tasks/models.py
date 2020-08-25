@@ -25,6 +25,8 @@ class Task(models.Model):
     effort = models.IntegerField(_('Effort'), default=0)
     blocked_by = models.OneToOneField('Task', on_delete=models.SET_NULL, null=True, blank=True)
 
+    owner = models.ForeignKey('auth.User', related_name='tasks', on_delete=models.CASCADE)
+
     state = FSMField(_('State'), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
 
     created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
@@ -70,6 +72,8 @@ class Sprint(models.Model):
     finished = models.DateTimeField(_('Finished'), editable=False, null=True, blank=True)
 
     tasks = models.ManyToManyField(Task)
+
+    owner = models.ForeignKey('auth.User', related_name='sprints', on_delete=models.CASCADE)
 
     created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)

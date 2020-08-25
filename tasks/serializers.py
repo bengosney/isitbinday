@@ -13,7 +13,13 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
             'state',
             'created',
             'last_updated',
+            'owner',
         ]
+
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+
+    
 
 
 class SprintSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,4 +33,8 @@ class SprintSerializer(serializers.HyperlinkedModelSerializer):
             'tasks',
             'created',
             'last_updated',
+            'owner',
         ]
+
+    owner = serializers.ReadOnlyField(source='owner.username')
+

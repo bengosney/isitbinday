@@ -9,7 +9,7 @@ router.register(r'tasks', TaskViewSet)
 router.register(r'sprints', SprintViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 ]
