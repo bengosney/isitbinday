@@ -23,7 +23,7 @@ class Task(models.Model):
     title = models.CharField(_('Title'), max_length=255)
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
     effort = models.IntegerField(_('Effort'), default=0)
-    blocked_by = models.OneToOneField('Task', on_delete=models.SET_NULL, null=True, blank=True)
+    blocked_by = models.ForeignKey('Task', related_name='blocks', on_delete=models.SET_NULL, null=True, blank=True)
 
     owner = models.ForeignKey('auth.User', related_name='tasks', on_delete=models.CASCADE)
 

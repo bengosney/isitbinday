@@ -5,8 +5,8 @@ from rest_framework import routers
 from tasks.views import TaskViewSet, SprintViewSet
 
 router = routers.DefaultRouter()
-router.register(r'tasks', TaskViewSet, basename='tasks')
-router.register(r'sprints', SprintViewSet, basename='sprints')
+router.register(r'tasks', TaskViewSet, basename='task')
+router.register(r'sprints', SprintViewSet, basename='sprint')
 
 urlpatterns = [
     path('api/', include(router.urls)),
