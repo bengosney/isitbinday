@@ -8,6 +8,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Task
         fields = [
+            'id',
             'title',
             'due_date',
             'effort',
@@ -28,6 +29,7 @@ class SprintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sprint
         fields = [
+            'id',
             'title',
             'state',
             'started',
@@ -42,14 +44,12 @@ class SprintSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('username',)
 
 
 class UserSerializerWithToken(serializers.ModelSerializer):
-
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
 
@@ -59,6 +59,7 @@ class UserSerializerWithToken(serializers.ModelSerializer):
 
         payload = jwt_payload_handler(obj)
         token = jwt_encode_handler(payload)
+
         return token
 
     def create(self, validated_data):
@@ -67,6 +68,7 @@ class UserSerializerWithToken(serializers.ModelSerializer):
         if password is not None:
             instance.set_password(password)
         instance.save()
+        
         return instance
 
     class Meta:
