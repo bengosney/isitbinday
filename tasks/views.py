@@ -1,8 +1,11 @@
 from .models import Task, Sprint
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from .serializers import TaskSerializer, SprintSerializer
 from tasks.permissions import IsOwner
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     """
@@ -21,6 +24,39 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         user = self.request.user
         return Task.objects.filter(owner=user).order_by('-created')
+
+    @action(detail=True)
+    def do(self, request, pk=None):
+        task = self.get_object()
+        status = True
+        task.do()
+        task.save()
+        
+        serializer = self.get_serializer(task)
+
+        return Response({'task': serializer.data, 'status': status})
+
+    @action(detail=True)
+    def done(self, request, pk=None):
+        task = self.get_object()
+        status = True
+        task.done()
+        task.save()
+        
+        serializer = self.get_serializer(task)
+
+        return Response({'task': serializer.data, 'status': status})
+
+    @action(detail=True)
+    def cancel(self, request, pk=None):
+        task = self.get_object()
+        status = True
+        task.cancel()
+        task.save()
+        
+        serializer = self.get_serializer(task)
+
+        return Response({'task': serializer.data, 'status': status})
 
 
 class SprintViewSet(viewsets.ModelViewSet):

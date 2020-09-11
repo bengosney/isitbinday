@@ -5,7 +5,13 @@ from django.utils.translation import gettext as _
 from django_fsm import FSMField, transition
 
 
-class Task(models.Model):
+class StateMixin():
+    @property
+    def available_state_transitions(self):
+        return [i.name for i in self.get_available_state_transitions()]
+
+
+class Task(StateMixin, models.Model):
     STATE_DRAFT = 'draft'
     STATE_TODO = 'todo'
     STATE_DOING = 'doing'
@@ -52,7 +58,7 @@ class Task(models.Model):
         pass
 
 
-class Sprint(models.Model):
+class Sprint(StateMixin, models.Model):
     STATE_PLANNING = 'planning'
     STATE_IN_PROGRESS = 'in progress'
     STATE_FINISHED = 'finished'

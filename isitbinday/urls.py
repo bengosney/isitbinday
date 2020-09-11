@@ -1,14 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from tasks.views import TaskViewSet, SprintViewSet
-
-router = routers.DefaultRouter()
-router.register(r'tasks', TaskViewSet, basename='task')
-router.register(r'sprints', SprintViewSet, basename='sprint')
+from tasks.urls import router
 
 urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
