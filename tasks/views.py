@@ -23,7 +23,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         This view should return a list of all tasks for the currently authenticated user.
         """
         user = self.request.user
-        return Task.objects.filter(owner=user).order_by('-created')
+        return Task.objects.filter(owner=user)
 
     @action(detail=True)
     def do(self, request, pk=None):

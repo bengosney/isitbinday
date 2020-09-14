@@ -35,8 +35,12 @@ class Task(StateMixin, models.Model):
 
     state = FSMField(_('State'), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
 
+    position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)
+
+    class Meta(object):
+        ordering = ['position']
 
     def __str__(self):
         return f'{self.title}'

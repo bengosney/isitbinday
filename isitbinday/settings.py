@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'adminsortable2',
     'django_fsm',
     'django_fsm_log',
     'fsm_admin',

@@ -1,11 +1,12 @@
 from django.contrib import admin
 from fsm_admin.mixins import FSMTransitionMixin
+from adminsortable2.admin import SortableAdminMixin
 
 
 from .models import Task, Sprint
 
 
-class TaskAdmin(FSMTransitionMixin, admin.ModelAdmin):
+class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
     list_display = ['title', 'effort', 'due_date', 'state', 'owner']
     readonly_fields = ['state', 'created', 'last_updated']
     fsm_field = ['state']

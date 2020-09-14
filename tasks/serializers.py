@@ -17,6 +17,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
             'last_updated',
             'owner',
             'available_state_transitions',
+            'position',
         ]
 
     owner = serializers.ReadOnlyField(source='owner.username')
