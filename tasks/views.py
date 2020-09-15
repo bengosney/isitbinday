@@ -1,4 +1,4 @@
-from .models import Task, Sprint
+from tasks.models import Task, Sprint
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -31,7 +31,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         status = True
         task.do()
         task.save()
-        
+
         serializer = self.get_serializer(task)
 
         return Response({'task': serializer.data, 'status': status})
@@ -42,7 +42,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         status = True
         task.done()
         task.save()
-        
+
         serializer = self.get_serializer(task)
 
         return Response({'task': serializer.data, 'status': status})
@@ -53,10 +53,19 @@ class TaskViewSet(viewsets.ModelViewSet):
         status = True
         task.cancel()
         task.save()
-        
+
         serializer = self.get_serializer(task)
 
         return Response({'task': serializer.data, 'status': status})
+
+    @action(detail=False, methods=['POST'])
+    def position(self, request):
+        for pair in request.data.get('positions'):
+            task = Task.objects.get(pk=pair.get('id'))
+            task.position = pair.get('position')
+            task.save()
+
+        return Response({'ok': 'ok'})
 
 
 class SprintViewSet(viewsets.ModelViewSet):
