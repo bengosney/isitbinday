@@ -26,6 +26,12 @@ class Task(StateMixin, models.Model):
         STATE_CANCELED
     ]
 
+    STATES_KANBAN = [
+        STATE_TODO,
+        STATE_DOING,
+        STATE_DONE,
+    ]
+
     title = models.CharField(_('Title'), max_length=255)
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
     effort = models.IntegerField(_('Effort'), default=0)

@@ -67,6 +67,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return Response({'ok': 'ok'})
 
+    @action(detail=False)
+    def kanbanStates(self, request):
+        return Response({'states': Task.STATES_KANBAN})
+
 
 class SprintViewSet(viewsets.ModelViewSet):
     """
