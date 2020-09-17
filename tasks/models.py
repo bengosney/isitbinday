@@ -26,11 +26,6 @@ class Task(StateMixin, models.Model):
         STATE_CANCELED
     ]
 
-    STATES_KANBAN = [
-        STATE_TODO,
-        STATE_DOING,
-        STATE_DONE,
-    ]
 
     title = models.CharField(_('Title'), max_length=255)
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
@@ -56,7 +51,7 @@ class Task(StateMixin, models.Model):
         pass
 
     @transition(field=state, source=STATE_TODO, target=STATE_DOING)
-    def do(self):
+    def doing(self):
         pass
 
     @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
@@ -64,7 +59,7 @@ class Task(StateMixin, models.Model):
         pass
 
     @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
-    def cancel(self):
+    def canceled(self):
         pass
 
 
