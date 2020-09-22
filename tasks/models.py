@@ -51,7 +51,7 @@ class Task(StateMixin, models.Model):
         pass
 
     @transition(field=state, source=STATE_TODO, target=STATE_DOING)
-    def doing(self):
+    def do(self):
         pass
 
     @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
@@ -59,7 +59,7 @@ class Task(StateMixin, models.Model):
         pass
 
     @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
-    def canceled(self):
+    def cancel(self):
         pass
 
 
