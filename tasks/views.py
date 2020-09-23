@@ -92,6 +92,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         states = defaultdict(lambda: {
             'sources': [],
             'transitions': [], 
+            'destination': [],
             'name': '',
         })
 
@@ -100,7 +101,8 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         for t in task.get_all_state_transitions():
             states[t.target]['sources'].append(t.source)
-            states[t.source]['transitions'].append(t.target)
+            states[t.source]['destination'].append(t.target)
+            states[t.target]['transitions'].append(t.name)
 
         return Response({'states': [states[s] for s in states]})
 
