@@ -104,7 +104,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             states[t.source]['destination'].append(t.target)
             states[t.target]['transitions'].append(t.name)
 
-        return Response({'states': [states[s] for s in states]})
+        return Response({'states': [states[s] for s in states if states[s]['name'] != '']})
 
 
 

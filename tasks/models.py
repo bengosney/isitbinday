@@ -19,7 +19,7 @@ class Task(StateMixin, models.Model):
     STATE_CANCELED = 'canceled'
 
     STATES = [
-        STATE_DRAFT,
+        #STATE_DRAFT,
         STATE_TODO,
         STATE_DOING,
         STATE_DONE,
