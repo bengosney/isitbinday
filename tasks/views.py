@@ -85,7 +85,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         task = Task()
         transitions = defaultdict(lambda: {
             'sources': [],
-            'target': '', 
+            'target': '',
             'name': ''
         })
 
@@ -93,15 +93,14 @@ class TaskViewSet(viewsets.ModelViewSet):
             transitions[t.target]['sources'].append(t.source)
             transitions[t.target]['target'] = t.target
             transitions[t.target]['name'] = t.name
-            
+
         return Response({'transitions': [transitions[t] for t in Task.STATES]})
-    
-    @action(detail=False)
-    def states(self, request):
+
+    def _all_states(self):
         task = Task()
         states = defaultdict(lambda: {
             'sources': [],
-            'transitions': [], 
+            'transitions': [],
             'destination': [],
             'name': '',
         })
@@ -114,8 +113,15 @@ class TaskViewSet(viewsets.ModelViewSet):
             states[t.source]['destination'].append(t.target)
             states[t.target]['transitions'].append(t.name)
 
-        return Response({'states': [states[s] for s in states if states[s]['name'] != '' and s not in Task.HIDDEN_STATES]})
+        return [states[s] for s in states if states[s]['name'] != '']
 
+    @action(detail=False)
+    def states(self, request):
+        return Response({'states': [s for s in self._all_states() if s['name'] not in Task.HIDDEN_STATES]})
+
+    @action(detail=False)
+    def hidden_states(self, request):
+        return Response({'states': [s for s in self._all_states() if s['name'] in Task.HIDDEN_STATES]})
 
 
 class SprintViewSet(viewsets.ModelViewSet):
