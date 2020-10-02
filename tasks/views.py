@@ -61,6 +61,16 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return Response({'task': serializer.data, 'status': status})
 
+    @action(detail=True)
+    def archive(self, request, pk=None):
+        task = self.get_object()
+        task.archive()
+        task.save()
+
+        serializer = self.get_serializer(task)
+
+        return Response({'task': serializer.data, 'status': True})
+
     @action(detail=False, methods=['POST'])
     def position(self, request):
         for pair in request.data.get('positions'):
@@ -104,7 +114,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             states[t.source]['destination'].append(t.target)
             states[t.target]['transitions'].append(t.name)
 
-        return Response({'states': [states[s] for s in states if states[s]['name'] != '']})
+        return Response({'states': [states[s] for s in states if states[s]['name'] != '' and s not in Task.HIDDEN_STATES]})
 
 
 

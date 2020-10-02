@@ -11,21 +11,30 @@ class StateMixin():
         return [i.name for i in self.get_available_state_transitions()]
 
 
+class TaskStateManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().exclude(state=Task.STATE_ARCHIVE)
+
+
 class Task(StateMixin, models.Model):
     STATE_DRAFT = 'draft'
     STATE_TODO = 'todo'
     STATE_DOING = 'doing'
     STATE_DONE = 'done'
     STATE_CANCELED = 'canceled'
+    STATE_ARCHIVE = 'archive'
 
     STATES = [
-        #STATE_DRAFT,
         STATE_TODO,
         STATE_DOING,
         STATE_DONE,
-        STATE_CANCELED
+        STATE_CANCELED,
+        STATE_ARCHIVE,
     ]
 
+    HIDDEN_STATES = [
+        STATE_ARCHIVE
+    ]
 
     title = models.CharField(_('Title'), max_length=255)
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
@@ -39,6 +48,9 @@ class Task(StateMixin, models.Model):
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)
+
+    objects = TaskStateManager()
+    admin_objects = models.Manager()
 
     class Meta(object):
         ordering = ['position']
@@ -60,6 +72,10 @@ class Task(StateMixin, models.Model):
 
     @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
     def cancel(self):
+        pass
+
+    @transition(field=state, source=[STATE_DONE, STATE_CANCELED], target=STATE_ARCHIVE)
+    def archive(self):
         pass
 
 
