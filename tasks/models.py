@@ -40,6 +40,8 @@ class Task(StateMixin, models.Model):
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
     effort = models.IntegerField(_('Effort'), default=0)
     blocked_by = models.ForeignKey('Task', related_name='blocks', on_delete=models.SET_NULL, null=True, blank=True)
+    completed = models.DateTimeField(_('Completed on'), blank=True, null=True)
+    repeats = models.CharField(_('Repeats'), max_length=255, blank=True, default='')
 
     owner = models.ForeignKey('auth.User', related_name='tasks', on_delete=models.CASCADE)
 
@@ -68,7 +70,7 @@ class Task(StateMixin, models.Model):
 
     @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
     def done(self):
-        pass
+        self.completed = datetime.now()
 
     @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
     def cancel(self):
