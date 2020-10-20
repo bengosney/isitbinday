@@ -71,6 +71,10 @@ class Task(StateMixin, models.Model):
     @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
     def done(self):
         self.completed = datetime.now()
+        
+        if self.repeats != '':
+            next = self.__class__(title=self.title, effort=self.effort, owner=self.owner, repeats=self.repeats)
+            next.save()
 
     @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
     def cancel(self):
