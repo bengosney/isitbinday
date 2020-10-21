@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import gettext as _
 from django_fsm import FSMField, transition
+from django.utils import timezone
 
 
 class StateMixin():
@@ -13,7 +14,7 @@ class StateMixin():
 
 class TaskStateManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().exclude(state=Task.STATE_ARCHIVE)
+        return super().get_queryset().exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
 
 
 class Task(StateMixin, models.Model):
@@ -38,6 +39,7 @@ class Task(StateMixin, models.Model):
 
     title = models.CharField(_('Title'), max_length=255)
     due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
+    show_after = models.DateField(_('Show After'), default=timezone.now)
     effort = models.IntegerField(_('Effort'), default=0)
     blocked_by = models.ForeignKey('Task', related_name='blocks', on_delete=models.SET_NULL, null=True, blank=True)
     completed = models.DateTimeField(_('Completed on'), blank=True, null=True)
