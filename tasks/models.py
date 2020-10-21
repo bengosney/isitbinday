@@ -5,6 +5,8 @@ from django.utils.translation import gettext as _
 from django_fsm import FSMField, transition
 from django.utils import timezone
 
+import dateparser
+
 
 class StateMixin():
     @property
@@ -76,6 +78,11 @@ class Task(StateMixin, models.Model):
         
         if self.repeats != '':
             next = self.__class__(title=self.title, effort=self.effort, owner=self.owner, repeats=self.repeats)
+            try:
+                next.show_after = dateparser.parse(f'in {self.repeats}')
+            except:
+                next.repeats = f'Failed to parse: {self.repeats}'
+
             next.save()
 
     @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
