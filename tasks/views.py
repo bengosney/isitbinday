@@ -123,6 +123,11 @@ class TaskViewSet(viewsets.ModelViewSet):
     def hidden_states(self, request):
         return Response({'states': [s for s in self._all_states() if s['name'] in Task.HIDDEN_STATES]})
 
+    @action(detail=False)
+    def auto_archive(self, request):
+        Task.auto_archive(1)
+        return Response({'ok': True})
+
 
 class SprintViewSet(viewsets.ModelViewSet):
     """

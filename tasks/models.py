@@ -5,6 +5,8 @@ from django.utils.translation import gettext as _
 from django_fsm import FSMField, transition
 from django.utils import timezone
 
+from datetime import date, timedelta
+
 import dateparser
 
 
@@ -63,6 +65,13 @@ class Task(StateMixin, models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    @classmethod
+    def auto_archive(cls, days):
+        tasks = cls.objects.filter(state=cls.STATE_DONE, completed__lte=date.today() - timedelta(days=days))
+        for task in tasks:
+            task.archive()
+            task.save()
 
     @transition(field=state, source=STATE_DRAFT, target=STATE_TODO)
     def todo(self):
