@@ -1,15 +1,19 @@
-from tasks.models import Task, Sprint
-from rest_framework import viewsets, permissions
+# Standard Library
+from collections import defaultdict
+from datetime import date, timedelta
+
+# Third Party
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .serializers import TaskSerializer, SprintSerializer
+# First Party
+from tasks.models import Sprint, Task
 from tasks.permissions import IsOwner
 
-from collections import defaultdict
-from pprint import pprint
+# Locals
+from .serializers import SprintSerializer, TaskSerializer
 
-from datetime import date, timedelta
 
 class TaskViewSet(viewsets.ModelViewSet):
     """
@@ -128,9 +132,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     def auto_archive(self, request):
         days = int(request.query_params.get('days', 5))
         before = date.today() - timedelta(days=days)
-        
+
         count = Task.auto_archive(before)
-        
+
         return Response({'ok': True, 'count': count, 'before': before})
 
 

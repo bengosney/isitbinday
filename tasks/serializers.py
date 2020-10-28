@@ -1,6 +1,8 @@
+# Third Party
 from rest_framework import serializers
-from .models import Task, Sprint
-from django.contrib.auth.models import User
+
+# Locals
+from .models import Sprint, Task
 
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,9 +28,6 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     completed = serializers.ReadOnlyField()
 
 
-    
-
-
 class SprintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sprint
@@ -45,5 +44,3 @@ class SprintSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     owner = serializers.ReadOnlyField(source='owner.username')
-
-

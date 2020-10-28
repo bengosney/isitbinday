@@ -1,12 +1,14 @@
+# Standard Library
 from datetime import datetime
 
+# Django
 from django.db import models
-from django.utils.translation import gettext as _
-from django_fsm import FSMField, transition
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
-
+# Third Party
 import dateparser
+from django_fsm import FSMField, transition
 
 
 class StateMixin():
@@ -86,12 +88,12 @@ class Task(StateMixin, models.Model):
     @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
     def done(self):
         self.completed = datetime.now()
-        
+
         if self.repeats != '':
             next = self.__class__(title=self.title, effort=self.effort, owner=self.owner, repeats=self.repeats)
             try:
                 next.show_after = dateparser.parse(f'in {self.repeats}')
-            except:
+            except BaseException:
                 next.repeats = f'Failed to parse: {self.repeats}'
 
             next.save()
@@ -130,6 +132,9 @@ class Sprint(StateMixin, models.Model):
 
     created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)
+
+    def __str__(self):
+        return f'{self.title}'
 
     @transition(field=state, source=STATE_PLANNING, target=STATE_IN_PROGRESS)
     def start(self):

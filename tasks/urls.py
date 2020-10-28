@@ -1,6 +1,8 @@
+# Third Party
 from rest_framework import routers
 
-from .views import TaskViewSet, SprintViewSet
+# Locals
+from .views import SprintViewSet, TaskViewSet
 
 router = routers.DefaultRouter()
 router.register(r'tasks', TaskViewSet, basename='task')

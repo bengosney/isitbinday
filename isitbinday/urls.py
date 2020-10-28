@@ -1,8 +1,11 @@
+# Django
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
+# Third Party
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+# First Party
 from tasks.urls import router
 
 urlpatterns = [

@@ -1,9 +1,13 @@
+# Django
 from django.contrib import admin
-from fsm_admin.mixins import FSMTransitionMixin
+
+# Third Party
 from adminsortable2.admin import SortableAdminMixin
 from django_fsm_log.admin import StateLogInline
+from fsm_admin.mixins import FSMTransitionMixin
 
-from .models import Task, Sprint
+# Locals
+from .models import Sprint, Task
 
 
 class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
