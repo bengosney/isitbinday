@@ -1,7 +1,7 @@
 from django.contrib import admin
 from fsm_admin.mixins import FSMTransitionMixin
 from adminsortable2.admin import SortableAdminMixin
-
+from django_fsm_log.admin import StateLogInline
 
 from .models import Task, Sprint
 
@@ -11,6 +11,7 @@ class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
     list_filter = ['state']
     readonly_fields = ['state', 'created', 'last_updated']
     fsm_field = ['state']
+    inlines = [StateLogInline]
 
     def get_queryset(self, request):
         qs = self.model.admin_objects.get_queryset()
