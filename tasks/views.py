@@ -84,13 +84,13 @@ class TaskViewSet(viewsets.ModelViewSet):
     def transitions(self, request):
         task = Task()
         transitions = defaultdict(lambda: {
-            'sources': [],
+            'sources': set(),
             'target': '',
             'name': ''
         })
 
         for t in task.get_all_state_transitions():
-            transitions[t.target]['sources'].append(t.source)
+            transitions[t.target]['sources'].add(t.source)
             transitions[t.target]['target'] = t.target
             transitions[t.target]['name'] = t.name
 
@@ -99,9 +99,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     def _all_states(self):
         task = Task()
         states = defaultdict(lambda: {
-            'sources': [],
-            'transitions': [],
-            'destination': [],
+            'sources': set(),
+            'transitions': set(),
+            'destination': set(),
             'name': '',
         })
 
@@ -109,9 +109,9 @@ class TaskViewSet(viewsets.ModelViewSet):
             states[state]['name'] = state
 
         for t in task.get_all_state_transitions():
-            states[t.target]['sources'].append(t.source)
-            states[t.source]['destination'].append(t.target)
-            states[t.target]['transitions'].append(t.name)
+            states[t.target]['sources'].add(t.source)
+            states[t.source]['destination'].add(t.target)
+            states[t.target]['transitions'].add(t.name)
 
         return [states[s] for s in states if states[s]['name'] != '']
 
