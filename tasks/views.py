@@ -9,6 +9,7 @@ from tasks.permissions import IsOwner
 from collections import defaultdict
 from pprint import pprint
 
+from datetime import date, timedelta
 
 class TaskViewSet(viewsets.ModelViewSet):
     """
@@ -125,8 +126,12 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def auto_archive(self, request):
-        Task.auto_archive(1)
-        return Response({'ok': True})
+        days = int(request.query_params.get('days', 5))
+        before = date.today() - timedelta(days=days)
+        
+        count = Task.auto_archive(before)
+        
+        return Response({'ok': True, 'count': count, 'before': before})
 
 
 class SprintViewSet(viewsets.ModelViewSet):

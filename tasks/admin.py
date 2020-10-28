@@ -7,7 +7,8 @@ from .models import Task, Sprint
 
 
 class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
-    list_display = ['title', 'effort', 'due_date', 'state', 'owner']
+    list_display = ['title', 'effort', 'due_date', 'state', 'owner', 'completed']
+    list_filter = ['state']
     readonly_fields = ['state', 'created', 'last_updated']
     fsm_field = ['state']
 
