@@ -18,10 +18,10 @@ installLint: ## Install the linting deps
 	pip install autoflake autopep8 isort flake8 flake8-django bandit eradicate
 
 lint: $(baselinefile)  ## Format, sort imports and lint python files
-	autoflake --expand-star-imports --exclude "migrations" --exclude "node_modules" -i -r --remove-unused-variables --remove-all-unused-imports .
-	autopep8 -a -a -a --exclude "migrations,node_modules" --in-place --recursive .
-	isort "." --skip "stef/wsgi.py" --skip-glob "**/migrations/*" --skip-glob "*/node_modules/*"
-	flake8 --exclude migrations,node_modules .
+	autoflake --expand-star-imports --exclude "migrations" -i -r --remove-unused-variables --remove-all-unused-imports .
+	autopep8 -a -a -a --exclude "migrations" --in-place --recursive .
+	isort -y --atomic --skip "isitbinday/*sgi.py" --skip-glob "**/migrations/*" --skip-glob "**/.history/*" --skip "manage.py"
+	flake8 --exclude migrations,.history .
 	bandit -x "./node_modules" -b $(baselinefile) -r .
 	eradicate -r --in-place .
 
