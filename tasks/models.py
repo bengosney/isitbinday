@@ -3,6 +3,7 @@ from datetime import datetime
 
 # Django
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -69,7 +70,7 @@ class Task(StateMixin, models.Model):
 
     @classmethod
     def auto_archive(cls, before):
-        tasks = cls.objects.filter(state=cls.STATE_DONE, completed__lte=before)
+        tasks = cls.objects.filter((Q(state=cls.STATE_DONE) | Q(state=cls.STATE_CANCELED)) & Q(completed__lte=before))
 
         for task in tasks:
             task.archive()
