@@ -129,6 +129,10 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Response({'states': [s for s in self._all_states() if s['name'] in Task.HIDDEN_STATES]})
 
     @action(detail=False)
+    def due_date_states(self, request):
+        return Response({'states': [s for s in Task.STATES_DUE_DATE_MATTERS]})
+
+    @action(detail=False)
     def auto_archive(self, request):
         days = int(request.query_params.get('days', 5))
         before = date.today() - timedelta(days=days)

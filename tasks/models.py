@@ -39,6 +39,11 @@ class Task(StateMixin, models.Model):
         STATE_ARCHIVE,
     ]
 
+    STATES_DUE_DATE_MATTERS = [
+        STATE_TODO,
+        STATE_DOING,
+    ]
+
     HIDDEN_STATES = [
         STATE_ARCHIVE
     ]
