@@ -18,11 +18,6 @@ class StateMixin():
         return [i.name for i in self.get_available_state_transitions()]
 
 
-class TaskStateManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
-
-
 class Task(StateMixin, models.Model):
     STATE_DRAFT = 'draft'
     STATE_TODO = 'todo'
@@ -63,9 +58,6 @@ class Task(StateMixin, models.Model):
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)
-
-    objects = TaskStateManager()
-    admin_objects = models.Manager()
 
     class Meta(object):
         ordering = ['position']

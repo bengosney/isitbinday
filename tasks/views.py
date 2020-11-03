@@ -1,6 +1,6 @@
 # Standard Library
 from collections import defaultdict
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 # Third Party
 from rest_framework import permissions, viewsets
@@ -31,7 +31,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         This view should return a list of all tasks for the currently authenticated user.
         """
         user = self.request.user
-        return Task.objects.filter(owner=user)
+        return Task.objects.filter(owner=user).exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
 
     @action(detail=True)
     def do(self, request, pk=None):
