@@ -75,7 +75,7 @@ class Task(StateMixin, models.Model):
 
         return len(tasks)
 
-    @transition(field=state, source=STATE_DRAFT, target=STATE_TODO)
+    @transition(field=state, source=[STATE_DRAFT, STATE_DOING], target=STATE_TODO)
     def todo(self):
         pass
 

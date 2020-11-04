@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import date, datetime, timedelta
 
 # Third Party
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, generics, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -14,10 +14,25 @@ from tasks.permissions import IsOwner
 # Locals
 from .serializers import SprintSerializer, TaskSerializer
 
+class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    API endpoint that shows a list of archived tasks
+    """
+
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        """
+        This view should return a list of archived tasks for the currently authenticated user.
+        """
+        user = self.request.user
+        return Task.objects.filter(owner=user).filter(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows tasks to be viewws or edited
+    API endpoint that allows tasks to be views or edited
     """
 
     serializer_class = TaskSerializer
@@ -32,6 +47,17 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         user = self.request.user
         return Task.objects.filter(owner=user).exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
+
+    @action(detail=True)
+    def todo(self, request, pk=None):
+        task = self.get_object()
+        status = True
+        task.todo()
+        task.save()
+
+        serializer = self.get_serializer(task)
+
+        return Response({'task': serializer.data, 'status': status})
 
     @action(detail=True)
     def do(self, request, pk=None):
@@ -144,7 +170,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 class SprintViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Sprints to be viewws or edited
+    API endpoint that allows Sprints to be views or edited
     """
 
     serializer_class = SprintSerializer
