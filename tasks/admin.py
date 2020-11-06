@@ -17,15 +17,6 @@ class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
     fsm_field = ['state']
     inlines = [StateLogInline]
 
-    def get_queryset(self, request):
-        qs = self.model.admin_objects.get_queryset()
-
-        ordering = self.ordering or ()
-        if ordering:
-            qs = qs.order_by(*ordering)
-
-        return qs
-
 
 class SprintAdmin(FSMTransitionMixin, admin.ModelAdmin):
     list_display = ['title', 'state', 'owner']
