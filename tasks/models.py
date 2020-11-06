@@ -6,10 +6,13 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.contrib.contenttypes.models import ContentType
+
 
 # Third Party
 import dateparser
 from django_fsm import FSMField, transition
+from django_fsm_log.models import StateLog
 
 
 class StateMixin():
@@ -74,6 +77,16 @@ class Task(StateMixin, models.Model):
             task.save()
 
         return len(tasks)
+
+    @property
+    def previous_state(self):
+        typeId = ContentType.objects.get_for_model(self)
+        stateLog = StateLog.objects.all().filter(object_id=self.pk, content_type_id=typeId).order_by('-timestamp')
+        
+        try:
+            return stateLog[0].source_state
+        except IndexError:
+            return None
 
     @transition(field=state, source=[STATE_DRAFT, STATE_DOING], target=STATE_TODO)
     def todo(self):
