@@ -1,7 +1,9 @@
 # Standard Library
 import datetime
+import os
 from pathlib import Path
 
+# Third Party
 import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -15,7 +17,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = 'uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if os.environ.get('ENV') == 'production' else True
 
 ALLOWED_HOSTS = []
 

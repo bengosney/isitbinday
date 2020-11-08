@@ -2,9 +2,7 @@
 from rest_framework import routers
 
 # Locals
-from .views import SprintViewSet, TaskViewSet, ArchiveTaskListView
-
-
+from .views import ArchiveTaskListView, SprintViewSet, TaskViewSet
 
 router = routers.DefaultRouter()
 router.register(r'tasks', TaskViewSet, basename='task')

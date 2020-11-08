@@ -2,12 +2,11 @@
 from datetime import datetime
 
 # Django
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
-from django.contrib.contenttypes.models import ContentType
-
 
 # Third Party
 import dateparser
@@ -82,7 +81,7 @@ class Task(StateMixin, models.Model):
     def previous_state(self):
         typeId = ContentType.objects.get_for_model(self)
         stateLog = StateLog.objects.all().filter(object_id=self.pk, content_type_id=typeId).order_by('-timestamp')
-        
+
         try:
             return stateLog[0].source_state
         except IndexError:

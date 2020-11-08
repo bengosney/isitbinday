@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import date, datetime, timedelta
 
 # Third Party
-from rest_framework import permissions, viewsets, generics, mixins
+from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -13,6 +13,7 @@ from tasks.permissions import IsOwner
 
 # Locals
 from .serializers import SprintSerializer, TaskSerializer
+
 
 class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
