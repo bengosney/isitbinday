@@ -27,6 +27,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     owner = serializers.ReadOnlyField(source='owner.username')
     completed = serializers.ReadOnlyField()
+    state = serializers.ReadOnlyField()
 
 
 class SprintSerializer(serializers.HyperlinkedModelSerializer):
