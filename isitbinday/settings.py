@@ -5,6 +5,7 @@ from pathlib import Path
 
 # Third Party
 import django_heroku
+from corsheaders.defaults import default_methods
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -139,6 +140,10 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.+\.isitbinday\.com$",
     r"^http://localhost:[0-9]+$",
 ]
+
+CORS_ALLOW_METHODS = list(set(list(default_methods) + [
+    'PATCH',
+]))
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5),
