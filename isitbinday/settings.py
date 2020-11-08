@@ -136,7 +136,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://\.+\.isitbinday\.com$",
+    r"^https://.+\.isitbinday\.com$",
     r"^http://localhost:[0-9]+$",
 ]
 
