@@ -28,7 +28,8 @@ class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
         This view should return a list of archived tasks for the currently authenticated user.
         """
         user = self.request.user
-        return Task.objects.filter(owner=user).filter(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
+        #return Task.objects.filter(owner=user).filter(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
+        return Task.objects.authorize(self.request, action="view")
 
 
 class TaskViewSet(viewsets.ModelViewSet):
