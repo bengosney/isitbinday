@@ -12,6 +12,7 @@ from django.utils.translation import gettext as _
 import dateparser
 from django_fsm import FSMField, transition
 from django_fsm_log.models import StateLog
+from django_oso.models import AuthorizedModel 
 
 
 class StateMixin():
@@ -20,7 +21,7 @@ class StateMixin():
         return [i.name for i in self.get_available_state_transitions()]
 
 
-class Task(StateMixin, models.Model):
+class Task(StateMixin, AuthorizedModel):
     STATE_DRAFT = 'draft'
     STATE_TODO = 'todo'
     STATE_DOING = 'doing'
@@ -117,7 +118,7 @@ class Task(StateMixin, models.Model):
         pass
 
 
-class Sprint(StateMixin, models.Model):
+class Sprint(StateMixin, AuthorizedModel):
     STATE_PLANNING = 'planning'
     STATE_IN_PROGRESS = 'in progress'
     STATE_FINISHED = 'finished'
