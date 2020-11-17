@@ -27,8 +27,8 @@ class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
         """
         This view should return a list of archived tasks for the currently authenticated user.
         """
-        user = self.request.user
-        return Task.objects.filter(owner=user).filter(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
+
+        return Task.objects.authorize(self.request, action="retrieve")
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -46,8 +46,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         This view should return a list of all tasks for the currently authenticated user.
         """
-        user = self.request.user
-        return Task.objects.filter(owner=user).exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
+        
+        return Task.objects.authorize(self.request, action="retrieve").exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
 
     @action(detail=True)
     def todo(self, request, pk=None):
@@ -184,5 +184,5 @@ class SprintViewSet(viewsets.ModelViewSet):
         """
         This view should return a list of all tasks for the currently authenticated user.
         """
-        user = self.request.user
-        return Sprint.objects.filter(owner=user).order_by('-created')
+
+        return Sprint.objects.authorize(self.request, action="retrieve").order_by('-created')
