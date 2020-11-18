@@ -46,7 +46,7 @@ requests==2.24.0
 rollbar==0.15.1
 six==1.15.0
 smmap==3.0.4
-sqlparse==0.3.1
+sqlparse==0.4.1
 stevedore==3.2.2
 toml==0.10.1
 tzlocal==2.1
