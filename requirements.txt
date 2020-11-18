@@ -18,7 +18,7 @@ django-fsm-log==2.0.1
 django-heroku==0.3.1
 django-oso==0.4.0
 djangorestframework==3.12.2
-djangorestframework-simplejwt==4.4.0
+djangorestframework-simplejwt==4.6.0
 eradicate==2.0.0
 flake8==3.8.4
 flake8-django==1.1.1
