@@ -24,7 +24,7 @@ flake8==3.8.4
 flake8-django==1.1.1
 gitdb==4.0.5
 GitPython==3.1.11
-graphviz==0.14.1
+graphviz==0.15
 gunicorn==20.0.4
 idna==2.10
 isort==4.3.21
