@@ -48,7 +48,7 @@ six==1.15.0
 smmap==3.0.4
 sqlparse==0.4.1
 stevedore==3.2.2
-toml==0.10.1
+toml==0.10.2
 tzlocal==2.1
 urllib3==1.26.2
 whitenoise==5.2.0
