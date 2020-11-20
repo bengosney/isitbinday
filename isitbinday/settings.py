@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_fsm_log',
     'fsm_admin',
     'tasks',
+    'food',
 ]
 
 MIDDLEWARE = [
