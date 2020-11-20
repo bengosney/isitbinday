@@ -14,5 +14,6 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('food/', include('food.urls')),
     path('admin/', admin.site.urls),
 ]
