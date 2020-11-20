@@ -2,17 +2,36 @@ from django import forms
 from . import models
 
 
-class categoryForm(forms.ModelForm):
+class UnitOfMeasureForm(forms.ModelForm):
     class Meta:
-        model = models.category
+        model = models.UnitOfMeasure
         fields = [
             "name",
         ]
 
 
-class productForm(forms.ModelForm):
+class StockForm(forms.ModelForm):
     class Meta:
-        model = models.product
+        model = models.Stock
+        fields = [
+            "quantity",
+            "location",
+            "unit_of_measure",
+            "product",
+        ]
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.Category
+        fields = [
+            "name",
+        ]
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = models.Product
         fields = [
             "name",
             "code",
@@ -21,9 +40,18 @@ class productForm(forms.ModelForm):
         ]
 
 
-class brandForm(forms.ModelForm):
+class BrandForm(forms.ModelForm):
     class Meta:
-        model = models.brand
+        model = models.Brand
         fields = [
+            "name",
+        ]
+
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = models.Location
+        fields = [
+            "type",
             "name",
         ]

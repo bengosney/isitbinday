@@ -6,75 +6,134 @@ from django.http import HttpResponse
 import openfoodfacts
 from pprint import pprint, pformat
 
-
 def test(request):
     code = '5010024111069'
     product = openfoodfacts.products.get_product(code)['product']
 
-    bob = ''
-    #bob = f"name: {product['generic_name']}<br />brand: {product['brands']} <br />categories: {product['categories']}"
-    obj = models.product.get_or_create(code, product['generic_name'], product['brands'], product['categories'])
-    return HttpResponse(f'{bob}<pre>{pformat(product)}</pre>')
+    obj = models.Product.get_or_create(code, product['generic_name'], product['brands'], product['categories'])
+    return HttpResponse(f'<pre>{pformat(product)}</pre>')
+    
+class UnitOfMeasureListView(generic.ListView):
+    model = models.UnitOfMeasure
+    form_class = forms.UnitOfMeasureForm
 
 
-class categoryListView(generic.ListView):
-    model = models.category
-    form_class = forms.categoryForm
+class UnitOfMeasureCreateView(generic.CreateView):
+    model = models.UnitOfMeasure
+    form_class = forms.UnitOfMeasureForm
 
 
-class categoryCreateView(generic.CreateView):
-    model = models.category
-    form_class = forms.categoryForm
+class UnitOfMeasureDetailView(generic.DetailView):
+    model = models.UnitOfMeasure
+    form_class = forms.UnitOfMeasureForm
 
 
-class categoryDetailView(generic.DetailView):
-    model = models.category
-    form_class = forms.categoryForm
-
-
-class categoryUpdateView(generic.UpdateView):
-    model = models.category
-    form_class = forms.categoryForm
+class UnitOfMeasureUpdateView(generic.UpdateView):
+    model = models.UnitOfMeasure
+    form_class = forms.UnitOfMeasureForm
     pk_url_kwarg = "pk"
 
 
-class productListView(generic.ListView):
-    model = models.product
-    form_class = forms.productForm
+class StockListView(generic.ListView):
+    model = models.Stock
+    form_class = forms.StockForm
 
 
-class productCreateView(generic.CreateView):
-    model = models.product
-    form_class = forms.productForm
+class StockCreateView(generic.CreateView):
+    model = models.Stock
+    form_class = forms.StockForm
 
 
-class productDetailView(generic.DetailView):
-    model = models.product
-    form_class = forms.productForm
+class StockDetailView(generic.DetailView):
+    model = models.Stock
+    form_class = forms.StockForm
 
 
-class productUpdateView(generic.UpdateView):
-    model = models.product
-    form_class = forms.productForm
+class StockUpdateView(generic.UpdateView):
+    model = models.Stock
+    form_class = forms.StockForm
     pk_url_kwarg = "pk"
 
 
-class brandListView(generic.ListView):
-    model = models.brand
-    form_class = forms.brandForm
+class CategoryListView(generic.ListView):
+    model = models.Category
+    form_class = forms.CategoryForm
 
 
-class brandCreateView(generic.CreateView):
-    model = models.brand
-    form_class = forms.brandForm
+class CategoryCreateView(generic.CreateView):
+    model = models.Category
+    form_class = forms.CategoryForm
 
 
-class brandDetailView(generic.DetailView):
-    model = models.brand
-    form_class = forms.brandForm
+class CategoryDetailView(generic.DetailView):
+    model = models.Category
+    form_class = forms.CategoryForm
 
 
-class brandUpdateView(generic.UpdateView):
-    model = models.brand
-    form_class = forms.brandForm
+class CategoryUpdateView(generic.UpdateView):
+    model = models.Category
+    form_class = forms.CategoryForm
+    pk_url_kwarg = "pk"
+
+
+class ProductListView(generic.ListView):
+    model = models.Product
+    form_class = forms.ProductForm
+
+
+class ProductCreateView(generic.CreateView):
+    model = models.Product
+    form_class = forms.ProductForm
+
+
+class ProductDetailView(generic.DetailView):
+    model = models.Product
+    form_class = forms.ProductForm
+
+
+class ProductUpdateView(generic.UpdateView):
+    model = models.Product
+    form_class = forms.ProductForm
+    pk_url_kwarg = "pk"
+
+
+class BrandListView(generic.ListView):
+    model = models.Brand
+    form_class = forms.BrandForm
+
+
+class BrandCreateView(generic.CreateView):
+    model = models.Brand
+    form_class = forms.BrandForm
+
+
+class BrandDetailView(generic.DetailView):
+    model = models.Brand
+    form_class = forms.BrandForm
+
+
+class BrandUpdateView(generic.UpdateView):
+    model = models.Brand
+    form_class = forms.BrandForm
+    pk_url_kwarg = "pk"
+
+
+class LocationListView(generic.ListView):
+    model = models.Location
+    form_class = forms.LocationForm
+
+
+class LocationCreateView(generic.CreateView):
+    model = models.Location
+    form_class = forms.LocationForm
+
+
+class LocationDetailView(generic.DetailView):
+    model = models.Location
+    form_class = forms.LocationForm
+
+
+class LocationUpdateView(generic.UpdateView):
+    model = models.Location
+    form_class = forms.LocationForm
     pk_url_kwarg = "pk"

@@ -4,25 +4,49 @@ from . import serializers
 from . import models
 
 
-class categoryViewSet(viewsets.ModelViewSet):
-    """ViewSet for the category class"""
+class UnitOfMeasureViewSet(viewsets.ModelViewSet):
+    """ViewSet for the UnitOfMeasure class"""
 
-    queryset = models.category.objects.all()
-    serializer_class = serializers.categorySerializer
+    queryset = models.UnitOfMeasure.objects.all()
+    serializer_class = serializers.UnitOfMeasureSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class productViewSet(viewsets.ModelViewSet):
-    """ViewSet for the product class"""
+class StockViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Stock class"""
 
-    queryset = models.product.objects.all()
-    serializer_class = serializers.productSerializer
+    queryset = models.Stock.objects.all()
+    serializer_class = serializers.StockSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class brandViewSet(viewsets.ModelViewSet):
-    """ViewSet for the brand class"""
+class CategoryViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Category class"""
 
-    queryset = models.brand.objects.all()
-    serializer_class = serializers.brandSerializer
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Product class"""
+
+    queryset = models.Product.objects.all()
+    serializer_class = serializers.ProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BrandViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Brand class"""
+
+    queryset = models.Brand.objects.all()
+    serializer_class = serializers.BrandSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class LocationViewSet(viewsets.ModelViewSet):
+    """ViewSet for the Location class"""
+
+    queryset = models.Location.objects.all()
+    serializer_class = serializers.LocationSerializer
     permission_classes = [permissions.IsAuthenticated]

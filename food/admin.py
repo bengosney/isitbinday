@@ -4,15 +4,56 @@ from django import forms
 from . import models
 
 
-class categoryAdminForm(forms.ModelForm):
+class UnitOfMeasureAdminForm(forms.ModelForm):
 
     class Meta:
-        model = models.category
+        model = models.UnitOfMeasure
         fields = "__all__"
 
 
-class categoryAdmin(admin.ModelAdmin):
-    form = categoryAdminForm
+class UnitOfMeasureAdmin(admin.ModelAdmin):
+    form = UnitOfMeasureAdminForm
+    list_display = [
+        "name",
+        "created",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "last_updated",
+    ]
+
+
+class StockAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Stock
+        fields = "__all__"
+
+
+class StockAdmin(admin.ModelAdmin):
+    form = StockAdminForm
+    list_display = [
+        "last_updated",
+        "added",
+        "quantity",
+        "created",
+    ]
+    readonly_fields = [
+        "last_updated",
+        "created",
+    ]
+
+
+class CategoryAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Category
+        fields = "__all__"
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    form = CategoryAdminForm
     list_display = [
         "name",
         "last_updated",
@@ -24,15 +65,15 @@ class categoryAdmin(admin.ModelAdmin):
     ]
 
 
-class productAdminForm(forms.ModelForm):
+class ProductAdminForm(forms.ModelForm):
 
     class Meta:
-        model = models.product
+        model = models.Product
         fields = "__all__"
 
 
-class productAdmin(admin.ModelAdmin):
-    form = productAdminForm
+class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
     list_display = [
         "name",
         "last_updated",
@@ -45,15 +86,15 @@ class productAdmin(admin.ModelAdmin):
     ]
 
 
-class brandAdminForm(forms.ModelForm):
+class BrandAdminForm(forms.ModelForm):
 
     class Meta:
-        model = models.brand
+        model = models.Brand
         fields = "__all__"
 
 
-class brandAdmin(admin.ModelAdmin):
-    form = brandAdminForm
+class BrandAdmin(admin.ModelAdmin):
+    form = BrandAdminForm
     list_display = [
         "name",
         "created",
@@ -65,6 +106,30 @@ class brandAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(models.category, categoryAdmin)
-admin.site.register(models.product, productAdmin)
-admin.site.register(models.brand, brandAdmin)
+class LocationAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Location
+        fields = "__all__"
+
+
+class LocationAdmin(admin.ModelAdmin):
+    form = LocationAdminForm
+    list_display = [
+        "type",
+        "name",
+        "created",
+        "last_updated",
+    ]
+    readonly_fields = [
+        "created",
+        "last_updated",
+    ]
+
+
+admin.site.register(models.UnitOfMeasure, UnitOfMeasureAdmin)
+admin.site.register(models.Stock, StockAdmin)
+admin.site.register(models.Category, CategoryAdmin)
+admin.site.register(models.Product, ProductAdmin)
+admin.site.register(models.Brand, BrandAdmin)
+admin.site.register(models.Location, LocationAdmin)
