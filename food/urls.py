@@ -1,9 +1,11 @@
-from django.urls import path, include
+# Django
+from django.urls import include, path
+
+# Third Party
 from rest_framework import routers
 
-from . import api
-from . import views
-
+# Locals
+from . import api, views
 
 router = routers.DefaultRouter()
 router.register("UnitOfMeasure", api.UnitOfMeasureViewSet)
@@ -14,6 +16,6 @@ router.register("Brand", api.BrandViewSet)
 router.register("Location", api.LocationViewSet)
 
 urlpatterns = (
-    path('', views.test),
+    path('<str:code>', views.LookupProduct),
     path("api/v1/", include(router.urls)),
 )

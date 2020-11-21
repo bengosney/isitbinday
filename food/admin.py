@@ -1,6 +1,8 @@
-from django.contrib import admin
+# Django
 from django import forms
+from django.contrib import admin
 
+# Locals
 from . import models
 
 

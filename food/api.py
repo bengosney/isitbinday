@@ -1,7 +1,8 @@
-from rest_framework import viewsets, permissions
+# Third Party
+from rest_framework import permissions, viewsets
 
-from . import serializers
-from . import models
+# Locals
+from . import models, serializers
 
 
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):

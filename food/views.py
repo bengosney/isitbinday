@@ -1,18 +1,27 @@
+# Django
 from django.views import generic
-from . import models
-from . import forms
 
-from django.http import HttpResponse
-import openfoodfacts
-from pprint import pprint, pformat
+# Third Party
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-def test(request):
-    code = '5010024111069'
-    product = openfoodfacts.products.get_product(code)['product']
+# First Party
+from food.serializers import LookupSerializer
 
-    obj = models.Product.get_or_create(code, product['generic_name'], product['brands'], product['categories'])
-    return HttpResponse(f'<pre>{pformat(product)}</pre>')
-    
+# Locals
+from . import forms, models
+
+
+@api_view(['GET'])
+def LookupProduct(request, code):
+    serializer = LookupSerializer(data={'code': code})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class UnitOfMeasureListView(generic.ListView):
     model = models.UnitOfMeasure
     form_class = forms.UnitOfMeasureForm

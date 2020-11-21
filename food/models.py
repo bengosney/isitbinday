@@ -1,3 +1,4 @@
+# Django
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -27,7 +28,7 @@ class Stock(models.Model):
 
     # Relationships
     location = models.ForeignKey("food.Location", on_delete=models.CASCADE)
-    unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE,null=True,blank=True)
+    unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey("food.Product", on_delete=models.CASCADE)
 
     # Fields
@@ -96,8 +97,10 @@ class Product(models.Model):
     @classmethod
     def get_or_create(cls, code, name, brandName, categories):
         brandObject = Brand.objects.get_or_create(name=brandName.split(',')[0])[0]
-        categoryObjects = [Category.objects.get_or_create(name=name)[0] for name in categories.split(',')]
- 
+        if isinstance(categories, str):
+            categories.split(',')
+        categoryObjects = [Category.objects.get_or_create(name=name)[0] for name in categories]
+
         prod = cls.objects.get_or_create(code=code, defaults={
             'name': name,
             'brand': brandObject,
