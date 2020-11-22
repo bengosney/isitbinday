@@ -1,4 +1,5 @@
 # Django
+from food.models import UnitOfMeasure
 from django.http.response import Http404
 
 # Third Party
@@ -12,52 +13,6 @@ from . import models
 # class LookupSerializer(serializers.Serializer):
 
 
-class LookupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Product
-        fields = [
-            "name",
-            "last_updated",
-            "created",
-            "code",
-            "brand",
-            "categories",
-        ]
-        read_only_fields = [
-            "name",
-            "last_updated",
-            "created",
-            "brand",
-            "categories",
-        ]
-
-    def create(self, validated_data):
-        code = validated_data.get('code')
-        try:
-            product = openfoodfacts.products.get_product(code)['product']
-        except KeyError:
-            raise Http404(f'{code} not found')
-
-        name = None
-        for key in ['generic_name', 'product_name']:
-            try:
-                name = product[key]
-            except KeyError:
-                pass
-
-        categories = product['categories'].split(',')
-        if product['categories_lc'] != 'en':
-            try:
-                translator = Translator()
-                categories = [c.text for c in translator.translate(categories, src=product['categories_lc'], dest='en')]
-            except BaseException:
-                categories = []
-
-        if name is None:
-            raise Http404('Name not found')
-
-        return models.Product.get_or_create(code, name, product['brands'], filter(None, categories))
-
 
 class UnitOfMeasureSerializer(serializers.ModelSerializer):
 
@@ -68,6 +23,10 @@ class UnitOfMeasureSerializer(serializers.ModelSerializer):
             "created",
             "last_updated",
         ]
+        read_only_fields = [
+            "last_updated",
+            "created",
+        ]
 
 
 class StockSerializer(serializers.ModelSerializer):
@@ -75,9 +34,17 @@ class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Stock
         fields = [
-            "last_updated",
+            "product",
+            "expires",
+            "location",
             "added",
             "quantity",
+            "unit_of_measure",
+            "last_updated",
+            "created",
+        ]
+        read_only_fields = [
+            "last_updated",
             "created",
         ]
 
@@ -88,6 +55,10 @@ class CategorySerializer(serializers.ModelSerializer):
         model = models.Category
         fields = [
             "name",
+            "last_updated",
+            "created",
+        ]
+        read_only_fields = [
             "last_updated",
             "created",
         ]
@@ -102,6 +73,14 @@ class ProductSerializer(serializers.ModelSerializer):
             "last_updated",
             "created",
             "code",
+            "brand",
+            "categories",
+            "quantity",
+            "unit_of_measure",
+        ]
+        read_only_fields = [
+            "last_updated",
+            "created",
         ]
 
 
@@ -114,6 +93,10 @@ class BrandSerializer(serializers.ModelSerializer):
             "created",
             "last_updated",
         ]
+        read_only_fields = [
+            "last_updated",
+            "created",
+        ]
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -121,8 +104,21 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Location
         fields = [
-            "type",
+            "temperature",
             "name",
             "created",
             "last_updated",
         ]
+        read_only_fields = [
+            "last_updated",
+            "created",
+        ]
+
+
+class LookupSerializer(serializers.ModelSerializer):
+    class Meta(ProductSerializer.Meta):
+        read_only_fields = [f for f in ProductSerializer.Meta.fields if f != 'code']
+
+    def create(self, validated_data):
+        code = validated_data.get('code')
+        return models.Product.lookup(code)

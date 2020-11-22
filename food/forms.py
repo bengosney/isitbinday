@@ -1,5 +1,6 @@
 # Django
 from django import forms
+from django.db.models import fields
 
 # Locals
 from . import models
@@ -21,6 +22,15 @@ class StockForm(forms.ModelForm):
             "location",
             "unit_of_measure",
             "product",
+        ]
+
+
+class TransferForm(forms.ModelForm):
+    class Meta:
+        model = models.Transfer
+        fields = [
+            "origin",
+            "destination",
         ]
 
 
@@ -55,6 +65,6 @@ class LocationForm(forms.ModelForm):
     class Meta:
         model = models.Location
         fields = [
-            "type",
+            "temperature",
             "name",
         ]

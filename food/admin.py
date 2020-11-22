@@ -36,9 +36,12 @@ class StockAdminForm(forms.ModelForm):
 class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
-        "last_updated",
-        "added",
+        "product",
         "quantity",
+        "unit_of_measure",
+        "added",
+        "expires",
+        "last_updated",
         "created",
     ]
     readonly_fields = [
@@ -46,6 +49,22 @@ class StockAdmin(admin.ModelAdmin):
         "created",
     ]
 
+
+class TransferAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.Transfer
+        fields = "__all__"
+
+class TransferAdmin(admin.ModelAdmin):
+    form = TransferAdminForm
+    list_display = [
+        "origin",
+        "destination",
+    ]
+    readonly_fields = [
+        "last_updated",
+        "created",
+    ]
 
 class CategoryAdminForm(forms.ModelForm):
 
@@ -118,8 +137,9 @@ class LocationAdminForm(forms.ModelForm):
 class LocationAdmin(admin.ModelAdmin):
     form = LocationAdminForm
     list_display = [
-        "type",
         "name",
+        "temperature",
+        "default",
         "created",
         "last_updated",
     ]
@@ -135,3 +155,4 @@ admin.site.register(models.Category, CategoryAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.Brand, BrandAdmin)
 admin.site.register(models.Location, LocationAdmin)
+admin.site.register(models.Transfer, TransferAdmin)
