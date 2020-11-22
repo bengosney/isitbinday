@@ -12,16 +12,6 @@ from food.serializers import LookupSerializer
 # Locals
 from . import forms, models
 
-
-@api_view(['GET'])
-def LookupProduct(request, code):
-    serializer = LookupSerializer(data={'code': code})
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class UnitOfMeasureListView(generic.ListView):
     model = models.UnitOfMeasure
     form_class = forms.UnitOfMeasureForm

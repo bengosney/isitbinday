@@ -8,14 +8,13 @@ from rest_framework import routers
 from . import api, views
 
 router = routers.DefaultRouter()
-router.register("UnitOfMeasure", api.UnitOfMeasureViewSet)
-router.register("Stock", api.StockViewSet)
-router.register("Category", api.CategoryViewSet)
-router.register("Product", api.ProductViewSet)
-router.register("Brand", api.BrandViewSet)
-router.register("Location", api.LocationViewSet)
+router.register("unit-of-measure", api.UnitOfMeasureViewSet)
+router.register("stock", api.StockViewSet)
+router.register("category", api.CategoryViewSet)
+router.register("product", api.ProductViewSet)
+router.register("brand", api.BrandViewSet)
+router.register("location", api.LocationViewSet)
 
 urlpatterns = (
-    path('<str:code>', views.LookupProduct),
-    path("api/v1/", include(router.urls)),
+    path('', include(router.urls)),
 )
