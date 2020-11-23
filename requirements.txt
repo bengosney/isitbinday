@@ -24,8 +24,16 @@ flake8==3.8.4
 flake8-django==1.1.1
 gitdb==4.0.5
 GitPython==3.1.11
+googletrans==3.0.0
 graphviz==0.14.1
 gunicorn==20.0.4
+h11==0.9.0
+h2==3.2.0
+hpack==3.0.0
+hstspreload==2020.11.21
+httpcore==0.9.1
+httpx==0.13.3
+hyperframe==5.2.0
 idna==2.10
 isort==4.3.21
 lazy-object-proxy==1.4.3
@@ -33,7 +41,6 @@ mccabe==0.6.1
 openfoodfacts==0.1.2
 oso==0.8.0
 pbr==5.5.1
-pkg-resources==0.0.0
 psycopg2==2.8.6
 pycodestyle==2.6.0
 pycparser==2.20
@@ -45,9 +52,11 @@ pytz==2020.1
 PyYAML==5.3.1
 regex==2020.10.15
 requests==2.24.0
+rfc3986==1.4.0
 rollbar==0.15.1
 six==1.15.0
 smmap==3.0.4
+sniffio==1.2.0
 sqlparse==0.3.1
 stevedore==3.2.2
 toml==0.10.1
