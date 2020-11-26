@@ -1,15 +1,14 @@
 # Third Party
-from ast import Str
-import re
-from food.models import Location, Product
-from food.serializers import LookupSerializer, ProductSerializer, StockSerializer
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.response import Response
+
+# First Party
+from food.models import Location, Product
+from food.serializers import LookupSerializer, StockSerializer
 
 # Locals
 from . import models, serializers
-from rest_framework.response import Response
-from rest_framework import status
 
 
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):

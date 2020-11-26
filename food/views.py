@@ -1,16 +1,9 @@
 # Django
 from django.views import generic
 
-# Third Party
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
-# First Party
-from food.serializers import LookupSerializer
-
 # Locals
 from . import forms, models
+
 
 class UnitOfMeasureListView(generic.ListView):
     model = models.UnitOfMeasure

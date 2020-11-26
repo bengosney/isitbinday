@@ -1,17 +1,12 @@
 # Django
-from food.models import UnitOfMeasure
-from django.http.response import Http404
 
 # Third Party
-import openfoodfacts
-from googletrans import Translator
 from rest_framework import serializers
 
 # Locals
 from . import models
 
 # class LookupSerializer(serializers.Serializer):
-
 
 
 class UnitOfMeasureSerializer(serializers.ModelSerializer):
