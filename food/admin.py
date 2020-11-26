@@ -55,6 +55,7 @@ class TransferAdminForm(forms.ModelForm):
         model = models.Transfer
         fields = "__all__"
 
+
 class TransferAdmin(admin.ModelAdmin):
     form = TransferAdminForm
     list_display = [
@@ -65,6 +66,7 @@ class TransferAdmin(admin.ModelAdmin):
         "last_updated",
         "created",
     ]
+
 
 class CategoryAdminForm(forms.ModelForm):
 
