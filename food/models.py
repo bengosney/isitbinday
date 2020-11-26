@@ -1,16 +1,20 @@
 # Django
+# Standard Library
 from typing import Type, TypeVar
+
 from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
-from django.db import models
+from django.db import models, transaction
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django_fsm import FSMField, transition
-from django.db import transaction
 
+# Third Party
 import openfoodfacts
+from django_fsm import FSMField
 from googletrans import Translator
 
 T = TypeVar("T")
+
+
 class UnitOfMeasure(models.Model):
 
     # Fields
@@ -62,7 +66,7 @@ class Stock(models.Model):
     # Fields
     added = models.DateTimeField(auto_now_add=True)
     state = FSMField(_('State'), default=STATE_IN_STOCK, choices=list(zip(STATES, STATES)), protected=True)
-    temperature = models.CharField(max_length=50, default=TEMPERATURE_ROOM_TEMPERATURE, choices=TEMPERATURES, blank=True, null=True)
+    temperature = models.CharField(max_length=50, default=TEMPERATURE_ROOM_TEMPERATURE, choices=TEMPERATURES, blank=True)
     expires = models.DateField(blank=True, null=True)
     quantity = models.FloatField(blank=True, default=1)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -192,7 +196,6 @@ class Product(models.Model):
             unit_of_measure = None
 
         return cls.get_or_create(code, name, brand, categories, quantity, unit_of_measure)
-
 
     @classmethod
     def get_or_create(cls, code, name, brandName, categories, quantity=None, unit_of_measure=None):

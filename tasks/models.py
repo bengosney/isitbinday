@@ -12,7 +12,7 @@ from django.utils.translation import gettext as _
 import dateparser
 from django_fsm import FSMField, transition
 from django_fsm_log.models import StateLog
-from django_oso.models import AuthorizedModel 
+from django_oso.models import AuthorizedModel
 
 
 class StateMixin():
