@@ -19,7 +19,7 @@ installLint: ## Install the linting deps
 
 lint: $(baselinefile)  ## Format, sort imports and lint python files
 	autoflake --expand-star-imports --exclude "migrations" -i -r --remove-unused-variables --remove-all-unused-imports .
-	autopep8 -a -a -a --exclude "migrations" --in-place --recursive .
+	black --exclude "migrations" -l 188 .
 	isort -y --atomic --skip "isitbinday/*sgi.py" --skip-glob "**/migrations/*" --skip-glob "**/.history/*" --skip "manage.py"
 	flake8 --exclude migrations,.history .
 	bandit -x "./node_modules" -b $(baselinefile) -r .
