@@ -62,6 +62,7 @@ class Stock(models.Model):
     location = models.ForeignKey("food.Location", on_delete=models.CASCADE)
     unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey("food.Product", on_delete=models.CASCADE)
+    owner = models.ForeignKey('auth.User', related_name='stocks', on_delete=models.CASCADE)
 
     # Fields
     added = models.DateTimeField(auto_now_add=True)
@@ -240,6 +241,8 @@ class Transfer(models.Model):
     destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name='transferred_from')
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    owner = models.ForeignKey('auth.User', related_name='transfers', on_delete=models.CASCADE)
 
     class Meta:
         pass

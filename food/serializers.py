@@ -29,6 +29,7 @@ class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Stock
         fields = [
+            "owner",
             "product",
             "expires",
             "location",
@@ -42,6 +43,8 @@ class StockSerializer(serializers.ModelSerializer):
             "last_updated",
             "created",
         ]
+
+    owner = serializers.ReadOnlyField(source='owner.username')
 
 
 class CategorySerializer(serializers.ModelSerializer):
