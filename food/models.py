@@ -11,6 +11,8 @@ from django.utils.translation import gettext as _
 import openfoodfacts
 from django_fsm import FSMField
 from googletrans import Translator
+from django_oso.models import AuthorizedModel
+
 
 T = TypeVar("T")
 
@@ -35,7 +37,7 @@ class UnitOfMeasure(models.Model):
         return reverse("food_UnitOfMeasure_update", args=(self.pk,))
 
 
-class Stock(models.Model):
+class Stock(AuthorizedModel):
     STATE_IN_STOCK = 'In Stock'
     STATE_CONSUMED = 'Consumed'
     STATE_TRANSFERRED = 'Transferred'
@@ -236,7 +238,7 @@ class Product(models.Model):
         return stock
 
 
-class Transfer(models.Model):
+class Transfer(AuthorizedModel):
     origin = models.ForeignKey("food.Stock", on_delete=models.CASCADE, null=True, blank=True, related_name='transferred_to')
     destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name='transferred_from')
     last_updated = models.DateTimeField(auto_now=True, editable=False)

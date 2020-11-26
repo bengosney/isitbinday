@@ -24,10 +24,18 @@ class UnitOfMeasureViewSet(viewsets.ModelViewSet):
 class StockViewSet(viewsets.ModelViewSet):
     """ViewSet for the Stock class"""
 
-    queryset = models.Stock.objects.all()
     serializer_class = serializers.StockSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all stocks for the currently authenticated user.
+        """
+
+        return models.Stock.objects.authorize(self.request, action="retrieve")
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """ViewSet for the Category class"""
