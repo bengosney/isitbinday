@@ -5,6 +5,7 @@ from pathlib import Path
 
 # Third Party
 import django_heroku
+import rollbar
 from corsheaders.defaults import default_methods
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -161,7 +162,6 @@ ROLLBAR = {
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }
-import rollbar
 rollbar.init(**ROLLBAR)
 
 django_heroku.settings(locals())

@@ -6,8 +6,8 @@ from django.urls import include, path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 # First Party
-from tasks.urls import router as taskRouter
 from food.urls import router as foodRouter
+from tasks.urls import router as taskRouter
 
 urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
