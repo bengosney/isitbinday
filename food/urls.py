@@ -15,6 +15,3 @@ router.register("product", api.ProductViewSet)
 router.register("brand", api.BrandViewSet)
 router.register("location", api.LocationViewSet)
 
-urlpatterns = (
-    path('', include(router.urls)),
-)
