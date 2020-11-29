@@ -12,7 +12,8 @@ from django.utils.translation import gettext as _
 import dateparser
 from django_fsm import FSMField, transition
 from django_fsm_log.models import StateLog
-from django_oso.models import AuthorizedModel 
+from django_oso.models import AuthorizedModel
+from recurrent.event_parser import RecurringEvent
 
 
 class StateMixin():
@@ -102,10 +103,8 @@ class Task(StateMixin, AuthorizedModel):
 
         if self.repeats != '':
             next = self.__class__(title=self.title, effort=self.effort, owner=self.owner, repeats=self.repeats)
-            try:
-                next.show_after = dateparser.parse(f'in {self.repeats}')
-            except BaseException:
-                next.repeats = f'Failed to parse: {self.repeats}'
+            r = RecurringEvent(now_date=self.completed)
+            next.show_after = r.parse(f'in {self.repeats}')
 
             next.save()
 

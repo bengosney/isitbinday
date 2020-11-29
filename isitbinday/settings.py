@@ -5,6 +5,7 @@ from pathlib import Path
 
 # Third Party
 import django_heroku
+import rollbar
 from corsheaders.defaults import default_methods
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django_fsm_log',
     'fsm_admin',
     'tasks',
+    'food',
 ]
 
 MIDDLEWARE = [
@@ -141,6 +143,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.+\.isitbinday\.com$",
     r"^http://localhost:[0-9]+$",
+    r"^http://192\.168\.1\.[0-9]{1,3}:[0-9]+$",
 ]
 
 CORS_ALLOW_METHODS = list(set(list(default_methods) + [
@@ -159,7 +162,6 @@ ROLLBAR = {
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }
-import rollbar
 rollbar.init(**ROLLBAR)
 
 django_heroku.settings(locals())
