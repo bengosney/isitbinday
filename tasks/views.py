@@ -46,7 +46,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         This view should return a list of all tasks for the currently authenticated user.
         """
-        
+
         return Task.objects.authorize(self.request, action="retrieve").exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
 
     @action(detail=True)

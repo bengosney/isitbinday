@@ -1,7 +1,10 @@
 # Third Party
+# Django
 from django.core.exceptions import PermissionDenied
-from rest_framework import permissions
+
 from django_oso.auth import authorize
+from rest_framework import permissions
+
 
 class IsOwner(permissions.BasePermission):
     """
