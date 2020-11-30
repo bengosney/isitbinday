@@ -29,3 +29,7 @@ repos:
     rev: 1.6.2
     hooks:
       - id: bandit
+  - repo: https://github.com/jazzband/pip-tools
+    rev: 5.4.0
+    hooks:
+      - id: pip-compile
