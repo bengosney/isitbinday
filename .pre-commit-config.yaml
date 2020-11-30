@@ -33,3 +33,4 @@ repos:
     rev: 5.4.0
     hooks:
       - id: pip-compile
+        files: ^(setup\.py|requirements.txt)$
