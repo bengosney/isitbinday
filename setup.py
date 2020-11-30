@@ -21,5 +21,6 @@ setup(name='isitbinday',
           'rollbar',
           'openfoodfacts',
           'recurrent',
+          'pre-commit'
           ],
       )
