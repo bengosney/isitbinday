@@ -48,6 +48,45 @@ class TaskViewsTestCase(APITestCaseWithUser):
 
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Task.objects.count(), 1)
+
+    def test_list(self):
+        url = reverse("task-list")
+        count = 5
+
+        for i in range(count):
+            data = {
+                "title": f"test task - {i}",
+            }
+            self.client.post(url, data, format="json")
+
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Task.objects.count(), int(response.json()["count"]))
+
+    def test_list_only_mine(self):
+        password = getInsecurePassword(12)
+        secondUser = User.objects.create_user(username="keith", email="keith@example.com", password=password)
+
+        url = reverse("task-list")
+        count = 5
+
+        def createTasks():
+            for i in range(count):
+                data = {
+                    "title": f"test task - {i}",
+                }
+                self.client.post(url, data, format="json")
+
+        createTasks()
+        self.client.logout()
+
+        self.client.login(username=secondUser.username, password=password)
+        createTasks()
+
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Task.objects.count() - count, int(response.json()["count"]))
 
 
 class TaskModelTestCase(TestCase):
