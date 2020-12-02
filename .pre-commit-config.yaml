@@ -34,3 +34,8 @@ repos:
     hooks:
       - id: pip-compile
         files: ^(setup\.py|requirements.txt)$
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v1.6.1
+    hooks:
+    - id: pretty-format-ini
+      args: [--autofix]
