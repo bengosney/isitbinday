@@ -40,13 +40,21 @@ class TaskViewsTestCase(APITestCaseWithUser):
         super().setUp()
         self.client.login(username=self.user.username, password=self.password)
 
-    def test_create(self):
+    def createTasks(self, count):
         url = reverse("task-list")
-        data = {
+        for i in range(count):
+            data = {
+                "title": f"test task - {i}",
+            }
+            self.client.post(url, data, format="json")
+
+    def test_create(self, data={}):
+        url = reverse("task-list")
+        defaultData = {
             "title": "test task",
         }
 
-        response = self.client.post(url, data, format="json")
+        response = self.client.post(url, {**defaultData, **data}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Task.objects.count(), 1)
 
@@ -54,11 +62,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         url = reverse("task-list")
         count = 5
 
-        for i in range(count):
-            data = {
-                "title": f"test task - {i}",
-            }
-            self.client.post(url, data, format="json")
+        self.createTasks(count)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -71,22 +75,26 @@ class TaskViewsTestCase(APITestCaseWithUser):
         url = reverse("task-list")
         count = 5
 
-        def createTasks():
-            for i in range(count):
-                data = {
-                    "title": f"test task - {i}",
-                }
-                self.client.post(url, data, format="json")
-
-        createTasks()
+        self.createTasks(count)
         self.client.logout()
 
         self.client.login(username=secondUser.username, password=password)
-        createTasks()
+        self.createTasks(count)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.count() - count, int(response.json()["count"]))
+
+    def test_list_no_archived(self):
+        url = reverse("task-list")
+        count = 5
+        self.createTasks(count)
+
+        self.client.get(url, format="json")
+
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Task.objects.count() - 1, int(response.json()["count"]))
 
 
 class TaskModelTestCase(TestCase):
