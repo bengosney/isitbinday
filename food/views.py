@@ -37,6 +37,7 @@ class StockViewSet(viewsets.ModelViewSet):
 
         return models.Stock.objects.authorize(self.request, action="retrieve")
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     """ViewSet for the Category class"""
 
@@ -52,23 +53,23 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProductSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    lookup_field = 'code'
+    lookup_field = "code"
 
     @action(detail=True)
     def lookup(self, request, code=None):
         try:
             product = Product.get_or_lookup(code)
         except Exception as e:
-            return Response(f'{type(e).__name__}: {e}', status=status.HTTP_400_BAD_REQUEST)
+            return Response(f"{type(e).__name__}: {e}", status=status.HTTP_400_BAD_REQUEST)
 
         serializer = LookupSerializer(product)
         return Response(serializer.data)
 
     @action(detail=True)
     def transfer_in(self, request, code: str = None):
-        quantity = request.query_params.get('quantity', 1)
-        expires = request.query_params.get('expires', None)
-        location = request.query_params.get('location', Location.get_default())
+        quantity = request.query_params.get("quantity", 1)
+        expires = request.query_params.get("expires", None)
+        location = request.query_params.get("location", Location.get_default())
 
         product = Product.get_or_lookup(code)
         stock = product.transfer_in(quantity, expires, location)

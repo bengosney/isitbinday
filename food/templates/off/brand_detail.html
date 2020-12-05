@@ -2,13 +2,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    
+
 <p>
     <a class="btn btn-light" href="{% url 'food_Brand_list' %}">
     Brand Listing
     </a>
 </p>
-    
+
 <table class="table">
     <tr><td>name</td><td>{{ object.name }}</td></tr>
     <tr><td>created</td><td>{{ object.created }}</td></tr>

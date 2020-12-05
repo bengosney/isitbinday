@@ -58,7 +58,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
 
-        return Response({'task': serializer.data, 'status': status})
+        return Response({"task": serializer.data, "status": status})
 
     @action(detail=True)
     def do(self, request, pk=None):
@@ -69,7 +69,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
 
-        return Response({'task': serializer.data, 'status': status})
+        return Response({"task": serializer.data, "status": status})
 
     @action(detail=True)
     def done(self, request, pk=None):
@@ -80,7 +80,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
 
-        return Response({'task': serializer.data, 'status': status})
+        return Response({"task": serializer.data, "status": status})
 
     @action(detail=True)
     def cancel(self, request, pk=None):
@@ -91,7 +91,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
 
-        return Response({'task': serializer.data, 'status': status})
+        return Response({"task": serializer.data, "status": status})
 
     @action(detail=True)
     def archive(self, request, pk=None):
@@ -101,72 +101,70 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
 
-        return Response({'task': serializer.data, 'status': True})
+        return Response({"task": serializer.data, "status": True})
 
-    @action(detail=False, methods=['POST'])
+    @action(detail=False, methods=["POST"])
     def position(self, request):
-        for pair in request.data.get('positions'):
-            task = Task.objects.get(pk=pair.get('id'))
-            task.position = pair.get('position')
+        for pair in request.data.get("positions"):
+            task = Task.objects.get(pk=pair.get("id"))
+            task.position = pair.get("position")
             task.save()
 
-        return Response({'ok': 'ok'})
+        return Response({"ok": "ok"})
 
     @action(detail=False)
     def transitions(self, request):
         task = Task()
-        transitions = defaultdict(lambda: {
-            'sources': set(),
-            'target': '',
-            'name': ''
-        })
+        transitions = defaultdict(lambda: {"sources": set(), "target": "", "name": ""})
 
         for t in task.get_all_state_transitions():
-            transitions[t.target]['sources'].add(t.source)
-            transitions[t.target]['target'] = t.target
-            transitions[t.target]['name'] = t.name
+            transitions[t.target]["sources"].add(t.source)
+            transitions[t.target]["target"] = t.target
+            transitions[t.target]["name"] = t.name
 
-        return Response({'transitions': [transitions[t] for t in Task.STATES]})
+        return Response({"transitions": [transitions[t] for t in Task.STATES]})
 
     def _all_states(self):
         task = Task()
-        states = defaultdict(lambda: {
-            'sources': set(),
-            'transitions': set(),
-            'destination': set(),
-            'name': '',
-        })
+        states = defaultdict(
+            lambda: {
+                "sources": set(),
+                "transitions": set(),
+                "destination": set(),
+                "name": "",
+            }
+        )
 
         for state in Task.STATES:
-            states[state]['name'] = state
+            states[state]["name"] = state
 
         for t in task.get_all_state_transitions():
-            states[t.target]['sources'].add(t.source)
-            states[t.source]['destination'].add(t.target)
-            states[t.target]['transitions'].add(t.name)
+            states[t.target]["sources"].add(t.source)
+            states[t.source]["destination"].add(t.target)
+            states[t.target]["transitions"].add(t.name)
 
-        return [states[s] for s in states if states[s]['name'] != '']
+        return [states[s] for s in states if states[s]["name"] != ""]
 
     @action(detail=False)
     def states(self, request):
-        return Response({'states': [s for s in self._all_states() if s['name'] not in Task.HIDDEN_STATES]})
+        return Response({"states": [s for s in self._all_states() if s["name"] not in Task.HIDDEN_STATES]})
 
     @action(detail=False)
     def hidden_states(self, request):
-        return Response({'states': [s for s in self._all_states() if s['name'] in Task.HIDDEN_STATES]})
+        return Response({"states": [s for s in self._all_states() if s["name"] in Task.HIDDEN_STATES]})
 
     @action(detail=False)
     def due_date_states(self, request):
-        return Response({'states': [s for s in Task.STATES_DUE_DATE_MATTERS]})
+        return Response({"states": [s for s in Task.STATES_DUE_DATE_MATTERS]})
 
     @action(detail=False)
     def auto_archive(self, request):
-        days = int(request.query_params.get('days', 5))
+        days = int(request.query_params.get("days", 5))
         before = date.today() - timedelta(days=days)
 
         count = Task.auto_archive(before)
 
-        return Response({'ok': True, 'count': count, 'before': before})
+        return Response({"ok": True, "count": count, "before": before})
 
 
 class SprintViewSet(viewsets.ModelViewSet):
@@ -185,4 +183,4 @@ class SprintViewSet(viewsets.ModelViewSet):
         This view should return a list of all tasks for the currently authenticated user.
         """
 
-        return Sprint.objects.authorize(self.request, action="retrieve").order_by('-created')
+        return Sprint.objects.authorize(self.request, action="retrieve").order_by("-created")
