@@ -3,6 +3,7 @@ import datetime
 import os
 import sys
 from pathlib import Path
+from pprint import pprint
 
 # Third Party
 import django_heroku
@@ -164,6 +165,7 @@ SIMPLE_JWT = {
 django_heroku.settings(locals())
 
 if DATABASES["default"]["USER"] == "circleci":
+    pprint(DATABASES)
     del DATABASES["default"]["OPTIONS"]["sslmode"]
 
 if not TESTING:
