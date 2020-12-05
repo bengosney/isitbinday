@@ -5,7 +5,7 @@ jobs:
       - image: circleci/python:3.8.0
         environment:
           DATABASE_URL: postgres://circleci:circleci@127.0.0.1:5432/circle_test
-      - image: circleci/postgres:10.6-postgis-ram
+      - image: circleci/postgres:12.5
         environment:
           POSTGRES_USER: circleci
           POSTGRES_DB: circle_test
@@ -31,7 +31,7 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
+
       - run:
           name: run tests
           command: |
