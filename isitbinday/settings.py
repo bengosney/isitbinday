@@ -167,6 +167,7 @@ django_heroku.settings(locals())
 if DATABASES["default"]["USER"] == "circleci":
     pprint(DATABASES)
     del DATABASES["default"]["OPTIONS"]["sslmode"]
+    del DATABASES["default"]["PASSWORD"]
 
 if not TESTING:
     # Third Party
