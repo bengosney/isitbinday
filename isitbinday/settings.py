@@ -163,6 +163,9 @@ SIMPLE_JWT = {
 
 django_heroku.settings(locals())
 
+if DATABASES["default"]["USER"] == "circleci":
+    del DATABASES["default"]["OPTIONS"]["sslmode"]
+
 if not TESTING:
     # Third Party
     import rollbar
