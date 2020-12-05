@@ -9,7 +9,7 @@ jobs:
         environment:
           POSTGRES_USER: circleci
           POSTGRES_DB: circle_test
-          POSTGRES_PASS: circleci
+          POSTGRES_PASSWORD: circleci
 
     working_directory: ~/repo
 
