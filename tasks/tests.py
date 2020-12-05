@@ -92,6 +92,11 @@ class TaskViewsTestCase(APITestCaseWithUser):
 
         self.client.get(url, format="json")
 
+        task = Task.objects.get(pk=1)
+        task.done()
+        task.archive()
+        task.save()
+
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.count() - 1, int(response.json()["count"]))
