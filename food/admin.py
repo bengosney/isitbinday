@@ -7,7 +7,6 @@ from . import models
 
 
 class UnitOfMeasureAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.UnitOfMeasure
         fields = "__all__"
@@ -27,7 +26,6 @@ class UnitOfMeasureAdmin(admin.ModelAdmin):
 
 
 class StockAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Stock
         fields = "__all__"
@@ -69,7 +67,6 @@ class TransferAdmin(admin.ModelAdmin):
 
 
 class CategoryAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Category
         fields = "__all__"
@@ -89,7 +86,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ProductAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Product
         fields = "__all__"
@@ -110,7 +106,6 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class BrandAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Brand
         fields = "__all__"
@@ -130,7 +125,6 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 class LocationAdminForm(forms.ModelForm):
-
     class Meta:
         model = models.Location
         fields = "__all__"
