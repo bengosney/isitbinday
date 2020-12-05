@@ -6,6 +6,7 @@
 #
 appdirs==1.4.4            # via virtualenv
 asgiref==3.3.1            # via django
+attrs==20.3.0             # via pytest
 certifi==2020.11.8        # via httpx, requests
 cffi==1.14.0              # via oso
 cfgv==3.2.0               # via pre-commit
@@ -34,14 +35,21 @@ httpx==0.13.3             # via googletrans
 hyperframe==5.2.0         # via h2
 identify==1.5.10          # via pre-commit
 idna==2.10                # via httpx, requests
+iniconfig==1.1.1          # via pytest
 nodeenv==1.5.0            # via pre-commit
 openfoodfacts==0.1.2      # via isitbinday (setup.py)
 oso==0.8.2                # via django-oso
+packaging==20.7           # via pytest
 parsedatetime==2.6        # via recurrent
+pluggy==0.13.1            # via pytest
 pre-commit==2.9.2         # via isitbinday (setup.py)
 psycopg2==2.8.6           # via django-heroku
+py==1.9.0                 # via pytest
 pycparser==2.20           # via cffi
 pyjwt==1.7.1              # via djangorestframework-simplejwt
+pyparsing==2.4.7          # via packaging
+pytest-django==4.1.0      # via isitbinday (setup.py)
+pytest==6.1.2             # via pytest-django
 pytz==2020.4              # via django
 pyyaml==5.3.1             # via pre-commit
 recurrent==0.4.0          # via isitbinday (setup.py)
@@ -51,7 +59,7 @@ rollbar==0.15.1           # via isitbinday (setup.py)
 six==1.15.0               # via rollbar, virtualenv
 sniffio==1.2.0            # via httpcore, httpx
 sqlparse==0.4.1           # via django
-toml==0.10.2              # via pre-commit
+toml==0.10.2              # via pre-commit, pytest
 urllib3==1.26.2           # via requests
 virtualenv==20.2.1        # via pre-commit
 whitenoise==5.2.0         # via django-heroku
