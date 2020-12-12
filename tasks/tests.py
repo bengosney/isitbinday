@@ -87,15 +87,15 @@ class TaskViewsTestCase(APITestCaseWithUser):
 
     def test_list_no_archived(self):
         url = reverse("task-list")
+        urlDone = reverse("task-done", args=[1])
+        urlArchive = reverse("task-archive", args=[1])
         count = 5
         self.createTasks(count)
 
         self.client.get(url, format="json")
 
-        task = Task.objects.get(pk=1)
-        task.done()
-        task.archive()
-        task.save()
+        self.client.get(urlDone)
+        self.client.get(urlArchive)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
