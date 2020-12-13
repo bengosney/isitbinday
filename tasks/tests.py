@@ -1,5 +1,6 @@
 # Standard Library
 import datetime
+import inspect
 import random
 import string
 from abc import ABC
@@ -44,7 +45,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         url = reverse("task-list")
         for i in range(count):
             data = {
-                "title": f"test task - {i}",
+                "title": f"{inspect.stack()[1].function} - {i}",
             }
             self.client.post(url, data, format="json")
 
@@ -84,22 +85,6 @@ class TaskViewsTestCase(APITestCaseWithUser):
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.count() - count, int(response.json()["count"]))
-
-    def test_list_no_archived(self):
-        url = reverse("task-list")
-        count = 5
-        self.createTasks(count)
-
-        self.client.get(url, format="json")
-
-        task = Task.objects.get(pk=1)
-        task.done()
-        task.archive()
-        task.save()
-
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Task.objects.count() - 1, int(response.json()["count"]))
 
 
 class TaskModelTestCase(TestCase):
