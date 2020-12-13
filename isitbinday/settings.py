@@ -163,6 +163,12 @@ SIMPLE_JWT = {
 
 django_heroku.settings(locals())
 
+if TESTING:
+    try:
+        del DATABASES["default"]["OPTIONS"]["sslmode"]
+    except KeyError:
+        pass
+
 if not TESTING:
     # Third Party
     import rollbar
