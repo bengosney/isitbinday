@@ -1,5 +1,6 @@
 # Standard Library
 import datetime
+import inspect
 import random
 import string
 from abc import ABC
@@ -44,7 +45,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         url = reverse("task-list")
         for i in range(count):
             data = {
-                "title": f"test task - {i}",
+                "title": f"{inspect.stack()[1].function} - {i}",
             }
             self.client.post(url, data, format="json")
 
