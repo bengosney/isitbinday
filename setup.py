@@ -8,6 +8,7 @@ setup(
     packages=find_packages(),
     scripts=["manage.py"],
     install_requires=[
+        "gunicorn",
         "django",
         "django-admin-sortable2",
         "django-appconf",

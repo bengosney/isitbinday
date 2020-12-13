@@ -26,6 +26,7 @@ djangorestframework-simplejwt==4.6.0  # via isitbinday (setup.py)
 djangorestframework==3.12.2  # via djangorestframework-simplejwt, isitbinday (setup.py)
 filelock==3.0.12          # via virtualenv
 googletrans==3.0.0        # via isitbinday (setup.py)
+gunicorn==20.0.4          # via isitbinday (setup.py)
 h11==0.9.0                # via httpcore
 h2==3.2.0                 # via httpcore
 hpack==3.0.0              # via h2
@@ -63,3 +64,6 @@ toml==0.10.2              # via pre-commit, pytest
 urllib3==1.26.2           # via requests
 virtualenv==20.2.2        # via pre-commit
 whitenoise==5.2.0         # via django-heroku
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
