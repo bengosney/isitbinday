@@ -5,6 +5,6 @@ from rest_framework import routers
 from .views import ArchiveTaskListView, SprintViewSet, TaskViewSet
 
 router = routers.DefaultRouter()
-router.register(r'tasks', TaskViewSet, basename='task')
-router.register(r'archived-tasks', ArchiveTaskListView, basename='archived-tasks')
-router.register(r'sprints', SprintViewSet, basename='sprint')
+router.register(r"tasks", TaskViewSet, basename="task")
+router.register(r"archived-tasks", ArchiveTaskListView, basename="archived-tasks")
+router.register(r"sprints", SprintViewSet, basename="sprint")

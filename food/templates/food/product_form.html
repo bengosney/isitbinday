@@ -2,13 +2,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    
+
 <p>
     <a class="btn btn-light" href="{% url 'food_Product_list' %}">
     Product Listing
     </a>
 </p>
-    
+
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{form.errors}}

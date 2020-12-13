@@ -11,17 +11,17 @@ from .models import Sprint, Task
 
 
 class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
-    list_display = ['title', 'effort', 'due_date', 'state', 'owner', 'completed']
-    list_filter = ['state']
-    readonly_fields = ['state', 'created', 'last_updated']
-    fsm_field = ['state']
+    list_display = ["title", "effort", "due_date", "state", "owner", "completed"]
+    list_filter = ["state"]
+    readonly_fields = ["state", "created", "last_updated"]
+    fsm_field = ["state"]
     inlines = [StateLogInline]
 
 
 class SprintAdmin(FSMTransitionMixin, admin.ModelAdmin):
-    list_display = ['title', 'state', 'owner']
-    readonly_fields = ['state', 'started', 'finished', 'created', 'last_updated']
-    fsm_field = ['state']
+    list_display = ["title", "state", "owner"]
+    readonly_fields = ["state", "started", "finished", "created", "last_updated"]
+    fsm_field = ["state"]
 
 
 admin.site.register(Task, TaskAdmin)

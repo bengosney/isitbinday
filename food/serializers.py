@@ -10,7 +10,6 @@ from . import models
 
 
 class UnitOfMeasureSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.UnitOfMeasure
         fields = [
@@ -25,7 +24,6 @@ class UnitOfMeasureSerializer(serializers.ModelSerializer):
 
 
 class StockSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Stock
         fields = [
@@ -44,11 +42,10 @@ class StockSerializer(serializers.ModelSerializer):
             "created",
         ]
 
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source="owner.username")
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Category
         fields = [
@@ -63,7 +60,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Product
         fields = [
@@ -83,7 +79,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class BrandSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Brand
         fields = [
@@ -98,7 +93,6 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class LocationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Location
         fields = [
@@ -115,8 +109,8 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class LookupSerializer(serializers.ModelSerializer):
     class Meta(ProductSerializer.Meta):
-        read_only_fields = [f for f in ProductSerializer.Meta.fields if f != 'code']
+        read_only_fields = [f for f in ProductSerializer.Meta.fields if f != "code"]
 
     def create(self, validated_data):
-        code = validated_data.get('code')
+        code = validated_data.get("code")
         return models.Product.lookup(code)

@@ -9,26 +9,25 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 # Third Party
-import dateparser
 from django_fsm import FSMField, transition
 from django_fsm_log.models import StateLog
 from django_oso.models import AuthorizedModel
 from recurrent.event_parser import RecurringEvent
 
 
-class StateMixin():
+class StateMixin:
     @property
     def available_state_transitions(self):
         return [i.name for i in self.get_available_state_transitions()]
 
 
 class Task(StateMixin, AuthorizedModel):
-    STATE_DRAFT = 'draft'
-    STATE_TODO = 'todo'
-    STATE_DOING = 'doing'
-    STATE_DONE = 'done'
-    STATE_CANCELED = 'canceled'
-    STATE_ARCHIVE = 'archive'
+    STATE_DRAFT = "draft"
+    STATE_TODO = "todo"
+    STATE_DOING = "doing"
+    STATE_DONE = "done"
+    STATE_CANCELED = "canceled"
+    STATE_ARCHIVE = "archive"
 
     STATES = [
         STATE_TODO,
@@ -43,31 +42,29 @@ class Task(StateMixin, AuthorizedModel):
         STATE_DOING,
     ]
 
-    HIDDEN_STATES = [
-        STATE_ARCHIVE
-    ]
+    HIDDEN_STATES = [STATE_ARCHIVE]
 
-    title = models.CharField(_('Title'), max_length=255)
-    due_date = models.DateField(_('Due Date'), blank=True, null=True, default=None)
-    show_after = models.DateField(_('Show After'), default=timezone.now)
-    effort = models.IntegerField(_('Effort'), default=0)
-    blocked_by = models.ForeignKey('Task', related_name='blocks', on_delete=models.SET_NULL, null=True, blank=True)
-    completed = models.DateTimeField(_('Completed on'), blank=True, null=True)
-    repeats = models.CharField(_('Repeats'), max_length=255, blank=True, default='')
+    title = models.CharField(_("Title"), max_length=255)
+    due_date = models.DateField(_("Due Date"), blank=True, null=True, default=None)
+    show_after = models.DateField(_("Show After"), default=timezone.now)
+    effort = models.IntegerField(_("Effort"), default=0)
+    blocked_by = models.ForeignKey("Task", related_name="blocks", on_delete=models.SET_NULL, null=True, blank=True)
+    completed = models.DateTimeField(_("Completed on"), blank=True, null=True)
+    repeats = models.CharField(_("Repeats"), max_length=255, blank=True, default="")
 
-    owner = models.ForeignKey('auth.User', related_name='tasks', on_delete=models.CASCADE)
+    owner = models.ForeignKey("auth.User", related_name="tasks", on_delete=models.CASCADE)
 
-    state = FSMField(_('State'), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
+    state = FSMField(_("State"), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
 
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
-    created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)
+    created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
 
     class Meta(object):
-        ordering = ['position']
+        ordering = ["position"]
 
     def __str__(self):
-        return f'{self.title}'
+        return f"{self.title}"
 
     @classmethod
     def auto_archive(cls, before):
@@ -82,7 +79,7 @@ class Task(StateMixin, AuthorizedModel):
     @property
     def previous_state(self):
         typeId = ContentType.objects.get_for_model(self)
-        stateLog = StateLog.objects.all().filter(object_id=self.pk, content_type_id=typeId).order_by('-timestamp')
+        stateLog = StateLog.objects.all().filter(object_id=self.pk, content_type_id=typeId).order_by("-timestamp")
 
         try:
             return stateLog[0].source_state
@@ -99,12 +96,12 @@ class Task(StateMixin, AuthorizedModel):
 
     @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
     def done(self):
-        self.completed = datetime.now()
+        self.completed = timezone.make_aware(datetime.now())
 
-        if self.repeats != '':
+        if self.repeats != "":
             next = self.__class__(title=self.title, effort=self.effort, owner=self.owner, repeats=self.repeats)
             r = RecurringEvent(now_date=self.completed)
-            next.show_after = r.parse(f'in {self.repeats}')
+            next.show_after = r.parse(f"in {self.repeats}")
 
             next.save()
 
@@ -118,10 +115,10 @@ class Task(StateMixin, AuthorizedModel):
 
 
 class Sprint(StateMixin, AuthorizedModel):
-    STATE_PLANNING = 'planning'
-    STATE_IN_PROGRESS = 'in progress'
-    STATE_FINISHED = 'finished'
-    STATE_CANCELED = 'canceled'
+    STATE_PLANNING = "planning"
+    STATE_IN_PROGRESS = "in progress"
+    STATE_FINISHED = "finished"
+    STATE_CANCELED = "canceled"
 
     STATES = [
         STATE_PLANNING,
@@ -130,21 +127,21 @@ class Sprint(StateMixin, AuthorizedModel):
         STATE_CANCELED,
     ]
 
-    title = models.CharField(_('Title'), max_length=255)
+    title = models.CharField(_("Title"), max_length=255)
 
-    state = FSMField(_('State'), default=STATE_PLANNING, choices=list(zip(STATES, STATES)), protected=True)
-    started = models.DateTimeField(_('Started'), editable=False, null=True, blank=True)
-    finished = models.DateTimeField(_('Finished'), editable=False, null=True, blank=True)
+    state = FSMField(_("State"), default=STATE_PLANNING, choices=list(zip(STATES, STATES)), protected=True)
+    started = models.DateTimeField(_("Started"), editable=False, null=True, blank=True)
+    finished = models.DateTimeField(_("Finished"), editable=False, null=True, blank=True)
 
     tasks = models.ManyToManyField(Task)
 
-    owner = models.ForeignKey('auth.User', related_name='sprints', on_delete=models.CASCADE)
+    owner = models.ForeignKey("auth.User", related_name="sprints", on_delete=models.CASCADE)
 
-    created = models.DateTimeField(_('Created'), auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(_('Last Updated'), auto_now=True, editable=False)
+    created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
 
     def __str__(self):
-        return f'{self.title}'
+        return f"{self.title}"
 
     @transition(field=state, source=STATE_PLANNING, target=STATE_IN_PROGRESS)
     def start(self):
