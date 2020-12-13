@@ -86,22 +86,6 @@ class TaskViewsTestCase(APITestCaseWithUser):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.count() - count, int(response.json()["count"]))
 
-    def test_list_no_archived(self):
-        url = reverse("task-list")
-        urlDone = reverse("task-done", args=[1])
-        urlArchive = reverse("task-archive", args=[1])
-        count = 5
-        self.createTasks(count)
-
-        self.client.get(url, format="json")
-
-        self.client.get(urlDone)
-        self.client.get(urlArchive)
-
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Task.objects.count() - 1, int(response.json()["count"]))
-
 
 class TaskModelTestCase(TestCase):
     def setUp(self):
