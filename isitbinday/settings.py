@@ -166,7 +166,7 @@ django_heroku.settings(locals())
 if TESTING:
     try:
         del DATABASES["default"]["OPTIONS"]["sslmode"]
-    except IndexError:
+    except KeyError:
         pass
 
 if not TESTING:
