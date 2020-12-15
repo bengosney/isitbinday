@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "fsm_admin",
     "tasks",
     "food",
+    "tags",
 ]
 
 MIDDLEWARE = [
