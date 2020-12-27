@@ -4,6 +4,9 @@
 allow(actor, "retrieve", task: tasks::Task) if
     task.owner = actor;
 
+allow(actor, "update", task: tasks::Task) if
+    task.owner = actor;
+
 allow(actor, "do", task: tasks::Task) if 
     task.owner = actor;
 
