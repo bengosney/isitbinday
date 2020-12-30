@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_fsm",
     "django_fsm_log",
     "fsm_admin",
+    "userauth",
     "tasks",
     "food",
 ]
@@ -174,7 +175,7 @@ if TESTING:
     except KeyError:
         pass
 
-if not TESTING:
+if not TESTING and not DEBUG:
     # Third Party
     import rollbar
 

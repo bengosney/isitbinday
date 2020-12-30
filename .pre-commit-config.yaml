@@ -13,6 +13,7 @@ repos:
     rev: 0.0.1-alpha.3
     hooks:
       - id: pycln
+        args: [--config=pyproject.toml]
   - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
