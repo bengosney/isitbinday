@@ -3,22 +3,44 @@
 exclude: 'migrations/.*\.py|Procfile|[aw]sgi\.py|node_modules|.git|\.polar'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
+    rev: v3.4.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+      - id: check-json
+      - id: check-toml
       - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: detect-aws-credentials
+      - id: detect-private-key
+      - id: no-commit-to-branch
+        args: [--branch, master]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.7.4
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+  - repo: https://github.com/asottile/yesqa
+    rev: v1.2.2
+    hooks:
+      - id: yesqa
+  - repo: https://github.com/myint/docformatter
+    rev: v1.4
+    hooks:
+      - id: docformatter
+        args: [--in-place]
   - repo: https://github.com/hadialqattan/pycln
-    rev: 0.0.1-alpha.3
+    rev: 0.0.1-beta.1
     hooks:
       - id: pycln
+        args: [--config=pyproject.toml]
   - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
       - id: black
   - repo: https://github.com/pycqa/isort
-    rev: 5.6.4
+    rev: 5.7.0
     hooks:
       - id: isort
   - repo: https://github.com/myint/autoflake
@@ -29,12 +51,8 @@ repos:
     rev: 3.8.4
     hooks:
       - id: flake8
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.6.2
-    hooks:
-      - id: bandit
   - repo: https://github.com/jazzband/pip-tools
-    rev: 5.4.0
+    rev: 5.5.0
     hooks:
       - id: pip-compile
-        files: ^(setup\.py|requirements.txt)$
+        files: ^(setup\.py|requirements.txt|requirements.in)$
