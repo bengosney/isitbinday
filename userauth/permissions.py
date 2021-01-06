@@ -15,8 +15,14 @@ class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         print(f"has_object_permission: {view.action}")
         try:
-            authorize(request, obj, action=view.action)
+            return authorize(request, obj, action=view.action)
         except PermissionDenied:
             return False
 
-        return True
+        return False
+
+
+class IsLinkedToOwner(permissions.BasePermission):
+    """
+    Custom permission to allow objects that are linked to user
+    """
