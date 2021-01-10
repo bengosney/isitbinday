@@ -1,11 +1,13 @@
 # Django
 # Standard Library
+import functools
 from copy import copy
 
 # Django
 from django.contrib.auth.models import User
 from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
 from django.db import models, transaction
+from django.db.models.base import Model
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
@@ -14,8 +16,33 @@ import openfoodfacts
 from django_fsm import FSMField, transition
 from django_oso.models import AuthorizedModel
 from googletrans import Translator
-from model_utils import FieldTracker
 from model_utils.fields import MonitorField
+
+
+def saveAfter(func):
+    @functools.wraps(func)
+    def wrapper_decorator(*args, **kwargs):
+        value = func(*args, **kwargs)
+        if isinstance(args[0], Model):
+            args[0].save()
+
+        return value
+
+    return wrapper_decorator
+
+
+def transitionAndSave(*args, **kwargs):
+    def decorator(func):
+        @transaction.atomic
+        @saveAfter
+        @transition(*args, **kwargs)
+        @functools.wraps(func)
+        def wrapper_decorator(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return wrapper_decorator
+
+    return decorator
 
 
 class UnitOfMeasure(models.Model):
@@ -68,17 +95,15 @@ class Stock(AuthorizedModel):
     owner = models.ForeignKey("auth.User", related_name="stocks", on_delete=models.CASCADE)
 
     # Fields
-    added = models.DateTimeField(auto_now_add=True)
+    added = models.DateTimeField(auto_now_add=True, editable=False)
     state = FSMField(_("State"), default=STATE_IN_STOCK, choices=list(zip(STATES, STATES)), protected=True)
     state_changed = MonitorField(monitor="state")
     temperature = models.CharField(max_length=50, default=TEMPERATURE_ROOM_TEMPERATURE, choices=TEMPERATURES, blank=True)
     temperature_changed = MonitorField(monitor="temperature")
-    expires = models.DateField(blank=True, null=True)
+    expires = models.DateField(blank=True, null=True, editable=False)
     quantity = models.FloatField(blank=True, default=1)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    tracker = FieldTracker()
 
     class Meta:
         pass
@@ -92,8 +117,9 @@ class Stock(AuthorizedModel):
     def get_update_url(self):
         return reverse("food_Stock_update", args=(self.pk,))
 
-    @transition(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
+    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
     def transfer(self, location, quantity=None):
+
         if self.location == location:
             raise Exception("Can not move to the same location")
 
@@ -106,14 +132,52 @@ class Stock(AuthorizedModel):
         if quantity > self.quantity:
             raise Exception("Can not move more than you have")
 
-    def save(self, *args, **kwargs):
-        immutable_fields = [""]
-        if self.pk:
-            immutable_errors = [f for f in immutable_fields if self.tracker.has_changed(f)]
-            if any(immutable_errors):
-                raise Exception(",".join(immutable_errors))
+        if quantity < self.quantity:
+            stockLeft = copy(self)
+            stockLeft.pk = None
+            stockLeft.quantity = self.quantity - quantity
+            stockLeft.save()
+        else:
+            stockLeft = None
 
-        return super().save(*args, **kwargs)
+        newStock = copy(self)
+        newStock.pk = None
+        newStock.quantity = quantity
+        newStock.save()
+
+        Transfer(origin=self, destination=newStock)
+
+        return newStock, stockLeft
+
+    def _split(self, quantity=None):
+        if quantity is None:
+            quantity = self.quantity
+
+        if quantity > self.quantity:
+            raise Exception("Can not effect more than you have")
+
+        if quantity <= 0:
+            raise Exception("Can not have negative or no effect")
+
+        if quantity < self.quantity:
+            stockLeft = copy(self)
+            stockLeft.pk = None
+            stockLeft.quantity = self.quantity - quantity
+            stockLeft.save()
+        else:
+            stockLeft = None
+
+        self.quantity = quantity
+
+        return stockLeft
+
+    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_CONSUMED)
+    def consume(self, quantity=None):
+        return self._split(quantity)
+
+    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
+    def remove(self, quantity=None):
+        return self._split(quantity)
 
 
 class Category(models.Model):
@@ -333,23 +397,3 @@ class Location(models.Model):
     @classmethod
     def get_default(cls):
         return cls.objects.filter(default=True).get()
-
-    @transaction.atomic
-    def transfer_to(self, stock: Stock, quantity=None):
-        if quantity is None:
-            quantity = stock.quantity
-
-        if quantity > stock.quantity:
-            raise Exception("Quantity to transfer can not be more that in stock")
-
-        stock.quantity -= quantity
-        stock.save()
-
-        oldStock = copy(stock)
-
-        stock.pk = None
-        stock.quantity = quantity
-        stock.save()
-        Transfer(origin=oldStock, destination=stock).save()
-
-        return stock, oldStock
