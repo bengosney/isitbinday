@@ -16,3 +16,5 @@ openfoodfacts
 recurrent
 pre-commit
 pytest-django
+django-extensions
+django-model-utils
