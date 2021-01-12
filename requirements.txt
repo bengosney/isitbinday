@@ -34,6 +34,8 @@ django-appconf==1.0.4
     #   django-fsm-log
 django-cors-headers==3.6.0
     # via -r requirements.in
+django-extensions==3.1.0
+    # via -r requirements.in
 django-fsm-admin==1.2.4
     # via -r requirements.in
 django-fsm-log==2.0.1
@@ -44,6 +46,8 @@ django-fsm==2.7.1
     #   django-fsm-admin
     #   django-fsm-log
 django-heroku==0.3.1
+    # via -r requirements.in
+django-model-utils==4.1.1
     # via -r requirements.in
 django-oso==0.5.1
     # via -r requirements.in
@@ -56,6 +60,7 @@ django==3.1.4
     #   django-fsm-admin
     #   django-fsm-log
     #   django-heroku
+    #   django-model-utils
     #   django-oso
     #   djangorestframework
     #   djangorestframework-simplejwt

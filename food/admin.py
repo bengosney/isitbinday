@@ -35,10 +35,11 @@ class StockAdmin(admin.ModelAdmin):
     form = StockAdminForm
     list_display = [
         "product",
+        "product_code",
         "quantity",
         "unit_of_measure",
-        "added",
         "expires",
+        "added",
         "last_updated",
         "created",
     ]

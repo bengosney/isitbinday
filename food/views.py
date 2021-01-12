@@ -14,7 +14,7 @@ from . import models, serializers
 
 
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):
-    """ViewSet for the UnitOfMeasure class"""
+    """ViewSet for the UnitOfMeasure class."""
 
     queryset = models.UnitOfMeasure.objects.all()
     serializer_class = serializers.UnitOfMeasureSerializer
@@ -22,7 +22,7 @@ class UnitOfMeasureViewSet(viewsets.ModelViewSet):
 
 
 class StockViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Stock class"""
+    """ViewSet for the Stock class."""
 
     serializer_class = serializers.StockSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -31,15 +31,25 @@ class StockViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        """
-        This view should return a list of all stocks for the currently authenticated user.
-        """
+        """This view should return a list of all stocks for the currently
+        authenticated user."""
 
         return models.Stock.objects.authorize(self.request, action="retrieve")
 
+    @action(detail=True)
+    def consume(self, request, pk: int):
+        quantity = request.query_params.get("quantity", None)
+
+        stock = self.get_object()
+        stock.consume(quantity=quantity)
+
+        serializer = StockSerializer(stock)
+
+        return Response(serializer.data)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Category class"""
+    """ViewSet for the Category class."""
 
     queryset = models.Category.objects.all()
     serializer_class = serializers.CategorySerializer
@@ -47,7 +57,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Product class"""
+    """ViewSet for the Product class."""
 
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
@@ -66,20 +76,20 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True)
-    def transfer_in(self, request, code: str = None):
+    def transfer_in(self, request, code: str):
         quantity = request.query_params.get("quantity", 1)
         expires = request.query_params.get("expires", None)
         location = request.query_params.get("location", Location.get_default())
 
         product = Product.get_or_lookup(code)
-        stock = product.transfer_in(quantity, expires, location)
+        stock = product.transfer_in(self.request.user, quantity, expires, location)
         serializer = StockSerializer(stock)
 
         return Response(serializer.data)
 
 
 class BrandViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Brand class"""
+    """ViewSet for the Brand class."""
 
     queryset = models.Brand.objects.all()
     serializer_class = serializers.BrandSerializer
@@ -87,7 +97,7 @@ class BrandViewSet(viewsets.ModelViewSet):
 
 
 class LocationViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Location class"""
+    """ViewSet for the Location class."""
 
     queryset = models.Location.objects.all()
     serializer_class = serializers.LocationSerializer
