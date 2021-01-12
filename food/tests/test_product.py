@@ -6,10 +6,10 @@ import string
 from food.models import Product, Stock
 
 # Locals
-from .base import BaseSetupClass
+from .base import BaseTestCase
 
 
-class ProductTestCase(BaseSetupClass):
+class ProductTestCase(BaseTestCase):
     def test_transfer_in(self):
         stock = self.product.transfer_in(self.user, quantity=2)
         self.assertIsInstance(stock, Stock)

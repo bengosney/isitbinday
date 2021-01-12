@@ -91,7 +91,7 @@ class Stock(AuthorizedModel):
     # Relationships
     location = models.ForeignKey("food.Location", on_delete=models.CASCADE)
     unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True)
-    product = models.ForeignKey("food.Product", on_delete=models.CASCADE)
+    product = models.ForeignKey("food.Product", related_name="stocks", on_delete=models.CASCADE)
     owner = models.ForeignKey("auth.User", related_name="stocks", on_delete=models.CASCADE)
 
     # Fields
@@ -149,9 +149,11 @@ class Stock(AuthorizedModel):
 
         return newStock, stockLeft
 
-    def _split(self, quantity=None):
+    def _split(self, quantity: float = None):
         if quantity is None:
             quantity = self.quantity
+        else:
+            quantity = float(quantity)
 
         if quantity > self.quantity:
             raise Exception("Can not effect more than you have")
@@ -178,6 +180,10 @@ class Stock(AuthorizedModel):
     @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
     def remove(self, quantity=None):
         return self._split(quantity)
+
+    @property
+    def product_code(self):
+        return f"{self.product.code}"
 
 
 class Category(models.Model):
@@ -396,4 +402,9 @@ class Location(models.Model):
 
     @classmethod
     def get_default(cls):
-        return cls.objects.filter(default=True).get()
+        try:
+            return cls.objects.filter(default=True).get()
+        except cls.DoesNotExist:
+            location = cls(name="Default", default=True)
+            location.save()
+            return location

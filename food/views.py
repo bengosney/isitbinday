@@ -36,6 +36,17 @@ class StockViewSet(viewsets.ModelViewSet):
 
         return models.Stock.objects.authorize(self.request, action="retrieve")
 
+    @action(detail=True)
+    def consume(self, request, pk: int):
+        quantity = request.query_params.get("quantity", None)
+
+        stock = self.get_object()
+        stock.consume(quantity=quantity)
+
+        serializer = StockSerializer(stock)
+
+        return Response(serializer.data)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """ViewSet for the Category class."""

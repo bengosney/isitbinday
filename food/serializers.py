@@ -1,5 +1,3 @@
-# Django
-
 # Third Party
 from rest_framework import serializers
 
@@ -13,10 +11,6 @@ defaultExcludes = (
     "temperature",
     "temperature_changed",
 )
-
-print([f for f in defaultExcludes if getattr(models.UnitOfMeasure, f, False)])
-print([f for f in defaultExcludes])
-print([f for f in models.UnitOfMeasure._meta.get_fields()])
 
 
 class UnitOfMeasureSerializer(serializers.ModelSerializer):

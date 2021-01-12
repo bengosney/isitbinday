@@ -6,10 +6,10 @@
 from food.models import Location, Stock
 
 # Locals
-from .base import BaseSetupClass
+from .base import BaseTestCase
 
 
-class StockTestCase(BaseSetupClass):
+class StockTestCase(BaseTestCase):
     def test_transfer_all(self):
         stock = self.product.transfer_in(self.user, quantity=10)
         secondLocation, _ = Location.objects.get_or_create(name="Second")
