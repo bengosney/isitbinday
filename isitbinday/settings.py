@@ -22,6 +22,8 @@ SECRET_KEY = "uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz"
 DEBUG = False if os.environ.get("ENV") == "production" else True
 TESTING = sys.argv[1:2] == ["test"]
 
+LIVE = not DEBUG and not TESTING
+
 ALLOWED_HOSTS = []
 
 
@@ -170,7 +172,7 @@ if TESTING:
     except KeyError:
         pass
 
-if not TESTING:
+if LIVE:
     # Third Party
     import rollbar
 
