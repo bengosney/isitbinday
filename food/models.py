@@ -1,20 +1,48 @@
 # Django
 # Standard Library
-from typing import Type, TypeVar
+import functools
+from copy import copy
 
 # Django
+from django.contrib.auth.models import User
 from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
 from django.db import models, transaction
+from django.db.models.base import Model
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
 # Third Party
 import openfoodfacts
-from django_fsm import FSMField
+from django_fsm import FSMField, transition
 from django_oso.models import AuthorizedModel
 from googletrans import Translator
+from model_utils.fields import MonitorField
 
-T = TypeVar("T")
+
+def saveAfter(func):
+    @functools.wraps(func)
+    def wrapper_decorator(*args, **kwargs):
+        value = func(*args, **kwargs)
+        if isinstance(args[0], Model):
+            args[0].save()
+
+        return value
+
+    return wrapper_decorator
+
+
+def transitionAndSave(*args, **kwargs):
+    def decorator(func):
+        @transaction.atomic
+        @saveAfter
+        @transition(*args, **kwargs)
+        @functools.wraps(func)
+        def wrapper_decorator(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return wrapper_decorator
+
+    return decorator
 
 
 class UnitOfMeasure(models.Model):
@@ -63,14 +91,16 @@ class Stock(AuthorizedModel):
     # Relationships
     location = models.ForeignKey("food.Location", on_delete=models.CASCADE)
     unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True)
-    product = models.ForeignKey("food.Product", on_delete=models.CASCADE)
+    product = models.ForeignKey("food.Product", related_name="stocks", on_delete=models.CASCADE)
     owner = models.ForeignKey("auth.User", related_name="stocks", on_delete=models.CASCADE)
 
     # Fields
-    added = models.DateTimeField(auto_now_add=True)
+    added = models.DateTimeField(auto_now_add=True, editable=False)
     state = FSMField(_("State"), default=STATE_IN_STOCK, choices=list(zip(STATES, STATES)), protected=True)
+    state_changed = MonitorField(monitor="state")
     temperature = models.CharField(max_length=50, default=TEMPERATURE_ROOM_TEMPERATURE, choices=TEMPERATURES, blank=True)
-    expires = models.DateField(blank=True, null=True)
+    temperature_changed = MonitorField(monitor="temperature")
+    expires = models.DateField(blank=True, null=True, editable=False)
     quantity = models.FloatField(blank=True, default=1)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -87,7 +117,9 @@ class Stock(AuthorizedModel):
     def get_update_url(self):
         return reverse("food_Stock_update", args=(self.pk,))
 
+    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
     def transfer(self, location, quantity=None):
+
         if self.location == location:
             raise Exception("Can not move to the same location")
 
@@ -99,6 +131,59 @@ class Stock(AuthorizedModel):
 
         if quantity > self.quantity:
             raise Exception("Can not move more than you have")
+
+        if quantity < self.quantity:
+            stockLeft = copy(self)
+            stockLeft.pk = None
+            stockLeft.quantity = self.quantity - quantity
+            stockLeft.save()
+        else:
+            stockLeft = None
+
+        newStock = copy(self)
+        newStock.pk = None
+        newStock.quantity = quantity
+        newStock.save()
+
+        Transfer(origin=self, destination=newStock)
+
+        return newStock, stockLeft
+
+    def _split(self, quantity: float = None):
+        if quantity is None:
+            quantity = self.quantity
+        else:
+            quantity = float(quantity)
+
+        if quantity > self.quantity:
+            raise Exception("Can not effect more than you have")
+
+        if quantity <= 0:
+            raise Exception("Can not have negative or no effect")
+
+        if quantity < self.quantity:
+            stockLeft = copy(self)
+            stockLeft.pk = None
+            stockLeft.quantity = self.quantity - quantity
+            stockLeft.save()
+        else:
+            stockLeft = None
+
+        self.quantity = quantity
+
+        return stockLeft
+
+    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_CONSUMED)
+    def consume(self, quantity=None):
+        return self._split(quantity)
+
+    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
+    def remove(self, quantity=None):
+        return self._split(quantity)
+
+    @property
+    def product_code(self):
+        return f"{self.product.code}"
 
 
 class Category(models.Model):
@@ -148,7 +233,7 @@ class Product(models.Model):
         return reverse("food_Product_update", args=(self.pk,))
 
     @classmethod
-    def get_or_lookup(cls: Type[T], code: str) -> T:
+    def get_or_lookup(cls, code: str):
         try:
             return cls.objects.get(code=code)
         except ObjectDoesNotExist:
@@ -201,23 +286,27 @@ class Product(models.Model):
         return cls.get_or_create(code, name, brand, categories, quantity, unit_of_measure)
 
     @classmethod
-    def get_or_create(cls, code, name, brandName, categories, quantity=None, unit_of_measure=None):
-        brandObject = Brand.objects.get_or_create(name=brandName.split(",")[0])[0]
+    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None) -> "Product":
+        if isinstance(brand, str):
+            brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
+
         if isinstance(categories, str):
-            categories.split(",")
-        categoryObjects = [Category.objects.get_or_create(name=name)[0] for name in categories]
+            categories = [c.strip() for c in categories.split(",")]
+
+        if not isinstance(categories[0], Category):
+            categories = [Category.objects.get_or_create(name=name)[0] for name in categories]
 
         if unit_of_measure is not None:
-            unit_of_measure = UnitOfMeasure.objects.get_or_create(unit_of_measure)[0]
+            unit_of_measure = UnitOfMeasure.objects.get_or_create(name=unit_of_measure)[0]
 
         defaults = {
             "name": name,
-            "brand": brandObject,
+            "brand": brand,
             "quantity": quantity,
             "unit_of_measure": unit_of_measure,
         }
         prod = cls.objects.get_or_create(code=code, defaults=defaults)[0]
-        prod.categories.set(categoryObjects)
+        prod.categories.set(categories)
 
         for key in defaults.keys():
             if getattr(prod, key) is None:
@@ -227,11 +316,11 @@ class Product(models.Model):
         return prod
 
     @transaction.atomic
-    def transfer_in(self, quantity=1, expires=None, location=None):
+    def transfer_in(self, owner: User, quantity=1, expires=None, location=None):
         if location is None:
             location = Location.get_default()
 
-        stock = Stock(product=self, quantity=quantity, expires=expires, location=location)
+        stock = Stock(owner=owner, product=self, quantity=quantity, expires=expires, location=location)
         stock.save()
         Transfer(destination=stock).save()
 
@@ -245,6 +334,14 @@ class Transfer(AuthorizedModel):
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     owner = models.ForeignKey("auth.User", related_name="transfers", on_delete=models.CASCADE)
+
+    def __init__(self, *args, **kwargs) -> None:
+        if "owner" not in kwargs:
+            if "origin" in kwargs:
+                kwargs["owner"] = kwargs["origin"].owner
+            if "destination" in kwargs:
+                kwargs["owner"] = kwargs["destination"].owner
+        super().__init__(*args, **kwargs)
 
     class Meta:
         pass
@@ -305,4 +402,9 @@ class Location(models.Model):
 
     @classmethod
     def get_default(cls):
-        return cls.objects.filter(default=True).get()
+        try:
+            return cls.objects.filter(default=True).get()
+        except cls.DoesNotExist:
+            location = cls(name="Default", default=True)
+            location.save()
+            return location
