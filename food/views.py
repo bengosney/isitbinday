@@ -77,11 +77,13 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def transfer_in(self, request, code: str):
-        quantity = request.query_params.get("quantity", 1)
+        quantity = float(request.query_params.get("quantity", 1))
         expires = request.query_params.get("expires", None)
         location = request.query_params.get("location", Location.get_default())
 
         product = Product.get_or_lookup(code)
+        if product.is_pack:
+            quantity *= product.quantity
         stock = product.transfer_in(self.request.user, quantity, expires, location)
         serializer = StockSerializer(stock)
 
