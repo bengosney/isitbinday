@@ -219,6 +219,7 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     code = models.CharField(max_length=30, unique=True)
     quantity = models.FloatField(blank=True, null=True, default=None)
+    is_pack = models.BooleanField(default=False)
 
     class Meta:
         pass
@@ -286,7 +287,7 @@ class Product(models.Model):
         return cls.get_or_create(code, name, brand, categories, quantity, unit_of_measure)
 
     @classmethod
-    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None) -> "Product":
+    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None, is_pack=False) -> "Product":
         if isinstance(brand, str):
             brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
 
@@ -304,6 +305,7 @@ class Product(models.Model):
             "brand": brand,
             "quantity": quantity,
             "unit_of_measure": unit_of_measure,
+            "is_pack": is_pack,
         }
         prod = cls.objects.get_or_create(code=code, defaults=defaults)[0]
         prod.categories.set(categories)
