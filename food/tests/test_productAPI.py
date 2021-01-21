@@ -41,6 +41,17 @@ class testProductAPI(APIBaseTestCase):
         self.assertEqual(stocks[0].quantity, quantity)
         self.assertEqual(stocks[0].state, Stock.STATE_IN_STOCK)
 
+    def test_transfer_pack_in(self, quantity=2):
+        url = reverse("product-transfer-in", kwargs={"code": self.pack.code})
+        urlWithQuery = f"{url}?{urlencode({'quantity': quantity})}"
+        response = self.client.get(urlWithQuery, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        stocks = self.pack.stocks.all()
+        self.assertEqual(len(stocks), 1)
+        self.assertEqual(stocks[0].quantity, quantity * self.pack.quantity)
+        self.assertEqual(stocks[0].state, Stock.STATE_IN_STOCK)
+
     def test_consume_some(self, quantity=10):
         stock = self.product.transfer_in(self.user, quantity)
         url = reverse("stock-consume", kwargs={"pk": stock.pk})

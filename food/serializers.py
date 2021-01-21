@@ -19,22 +19,10 @@ class UnitOfMeasureSerializer(serializers.ModelSerializer):
         exclude = [f for f in defaultExcludes if getattr(models.UnitOfMeasure, f, False)]
 
 
-class StockSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Stock
-        exclude = [f for f in defaultExcludes if getattr(models.Stock, f, False)]
-
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         exclude = [f for f in defaultExcludes if getattr(models.Category, f, False)]
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Product
-        exclude = [f for f in defaultExcludes if getattr(models.Product, f, False)]
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -47,6 +35,23 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Location
         exclude = [f for f in defaultExcludes if getattr(models.Location, f, False)]
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Product
+        exclude = [f for f in defaultExcludes if getattr(models.Product, f, False)]
+
+    brand = BrandSerializer(many=False, read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
+
+
+class StockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Stock
+        exclude = [f for f in defaultExcludes if getattr(models.Stock, f, False)]
+
+    product = ProductSerializer(many=False, read_only=True)
 
 
 class LookupSerializer(serializers.ModelSerializer):
