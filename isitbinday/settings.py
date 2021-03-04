@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_fsm",
     "django_fsm_log",
     "fsm_admin",
+    "user",
     "tasks",
     "food",
 ]
