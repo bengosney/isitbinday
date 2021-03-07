@@ -60,7 +60,7 @@ class Task(StateMixin, AuthorizedModel):
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
 
-    class Meta(object):
+    class Meta:
         ordering = ["position"]
 
     def __str__(self):

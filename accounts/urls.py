@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     path("create/", views.UserCreate.as_view(), name="create"),
+    path("activate/", views.UserActivate.as_view(), name="activate"),
 ]
 
-app_name = "user"
+app_name = "accounts"
