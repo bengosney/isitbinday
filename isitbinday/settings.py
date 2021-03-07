@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django_fsm",
     "django_fsm_log",
     "fsm_admin",
-    "user",
+    "accounts",
     "tasks",
     "food",
 ]
@@ -164,6 +164,10 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "system@isitbinday.com"
 
 django_heroku.settings(locals())
 
