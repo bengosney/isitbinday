@@ -8,9 +8,9 @@ from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 # First Party
+from accounts.urls import urlpatterns as user_urls
 from food.urls import router as foodRouter
 from tasks.urls import router as taskRouter
-from user.urls import urlpatterns as user_urls
 
 API_TITLE = "Is it bin day"
 API_DESCRIPTION = "Help organise what you need to do"
@@ -31,7 +31,7 @@ urlpatterns = [
     path("api/tasks/", include(taskRouter.urls)),
     path("api/food/", include(foodRouter.urls)),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/user/", include(user_urls)),
+    path("api/accounts/", include(user_urls)),
     path("admin/", admin.site.urls),
     path("openapi/", get_schema_view(**APT_DETAILS), name="openapi-schema"),
     path("swagger/", TemplateView.as_view(template_name="swagger-ui.html", extra_context=context), name="swagger-ui"),
