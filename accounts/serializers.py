@@ -1,7 +1,5 @@
 # Django
-# from django.contrib.auth.models import User
-
-# Django
+from django.db import transaction
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 
@@ -25,17 +23,19 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True},
         }
 
+    @transaction.atomic
     def create(self, validated_data):
+        url_template = validated_data.pop("url_template")
         validated_data["username"] = validated_data["email"]
         password = validated_data.pop("password")
         user = User(**validated_data)
         user.is_active = False
         user.set_password(password)
-        try:
-            user.save()
-            user.send_auth_email(validated_data["url_template"])
-        except Exception as e:
-            return {"error": f"{e}"}
+        user.save()
+        user.send_auth_email(url_template)
+        # try:
+        # except Exception as e:
+        #     return {"error": f"{e}"}
 
         return user
 

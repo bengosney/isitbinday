@@ -6,7 +6,10 @@ from pathlib import Path
 
 # Third Party
 import django_heroku
+import environ
 from corsheaders.defaults import default_methods
+
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -160,7 +163,7 @@ CORS_ALLOW_METHODS = list(
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=3),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=10),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
@@ -189,3 +192,10 @@ if LIVE:
         "root": BASE_DIR,
     }
     rollbar.init(**ROLLBAR)
+
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = env.str("EMAIL_HOST")
+    EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+    EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
