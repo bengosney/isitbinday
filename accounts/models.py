@@ -16,7 +16,7 @@ class User(BaseUser):
         uid = urlsafe_base64_encode(force_bytes(self.pk))
         token = default_token_generator.make_token(self)
 
-        template = Template("url_template")
+        template = Template(url_template)
         context = Context({"uid": uid, "token": token})
         url = template.render(context)
 

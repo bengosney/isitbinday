@@ -3,6 +3,7 @@ django
 django-admin-sortable2
 django-appconf
 django-cors-headers
+django-environ
 django-fsm
 django-fsm-admin
 django-fsm-log
