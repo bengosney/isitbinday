@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = "uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.environ.get("ENV") == "production" else True
+DEBUG = os.environ.get("ENV") != "production"
 TESTING = sys.argv[1:2] == ["test"]
 
 LIVE = not DEBUG and not TESTING
