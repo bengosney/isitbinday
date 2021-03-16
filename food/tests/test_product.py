@@ -30,7 +30,7 @@ class ProductTestCase(BaseTestCase):
         for key in args:
             prop = getattr(product, key)
             try:
-                prop = ", ".join([f"{p.name}" for p in prop.all()])
+                prop = ", ".join(f"{p.name}" for p in prop.all())
             except AttributeError:
                 pass
 
