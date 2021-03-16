@@ -150,11 +150,7 @@ class Stock(AuthorizedModel):
         return newStock, stockLeft
 
     def _split(self, quantity: float = None):
-        if quantity is None:
-            quantity = self.quantity
-        else:
-            quantity = float(quantity)
-
+        quantity = self.quantity if quantity is None else float(quantity)
         if quantity > self.quantity:
             raise Exception("Can not effect more than you have")
 
@@ -310,7 +306,7 @@ class Product(models.Model):
         prod = cls.objects.get_or_create(code=code, defaults=defaults)[0]
         prod.categories.set(categories)
 
-        for key in defaults.keys():
+        for key in defaults:
             if getattr(prod, key) is None:
                 setattr(prod, key, defaults[key])
         prod.save()
