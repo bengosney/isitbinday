@@ -65,7 +65,7 @@ sniffio==1.2.0
 sqlparse==0.4.1
 toml==0.10.2
 uritemplate==3.0.1
-urllib3==1.26.2
+urllib3==1.26.3
 virtualenv==20.2.2
 whitenoise==5.2.0
 
