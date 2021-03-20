@@ -24,7 +24,7 @@ django-fsm==2.7.1
 django-heroku==0.3.1
 django-model-utils==4.1.1
 django-oso==0.5.1
-django==3.1.4
+django==3.1.6
 djangorestframework-simplejwt==4.6.0
 djangorestframework==3.12.2
 filelock==3.0.12
