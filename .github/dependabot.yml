@@ -9,8 +9,6 @@ updates:
   milestone: 1
   assignees:
   - "bengosney"
-  labels:
-  - merge when green
   allow:
   - dependency-type: direct
   - dependency-type: indirect
