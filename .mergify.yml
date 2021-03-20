@@ -1,0 +1,17 @@
+pull_request_rules:
+  - name: Automatic approve on dependabot PR
+    conditions:
+      - author~=^dependabot(|-preview)\[bot\]$
+      - check-success=workflow
+    actions:
+      review:
+        type: APPROVE
+
+  - name: Automatic merge on approval
+    conditions:
+      - author~=^dependabot(|-preview)\[bot\]$
+      - check-success=workflow
+    actions:
+      merge:
+        method: merge
+        strict: smart
