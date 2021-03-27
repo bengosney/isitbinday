@@ -29,6 +29,11 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     completed = serializers.ReadOnlyField()
     state = serializers.ReadOnlyField()
 
+    def to_internal_value(self, data):
+        if data.get("due_date", None) == "":
+            data.pop("due_date")
+        return super().to_internal_value(data)
+
 
 class SprintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
