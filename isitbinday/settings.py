@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "accounts",
     "tasks",
     "food",
+    "books",
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "rollbar.contrib.django.middleware.RollbarNotifierMiddleware",
 ]
+
+SECURE_SSL_REDIRECT = LIVE
+PREPEND_WWW = LIVE
 
 ROOT_URLCONF = "isitbinday.urls"
 
