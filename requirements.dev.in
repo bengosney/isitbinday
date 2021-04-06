@@ -1,0 +1,8 @@
+pre-commit
+pip-chill
+pip-tools
+pytest
+icecream
+
+pytest-django
+pytest-clarity

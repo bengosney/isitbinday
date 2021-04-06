@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 # First Party
 from accounts.urls import urlpatterns as user_urls
+from books.urls import router as bookRouter
 from food.urls import router as foodRouter
 from tasks.urls import router as taskRouter
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/tasks/", include(taskRouter.urls)),
     path("api/food/", include(foodRouter.urls)),
+    path("api/books/", include(bookRouter.urls)),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/accounts/", include(user_urls)),
     path("admin/", admin.site.urls),

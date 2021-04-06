@@ -15,9 +15,7 @@ googletrans
 rollbar
 openfoodfacts
 recurrent
-pre-commit
-pytest-django
 django-extensions
 django-model-utils
-pyyaml
+pyyaml==5.4.1
 uritemplate
