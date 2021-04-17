@@ -15,3 +15,20 @@ pull_request_rules:
       merge:
         method: merge
         strict: smart
+        
+  - name: Automatic approve my PR
+    conditions:
+      - author~=^bengosney$
+      - check-success=workflow
+    actions:
+      review:
+        type: APPROVE
+
+  - name: Automatic merge on approval
+    conditions:
+      - author~=^bengosney$
+      - check-success=workflow
+    actions:
+      merge:
+        method: merge
+        strict: smart
