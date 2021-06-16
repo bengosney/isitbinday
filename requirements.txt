@@ -20,7 +20,7 @@ django-fsm==2.7.1
 django-heroku==0.3.1
 django-model-utils==4.1.1
 django-oso==0.8.0
-django==3.2.3
+django==3.2.4
 djangorestframework-simplejwt==4.6.0
 djangorestframework==3.12.4
 googletrans==3.0.0
