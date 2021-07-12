@@ -159,7 +159,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def auto_archive(self, request):
-        days = int(request.query_params.get("days", 5))
+        days = int(request.query_params.get("days", 3))
         before = date.today() - timedelta(days=days)
 
         count = Task.auto_archive(before)
