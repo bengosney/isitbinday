@@ -22,3 +22,8 @@ install: requirements.txt ## Install production requirements
 install-dev: requirements.txt $(REQS) ## Install development requirements (default)
 	@echo "Installing $^"
 	@pip-sync $^
+
+_init:
+	pip install wheel pip-tools
+
+init: _init install-dev
