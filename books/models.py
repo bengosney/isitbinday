@@ -10,6 +10,9 @@ from django.urls import reverse
 from django_oso.models import AuthorizedModel
 from requests import get
 
+# Locals
+from .exceptions import BookNotFound
+
 
 class Author(AuthorizedModel):
 
@@ -41,7 +44,7 @@ class Book(AuthorizedModel):
     owner = models.ForeignKey("auth.User", related_name="books", on_delete=models.CASCADE)
 
     # Fields
-    publish_date = models.CharField(max_length=30)
+    publish_date = models.CharField(max_length=30, null=True, default=None)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     title = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -64,17 +67,32 @@ class Book(AuthorizedModel):
         try:
             return cls.objects.get(isbn=code)
         except ObjectDoesNotExist:
-            return cls._lookup(code, owner=owner)
+            pass
+
+        try:
+            return cls._lookup(code, owner)
+        except BookNotFound:
+            return cls._getUnknownBook(code, owner)
+
+    @classmethod
+    def _getUnknownBook(cls, code, owner):
+        book = Book(
+            title="Unknown Book",
+            isbn=code,
+            owner=owner,
+        )
+        book.save()
+        return book
 
     @classmethod
     def _lookup(cls, code, owner=None):
         url = f"https://openlibrary.org/api/books?bibkeys={code}&jscmd=data&format=json"
         response = get(url)
-        data = json.loads(response.text)[code]
-        isbn = ""
-        for ident in data["identifiers"]:
-            if f"{ident}".startswith("isbn"):
-                isbn = data["identifiers"][ident][0]
+        isbn = code
+        try:
+            data = json.loads(response.text)[code]
+        except KeyError:
+            raise BookNotFound()
 
         book = Book(
             title=data["title"],
