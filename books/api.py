@@ -31,10 +31,10 @@ class bookViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return models.Book.objects.authorize(self.request, action="retrieve")
 
-    @action(detail=False, url_path="lookup/(?P<barcode>[^/.]+)")
-    def lookup(self, request, barcode=None):
+    @action(detail=False, url_path="lookup/(?P<isbn>[^/.]+)")
+    def lookup(self, request, isbn=None):
         try:
-            book = models.Book.get_or_lookup(barcode, owner=self.request.user)
+            book = models.Book.get_or_lookup(isbn, owner=self.request.user)
         except Exception as e:
             return Response(f"{type(e).__name__}: {e}", status=status.HTTP_400_BAD_REQUEST)
 

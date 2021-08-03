@@ -46,7 +46,6 @@ class bookSerializer(serializers.HyperlinkedModelSerializer):
             "publish_date",
             "title",
             "isbn",
-            "barcode",
             "last_updated",
             "created",
             "authors",

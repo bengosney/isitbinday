@@ -46,10 +46,9 @@ class Book(AuthorizedModel):
     title = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     isbn = models.CharField(max_length=30)
-    barcode = models.CharField(max_length=30)
 
     class Meta:
-        unique_together = [["isbn", "owner"], ["isbn", "barcode"], ["title", "owner"]]
+        unique_together = [["isbn", "owner"], ["title", "owner"]]
 
     def __str__(self):
         return str(self.pk)
@@ -63,7 +62,7 @@ class Book(AuthorizedModel):
     @classmethod
     def get_or_lookup(cls, code: str, owner=None):
         try:
-            return cls.objects.get(barcode=code)
+            return cls.objects.get(isbn=code)
         except ObjectDoesNotExist:
             return cls._lookup(code, owner=owner)
 
