@@ -151,6 +151,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.+\.isitbinday\.com$",
     r"^http://localhost:[0-9]+$",
     r"^http://192\.168\.1\.[0-9]{1,3}:[0-9]+$",
+    r"^http://10\.0\.0\.[0-9]{1,3}:[0-9]+$",
 ]
 
 CORS_ALLOW_METHODS = list(
