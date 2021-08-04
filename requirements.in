@@ -11,6 +11,8 @@ django-heroku
 django-oso
 djangorestframework
 djangorestframework-simplejwt
+django-taggit
+django-taggit-serializer
 googletrans
 rollbar
 openfoodfacts

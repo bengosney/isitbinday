@@ -1,11 +1,14 @@
 # Third Party
 from rest_framework import serializers
+from taggit_serializer.serializers import TaggitSerializer, TagListSerializerField
 
 # Locals
 from .models import Sprint, Task
 
 
-class TaskSerializer(serializers.HyperlinkedModelSerializer):
+class TaskSerializer(TaggitSerializer, serializers.HyperlinkedModelSerializer):
+    tags = TagListSerializerField()
+
     class Meta:
         model = Task
         fields = [
@@ -15,6 +18,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
             "effort",
             "blocked_by",
             "state",
+            "tags",
             "created",
             "last_updated",
             "owner",

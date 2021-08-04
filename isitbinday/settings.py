@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "django_fsm",
     "django_fsm_log",
     "fsm_admin",
+    "taggit",
+    "taggit_serializer",
     "accounts",
     "tasks",
     "food",

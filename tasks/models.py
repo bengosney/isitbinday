@@ -13,12 +13,16 @@ from django_fsm import FSMField, transition
 from django_fsm_log.models import StateLog
 from django_oso.models import AuthorizedModel
 from recurrent.event_parser import RecurringEvent
+from taggit.managers import TaggableManager
 
 
 class StateMixin:
     @property
     def available_state_transitions(self):
-        return [i.name for i in self.get_available_state_transitions()]
+        try:
+            return [i.name for i in self.get_available_state_transitions()]
+        except NameError:
+            raise Exception("StateMixin requires get_available_state_transitions")
 
 
 class Task(StateMixin, AuthorizedModel):
@@ -55,6 +59,8 @@ class Task(StateMixin, AuthorizedModel):
     owner = models.ForeignKey("auth.User", related_name="tasks", on_delete=models.CASCADE)
 
     state = FSMField(_("State"), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
+
+    tags = TaggableManager()
 
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)

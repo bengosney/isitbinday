@@ -45,6 +45,12 @@ django-model-utils==4.1.1
     # via -r requirements.in
 django-oso==0.8.0
     # via -r requirements.in
+django-taggit-serializer==0.1.7
+    # via -r requirements.in
+django-taggit==1.5.1
+    # via
+    #   -r requirements.in
+    #   django-taggit-serializer
 django==3.2.4
     # via
     #   -r requirements.in
@@ -57,6 +63,7 @@ django==3.2.4
     #   django-heroku
     #   django-model-utils
     #   django-oso
+    #   django-taggit
     #   djangorestframework
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==4.6.0
@@ -114,7 +121,9 @@ rfc3986==1.5.0
 rollbar==0.15.2
     # via -r requirements.in
 six==1.16.0
-    # via rollbar
+    # via
+    #   django-taggit-serializer
+    #   rollbar
 sniffio==1.2.0
     # via
     #   httpcore
