@@ -1,9 +1,6 @@
 # Django
 from django.test import TestCase
 
-# Third Party
-from icecream import ic
-
 # Locals
 from .models import Book
 
@@ -14,7 +11,5 @@ class BookModelTestCase(TestCase):
         return
         isbn = "9781985232822"
         book = Book._lookup(isbn)
-
-        ic(book)
 
         self.assertEqual(book.isbn, isbn)
