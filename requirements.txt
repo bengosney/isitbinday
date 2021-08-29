@@ -57,7 +57,7 @@ django-heroku==0.3.1
     # via -r requirements.in
 django-model-utils==4.1.1
     # via -r requirements.in
-django-oso==0.8.0
+django-oso==0.11.0
     # via -r requirements.in
 djangorestframework==3.12.4
     # via
@@ -89,7 +89,7 @@ idna==2.10
     #   requests
 openfoodfacts==0.1.2
     # via -r requirements.in
-oso==0.12.2
+oso==0.15.0
     # via django-oso
 parsedatetime==2.6
     # via recurrent
