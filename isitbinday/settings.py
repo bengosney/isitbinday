@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "tasks",
     "food",
     "books",
+    "recipes",
 ]
 
 MIDDLEWARE = [
