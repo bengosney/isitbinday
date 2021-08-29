@@ -22,7 +22,7 @@ executing==0.6.0
     # via icecream
 filelock==3.0.12
     # via virtualenv
-icecream==2.1.0
+icecream==2.1.1
     # via -r requirements.dev.in
 identify==2.2.4
     # via pre-commit
@@ -36,7 +36,7 @@ pep517==0.10.0
     # via pip-tools
 pip-chill==1.0.1
     # via -r requirements.dev.in
-pip-tools==6.1.0
+pip-tools==6.2.0
     # via -r requirements.dev.in
 pluggy==0.13.1
     # via pytest
@@ -48,15 +48,15 @@ pygments==2.9.0
     # via icecream
 pyparsing==2.4.7
     # via packaging
-pytest-clarity==0.3.0a0
-    # via -r requirements.dev.in
-pytest-django==4.2.0
-    # via -r requirements.dev.in
 pytest==6.2.4
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
     #   pytest-django
+pytest-clarity==0.3.0a0
+    # via -r requirements.dev.in
+pytest-django==4.2.0
+    # via -r requirements.dev.in
 pyyaml==5.4.1
     # via pre-commit
 six==1.16.0
@@ -72,6 +72,9 @@ toml==0.10.2
     #   pytest
 virtualenv==20.4.6
     # via pre-commit
+wheel==0.37.0
+    # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
+# setuptools
