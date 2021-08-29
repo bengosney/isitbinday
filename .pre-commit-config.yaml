@@ -3,7 +3,7 @@
 exclude: 'migrations/.*\.py|Procfile|[aw]sgi\.py|node_modules|.git|\.polar'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.0.1
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -17,12 +17,12 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, master]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.7.4
+    rev: v2.25.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
   - repo: https://github.com/asottile/yesqa
-    rev: v1.2.2
+    rev: v1.2.3
     hooks:
       - id: yesqa
   - repo: https://github.com/myint/docformatter
@@ -31,16 +31,16 @@ repos:
       - id: docformatter
         args: [--in-place]
   - repo: https://github.com/hadialqattan/pycln
-    rev: 0.0.1-beta.1
+    rev: v1.0.3
     hooks:
       - id: pycln
         args: [--config=pyproject.toml]
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.7b0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/isort
-    rev: 5.7.0
+    rev: 5.9.3
     hooks:
       - id: isort
   - repo: https://github.com/myint/autoflake
@@ -48,11 +48,11 @@ repos:
     hooks:
       - id: autoflake
   - repo: https://gitlab.com/PyCQA/flake8
-    rev: 3.8.4
+    rev: 3.9.2
     hooks:
       - id: flake8
   - repo: https://github.com/jazzband/pip-tools
-    rev: 5.5.0
+    rev: 6.2.0
     hooks:
       - id: pip-compile
         files: ^(setup\.py|requirements.txt|requirements.in)$
