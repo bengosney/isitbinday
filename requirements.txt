@@ -18,7 +18,7 @@ chardet==3.0.4
     #   requests
 dj-database-url==0.5.0
     # via django-heroku
-django==3.2.4
+django==3.2.6
     # via
     #   -r requirements.in
     #   django-admin-sortable2
@@ -38,7 +38,7 @@ django-appconf==1.0.4
     # via
     #   -r requirements.in
     #   django-fsm-log
-django-cors-headers==3.7.0
+django-cors-headers==3.8.0
     # via -r requirements.in
 django-environ==0.4.5
     # via -r requirements.in
