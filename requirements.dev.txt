@@ -40,7 +40,7 @@ pip-tools==6.2.0
     # via -r requirements.dev.in
 pluggy==0.13.1
     # via pytest
-pre-commit==2.12.1
+pre-commit==2.14.1
     # via -r requirements.dev.in
 py==1.10.0
     # via pytest
@@ -55,7 +55,7 @@ pytest==6.2.4
     #   pytest-django
 pytest-clarity==0.3.0a0
     # via -r requirements.dev.in
-pytest-django==4.2.0
+pytest-django==4.4.0
     # via -r requirements.dev.in
 pyyaml==5.4.1
     # via pre-commit
