@@ -103,7 +103,7 @@ pytz==2021.1
     # via django
 pyyaml==5.4.1
     # via -r requirements.in
-recurrent==0.4.0
+recurrent==0.4.1
     # via -r requirements.in
 requests==2.25.1
     # via
