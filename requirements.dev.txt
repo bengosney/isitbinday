@@ -36,7 +36,7 @@ pep517==0.10.0
     # via pip-tools
 pip-chill==1.0.1
     # via -r requirements.dev.in
-pip-tools==6.1.0
+pip-tools==6.2.0
     # via -r requirements.dev.in
 pluggy==0.13.1
     # via pytest
@@ -72,6 +72,9 @@ toml==0.10.2
     #   pytest
 virtualenv==20.4.6
     # via pre-commit
+wheel==0.37.0
+    # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
+# setuptools
