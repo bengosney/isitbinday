@@ -5,10 +5,4 @@ updates:
   schedule:
     interval: weekly
   open-pull-requests-limit: 50
-  target-branch: updates
-  milestone: 1
-  assignees:
-  - "bengosney"
-  allow:
-  - dependency-type: direct
-  - dependency-type: indirect
+  target-branch: master
