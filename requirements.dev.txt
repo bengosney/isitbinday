@@ -22,7 +22,7 @@ executing==0.6.0
     # via icecream
 filelock==3.0.12
     # via virtualenv
-icecream==2.1.0
+icecream==2.1.1
     # via -r requirements.dev.in
 identify==2.2.4
     # via pre-commit
