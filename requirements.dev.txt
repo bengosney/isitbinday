@@ -40,7 +40,7 @@ pip-tools==6.1.0
     # via -r requirements.dev.in
 pluggy==0.13.1
     # via pytest
-pre-commit==2.12.1
+pre-commit==2.14.1
     # via -r requirements.dev.in
 py==1.10.0
     # via pytest
@@ -48,15 +48,15 @@ pygments==2.9.0
     # via icecream
 pyparsing==2.4.7
     # via packaging
-pytest-clarity==0.3.0a0
-    # via -r requirements.dev.in
-pytest-django==4.2.0
-    # via -r requirements.dev.in
 pytest==6.2.4
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
     #   pytest-django
+pytest-clarity==0.3.0a0
+    # via -r requirements.dev.in
+pytest-django==4.2.0
+    # via -r requirements.dev.in
 pyyaml==5.4.1
     # via pre-commit
 six==1.16.0
