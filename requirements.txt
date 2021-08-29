@@ -111,7 +111,7 @@ requests==2.25.1
     #   rollbar
 rfc3986==1.5.0
     # via httpx
-rollbar==0.15.2
+rollbar==0.16.1
     # via -r requirements.in
 six==1.16.0
     # via rollbar
