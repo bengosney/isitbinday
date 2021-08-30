@@ -7,7 +7,7 @@ from django_oso.models import AuthorizedModel
 
 
 class OwnedModel(AuthorizedModel):
-    owner = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    owner = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         abstract = True
