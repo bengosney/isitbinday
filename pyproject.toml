@@ -2,9 +2,7 @@
 name = "Is It Bin Day"
 version = "0.1.3"
 description = "More usefull task list"
-authors = [
-    "Ben Gosney <bengosney@googlemail.com>"
-]
+authors = ["Ben Gosney <bengosney@googlemail.com>"]
 python = "^3.8"
 homepage = "https://www.isitbinday.com/"
 repository = "https://github.com/bengosney/isitbinday/"
