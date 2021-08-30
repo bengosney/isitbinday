@@ -32,10 +32,10 @@ class recipe(models.Model):
 
     # Fields
     name = models.CharField(max_length=30)
-    time = models.DurationField()
-    description = models.TextField(max_length=512)
+    time = models.DurationField(default=0)
+    description = models.TextField(max_length=512, default="", blank=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    link = models.URLField(max_length=200)
+    link = models.URLField(max_length=200, default="", blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:

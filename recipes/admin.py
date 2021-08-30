@@ -6,6 +6,14 @@ from django.contrib import admin
 from . import models
 
 
+class ingredientInline(admin.TabularInline):
+    model = models.ingredient
+
+
+class stepInline(admin.TabularInline):
+    model = models.step
+
+
 class ingredientAdminForm(forms.ModelForm):
     class Meta:
         model = models.ingredient
@@ -21,10 +29,8 @@ class ingredientAdmin(admin.ModelAdmin):
         "quantity",
     ]
     readonly_fields = [
-        "name",
         "last_updated",
         "created",
-        "quantity",
     ]
 
 
@@ -45,12 +51,13 @@ class recipeAdmin(admin.ModelAdmin):
         "created",
     ]
     readonly_fields = [
-        "name",
-        "time",
-        "description",
         "last_updated",
-        "link",
         "created",
+    ]
+
+    inlines = [
+        ingredientInline,
+        stepInline,
     ]
 
 
@@ -68,9 +75,8 @@ class unitAdmin(admin.ModelAdmin):
         "name",
     ]
     readonly_fields = [
-        "created",
         "last_updated",
-        "name",
+        "created",
     ]
 
 
@@ -88,9 +94,8 @@ class stepAdmin(admin.ModelAdmin):
         "description",
     ]
     readonly_fields = [
-        "created",
         "last_updated",
-        "description",
+        "created",
     ]
 
 
