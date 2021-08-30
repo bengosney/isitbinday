@@ -2,12 +2,22 @@
 from django.db import models
 from django.urls import reverse
 
+# Third Party
+from django_oso.models import AuthorizedModel
 
-class ingredient(models.Model):
+
+class OwnedModel(AuthorizedModel):
+    owner = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class ingredient(OwnedModel):
 
     # Relationships
-    unit = models.ForeignKey("recipes.unit", on_delete=models.CASCADE)
-    recipe = models.ForeignKey("recipes.recipe", on_delete=models.CASCADE)
+    unit = models.ForeignKey("recipes.unit", related_name="ingredients", on_delete=models.CASCADE)
+    recipe = models.ForeignKey("recipes.recipe", related_name="ingredients", on_delete=models.CASCADE)
 
     # Fields
     name = models.CharField(max_length=30)
@@ -28,7 +38,7 @@ class ingredient(models.Model):
         return reverse("recipes_ingredient_update", args=(self.pk,))
 
 
-class recipe(models.Model):
+class recipe(OwnedModel):
 
     # Fields
     name = models.CharField(max_length=30)
@@ -51,7 +61,7 @@ class recipe(models.Model):
         return reverse("recipes_recipe_update", args=(self.pk,))
 
 
-class unit(models.Model):
+class unit(OwnedModel):
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -71,7 +81,7 @@ class unit(models.Model):
         return reverse("recipes_unit_update", args=(self.pk,))
 
 
-class step(models.Model):
+class step(OwnedModel):
 
     # Relationships
     recipe = models.ForeignKey("recipes.recipe", on_delete=models.CASCADE)
