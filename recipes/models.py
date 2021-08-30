@@ -84,7 +84,7 @@ class unit(OwnedModel):
 class step(OwnedModel):
 
     # Relationships
-    recipe = models.ForeignKey("recipes.recipe", on_delete=models.CASCADE)
+    recipe = models.ForeignKey("recipes.recipe", related_name="steps", on_delete=models.CASCADE)
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)

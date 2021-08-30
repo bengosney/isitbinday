@@ -23,6 +23,8 @@ class recipeSerializer(serializers.ModelSerializer):
             "name",
             "time",
             "description",
+            "ingredients",
+            "steps",
             "last_updated",
             "link",
             "created",
