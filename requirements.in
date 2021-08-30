@@ -19,3 +19,5 @@ django-extensions
 django-model-utils
 pyyaml==5.4.1
 uritemplate
+django-stubs
+djangorestframework-stubs

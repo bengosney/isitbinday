@@ -2,6 +2,7 @@
 # Standard Library
 import functools
 from copy import copy
+from typing import Optional
 
 # Django
 from django.contrib.auth.models import User
@@ -149,7 +150,7 @@ class Stock(AuthorizedModel):
 
         return newStock, stockLeft
 
-    def _split(self, quantity: float = None):
+    def _split(self, quantity: float = None) -> Optional["Stock"]:
         quantity = self.quantity if quantity is None else float(quantity)
         if quantity > self.quantity:
             raise Exception("Can not effect more than you have")
@@ -157,13 +158,13 @@ class Stock(AuthorizedModel):
         if quantity <= 0:
             raise Exception("Can not have negative or no effect")
 
+        stockLeft = None
+
         if quantity < self.quantity:
             stockLeft = copy(self)
             stockLeft.pk = None
             stockLeft.quantity = self.quantity - quantity
             stockLeft.save()
-        else:
-            stockLeft = None
 
         self.quantity = quantity
 

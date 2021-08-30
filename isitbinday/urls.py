@@ -11,17 +11,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from accounts.urls import urlpatterns as user_urls
 from books.urls import router as bookRouter
 from food.urls import router as foodRouter
+from recipes.urls import router as recipesRouter
 from tasks.urls import router as taskRouter
 
 API_TITLE = "Is it bin day"
 API_DESCRIPTION = "Help organise what you need to do"
 API_VERSION = "1.0.0"
-
-APT_DETAILS = {
-    "title": API_TITLE,
-    "description": API_DESCRIPTION,
-    "version": API_VERSION,
-}
 
 context = {"schema_url": "openapi-schema"}
 
@@ -32,10 +27,11 @@ urlpatterns = [
     path("api/tasks/", include(taskRouter.urls)),
     path("api/food/", include(foodRouter.urls)),
     path("api/books/", include(bookRouter.urls)),
+    path("api/recipes/", include(recipesRouter.urls)),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/accounts/", include(user_urls)),
     path("admin/", admin.site.urls),
-    path("openapi/", get_schema_view(**APT_DETAILS), name="openapi-schema"),
+    path("openapi/", get_schema_view(title=API_TITLE, description=API_DESCRIPTION, version=API_VERSION), name="openapi-schema"),
     path("swagger/", TemplateView.as_view(template_name="swagger-ui.html", extra_context=context), name="swagger-ui"),
     path("redoc/", TemplateView.as_view(template_name="redoc.html", extra_context=context), name="redoc"),
 ]
