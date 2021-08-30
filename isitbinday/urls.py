@@ -11,6 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from accounts.urls import urlpatterns as user_urls
 from books.urls import router as bookRouter
 from food.urls import router as foodRouter
+from recipes.urls import router as recipesRouter
 from tasks.urls import router as taskRouter
 
 API_TITLE = "Is it bin day"
@@ -26,6 +27,7 @@ urlpatterns = [
     path("api/tasks/", include(taskRouter.urls)),
     path("api/food/", include(foodRouter.urls)),
     path("api/books/", include(bookRouter.urls)),
+    path("api/recipes/", include(recipesRouter.urls)),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/accounts/", include(user_urls)),
     path("admin/", admin.site.urls),
