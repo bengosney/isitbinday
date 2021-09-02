@@ -7,7 +7,7 @@ from . import models
 
 class ingredientForm(forms.ModelForm):
     class Meta:
-        model = models.ingredient
+        model = models.Ingredient
         fields = [
             "name",
             "quantity",
@@ -18,7 +18,7 @@ class ingredientForm(forms.ModelForm):
 
 class recipeForm(forms.ModelForm):
     class Meta:
-        model = models.recipe
+        model = models.Recipe
         fields = [
             "name",
             "time",
@@ -29,7 +29,7 @@ class recipeForm(forms.ModelForm):
 
 class unitForm(forms.ModelForm):
     class Meta:
-        model = models.unit
+        model = models.Unit
         fields = [
             "name",
         ]
@@ -37,7 +37,7 @@ class unitForm(forms.ModelForm):
 
 class stepForm(forms.ModelForm):
     class Meta:
-        model = models.step
+        model = models.Step
         fields = [
             "description",
             "recipe",
