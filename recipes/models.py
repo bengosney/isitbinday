@@ -1,8 +1,10 @@
 # Django
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 # Third Party
+from django_extensions.db.fields import AutoSlugField
 from django_oso.models import AuthorizedModel
 
 
@@ -13,7 +15,7 @@ class OwnedModel(AuthorizedModel):
         abstract = True
 
 
-class ingredient(OwnedModel):
+class Ingredient(OwnedModel):
 
     # Relationships
     unit = models.ForeignKey("recipes.unit", related_name="ingredients", on_delete=models.CASCADE)
@@ -38,15 +40,14 @@ class ingredient(OwnedModel):
         return reverse("recipes_ingredient_update", args=(self.pk,))
 
 
-class recipe(OwnedModel):
-
-    # Fields
-    name = models.CharField(max_length=30)
-    time = models.DurationField(default=0)
-    description = models.TextField(max_length=512, default="", blank=True)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    link = models.URLField(max_length=200, default="", blank=True)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
+class Recipe(OwnedModel):
+    name = models.CharField(_("Name"), max_length=30)
+    time = models.DurationField(_("Time to cook"), default=0)
+    description = models.TextField(_("Description"), max_length=512, default="", blank=True)
+    slug = AutoSlugField(_("Slug"), populate_from=("name",))
+    link = models.URLField(_("Original URL"), max_length=200, default="", blank=True)
+    last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
+    created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
 
     class Meta:
         pass
@@ -61,7 +62,7 @@ class recipe(OwnedModel):
         return reverse("recipes_recipe_update", args=(self.pk,))
 
 
-class unit(OwnedModel):
+class Unit(OwnedModel):
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -81,7 +82,7 @@ class unit(OwnedModel):
         return reverse("recipes_unit_update", args=(self.pk,))
 
 
-class step(OwnedModel):
+class Step(OwnedModel):
 
     # Relationships
     recipe = models.ForeignKey("recipes.recipe", related_name="steps", on_delete=models.CASCADE)

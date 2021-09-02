@@ -56,15 +56,18 @@ pygments==2.9.0
     #   rich
 pyparsing==2.4.7
     # via packaging
+pytest-clarity==1.0.1
+    # via -r requirements.dev.in
+pytest-django==4.4.0
+    # via -r requirements.dev.in
+pytest-picked==0.4.6
+    # via -r requirements.dev.in
 pytest==6.2.4
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
     #   pytest-django
-pytest-clarity==1.0.1
-    # via -r requirements.dev.in
-pytest-django==4.4.0
-    # via -r requirements.dev.in
+    #   pytest-picked
 pyyaml==5.4.1
     # via pre-commit
 rich==10.9.0
