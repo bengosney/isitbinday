@@ -1,37 +1,48 @@
 # Third Party
 from rest_framework import permissions, viewsets
 
+# First Party
+from tasks.permissions import IsOwner
+
 # Locals
 from . import models, serializers
 
 
-class ingredientViewSet(viewsets.ModelViewSet):
+class baseViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return super().get_queryset().authorize(self.request, action="retrieve")
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ingredientViewSet(baseViewSet):
     """ViewSet for the ingredient class."""
 
-    queryset = models.ingredient.objects.all()
+    queryset = models.Ingredient.objects.all()
     serializer_class = serializers.ingredientSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class recipeViewSet(viewsets.ModelViewSet):
+class recipeViewSet(baseViewSet):
     """ViewSet for the recipe class."""
 
-    queryset = models.recipe.objects.all()
+    queryset = models.Recipe.objects.all()
     serializer_class = serializers.recipeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class unitViewSet(viewsets.ModelViewSet):
+class unitViewSet(baseViewSet):
     """ViewSet for the unit class."""
 
-    queryset = models.unit.objects.all()
+    queryset = models.Unit.objects.all()
     serializer_class = serializers.unitSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class stepViewSet(viewsets.ModelViewSet):
+class stepViewSet(baseViewSet):
     """ViewSet for the step class."""
 
-    queryset = models.step.objects.all()
+    queryset = models.Step.objects.all()
     serializer_class = serializers.stepSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
