@@ -22,7 +22,7 @@ coreschema==0.0.4
     # via coreapi
 dj-database-url==0.5.0
     # via django-heroku
-django==3.2.6
+django==3.2.7
     # via
     #   -r requirements.in
     #   django-admin-sortable2
@@ -46,7 +46,7 @@ django-appconf==1.0.4
     #   django-fsm-log
 django-cors-headers==3.8.0
     # via -r requirements.in
-django-environ==0.4.5
+django-environ==0.6.0
     # via -r requirements.in
 django-extensions==3.1.3
     # via -r requirements.in
@@ -65,11 +65,11 @@ django-model-utils==4.1.1
     # via -r requirements.in
 django-oso==0.11.0
     # via -r requirements.in
-django-stubs==1.8.0
+django-stubs==1.9.0
     # via
     #   -r requirements.in
     #   djangorestframework-stubs
-django-stubs-ext==0.2.0
+django-stubs-ext==0.3.0
     # via django-stubs
 djangorestframework==3.12.4
     # via
@@ -150,7 +150,13 @@ sniffio==1.2.0
 sqlparse==0.4.1
     # via django
 toml==0.10.2
-    # via mypy
+    # via
+    #   django-stubs
+    #   mypy
+types-pytz==2021.1.2
+    # via django-stubs
+types-pyyaml==5.4.10
+    # via django-stubs
 typing-extensions==3.10.0.1
     # via
     #   django-stubs
