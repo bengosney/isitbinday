@@ -7,16 +7,16 @@ from . import models
 
 
 class ingredientInline(admin.TabularInline):
-    model = models.ingredient
+    model = models.Ingredient
 
 
 class stepInline(admin.TabularInline):
-    model = models.step
+    model = models.Step
 
 
 class ingredientAdminForm(forms.ModelForm):
     class Meta:
-        model = models.ingredient
+        model = models.Ingredient
         fields = "__all__"
 
 
@@ -36,7 +36,7 @@ class ingredientAdmin(admin.ModelAdmin):
 
 class recipeAdminForm(forms.ModelForm):
     class Meta:
-        model = models.recipe
+        model = models.Recipe
         fields = "__all__"
 
 
@@ -63,7 +63,7 @@ class recipeAdmin(admin.ModelAdmin):
 
 class unitAdminForm(forms.ModelForm):
     class Meta:
-        model = models.unit
+        model = models.Unit
         fields = "__all__"
 
 
@@ -82,7 +82,7 @@ class unitAdmin(admin.ModelAdmin):
 
 class stepAdminForm(forms.ModelForm):
     class Meta:
-        model = models.step
+        model = models.Step
         fields = "__all__"
 
 
@@ -99,7 +99,7 @@ class stepAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(models.ingredient, ingredientAdmin)
-admin.site.register(models.recipe, recipeAdmin)
-admin.site.register(models.unit, unitAdmin)
-admin.site.register(models.step, stepAdmin)
+admin.site.register(models.Ingredient, ingredientAdmin)
+admin.site.register(models.Recipe, recipeAdmin)
+admin.site.register(models.Unit, unitAdmin)
+admin.site.register(models.Step, stepAdmin)
