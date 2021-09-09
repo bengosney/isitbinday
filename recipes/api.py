@@ -30,6 +30,7 @@ class recipeViewSet(baseViewSet):
     queryset = models.Recipe.objects.all()
     serializer_class = serializers.recipeSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    lookup_field = "slug"
 
 
 class unitViewSet(baseViewSet):

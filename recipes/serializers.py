@@ -30,7 +30,7 @@ class stepSerializer(serializers.ModelSerializer):
 
 
 class recipeSerializer(serializers.ModelSerializer):
-    ingredient = ingredientSerializer(many=True, read_only=True)
+    ingredients = ingredientSerializer(many=True, read_only=True)
     steps = stepSerializer(many=True, read_only=True)
 
     class Meta(baseSerializerMeta):
