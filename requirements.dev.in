@@ -7,3 +7,5 @@ icecream
 pytest-django
 pytest-clarity
 pytest-picked
+
+packaging==21.0

@@ -1,4 +1,5 @@
 # Third Party
+import pint
 from rest_framework import serializers
 
 # Locals
@@ -15,6 +16,14 @@ class baseSerializerMeta:
 
 
 class ingredientSerializer(serializers.ModelSerializer):
+    qty = serializers.SerializerMethodField()
+    units = pint.UnitRegistry()
+
+    def get_qty(self, obj: models.Ingredient):
+        print(f"unit: {obj.unit.name}")
+        qty = obj.quantity.to_integral() * self.units(obj.unit.name)
+        return f"{qty}"
+
     class Meta(baseSerializerMeta):
         model = models.Ingredient
 
