@@ -34,8 +34,10 @@ iniconfig==1.1.1
     # via pytest
 nodeenv==1.6.0
     # via pre-commit
-packaging==20.9
-    # via pytest
+packaging==21.0
+    # via
+    #   -r requirements.dev.in
+    #   pytest
 pep517==0.10.0
     # via pip-tools
 pip-chill==1.0.1
