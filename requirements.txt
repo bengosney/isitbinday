@@ -117,14 +117,20 @@ openfoodfacts==0.1.2
     # via -r requirements.in
 oso==0.15.1
     # via django-oso
+packaging==21.0
+    # via pint
 parsedatetime==2.6
     # via recurrent
+pint==0.17
+    # via -r requirements.in
 psycopg2==2.9.1
     # via django-heroku
 pycparser==2.20
     # via cffi
 pyjwt==2.1.0
     # via djangorestframework-simplejwt
+pyparsing==2.4.7
+    # via packaging
 pytz==2021.1
     # via django
 pyyaml==5.4.1
