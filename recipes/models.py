@@ -33,7 +33,6 @@ class Ingredient(OwnedModel):
 
     @property
     def quantity_class(self) -> pint.Quantity:
-        print(self.unit.unit_class)
         return self.quantity * self.unit.unit_class
 
     @property

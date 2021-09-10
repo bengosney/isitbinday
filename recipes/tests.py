@@ -16,6 +16,7 @@ from rest_framework.test import APITestCase
 
 # Locals
 from .models import Ingredient, Recipe, Unit
+from .serializers import ingredientSerializer
 
 
 def getInsecurePassword(length):
@@ -125,3 +126,9 @@ class IngredientTestCases(TestCase):
     def test_base_unit(self):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10)
         self.assertAlmostEqual(i.quantity_base_units.magnitude, 0.283, 3)
+
+    def test_serializer(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10)
+        serializer = ingredientSerializer(i)
+
+        self.assertEqual(f"{serializer.data['qty']}", f"{i.quantity_base_units}")
