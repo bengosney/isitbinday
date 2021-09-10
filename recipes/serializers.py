@@ -17,12 +17,11 @@ class baseSerializerMeta:
 
 class ingredientSerializer(serializers.ModelSerializer):
     qty = serializers.SerializerMethodField()
+    quantity_base_units = serializers.CharField()
     units = pint.UnitRegistry()
 
     def get_qty(self, obj: models.Ingredient):
-        print(f"unit: {obj.unit.name}")
-        qty = obj.quantity.to_integral() * self.units(obj.unit.name)
-        return f"{qty}"
+        return obj.quantity_base_units
 
     class Meta(baseSerializerMeta):
         model = models.Ingredient
