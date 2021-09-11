@@ -100,6 +100,12 @@ class UnitsTestCases(TestCase):
         unit = Unit(name="g")
         self.assertEqual(unit.unit_class.units, "gram")
 
+    def test_unit_name_with_spaces(self):
+        unit = Unit(name="Imperial Pint")
+
+        self.assertIsInstance(unit.unit_class, pint.Quantity)
+        self.assertEqual(unit.unit_class.units, "imperial_pint")
+
 
 class IngredientTestCases(TestCase):
     def setUp(self) -> None:
