@@ -39,6 +39,10 @@ class Ingredient(OwnedModel):
     def quantity_base_units(self):
         return self.quantity_class.to_base_units()
 
+    @property
+    def quantity_metric(self):
+        return self.quantity_base_units
+
     def __str__(self):
         return str(self.name)
 
@@ -78,7 +82,7 @@ class Unit(OwnedModel):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=30)
 
-    _units = pint.UnitRegistry()
+    _units = pint.UnitRegistry(system="cgs")
 
     class Meta:
         pass
