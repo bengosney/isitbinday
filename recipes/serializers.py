@@ -15,10 +15,8 @@ class baseSerializerMeta:
 
 
 class ingredientSerializer(serializers.ModelSerializer):
-    quantity_metric = serializers.CharField()
-
-    def get_qty(self, obj: models.Ingredient):
-        return obj.quantity_base_units
+    quantity_metric = serializers.FloatField()
+    quantity_metric_unit = serializers.CharField()
 
     class Meta(baseSerializerMeta):
         model = models.Ingredient

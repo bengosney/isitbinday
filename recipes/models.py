@@ -41,7 +41,11 @@ class Ingredient(OwnedModel):
 
     @property
     def quantity_metric(self):
-        return self.quantity_base_units
+        return self.quantity_base_units.magnitude
+
+    @property
+    def quantity_metric_unit(self):
+        return self.quantity_base_units.units
 
     def __str__(self):
         return str(self.name)
