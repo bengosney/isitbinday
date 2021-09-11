@@ -96,7 +96,7 @@ class Unit(OwnedModel):
 
     @property
     def unit_class(self):
-        return self._units(self.name)
+        return self._units(f"{self.name}".replace(" ", "_").lower())
 
     def get_absolute_url(self):
         return reverse("recipes_unit_detail", args=(self.pk,))
