@@ -127,8 +127,22 @@ class IngredientTestCases(TestCase):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
         self.assertAlmostEqual(i.quantity_base_units.magnitude, 283.495, 3)
 
-    def test_serializer(self):
+    def test_metric_quantity(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        self.assertAlmostEqual(i.quantity_metric, 283.495, 3)
+
+    def test_metric_unit(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        self.assertEqual(i.quantity_metric_unit, "gram")
+
+    def test_serializer_quantity(self):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
         serializer = ingredientSerializer(i)
 
-        self.assertEqual(f"{serializer.data['quantity_metric']}", f"{i.quantity_base_units}")
+        self.assertEqual(f"{serializer.data['quantity_metric']}", f"{i.quantity_base_units.magnitude}")
+
+    def test_serializer_unit(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        serializer = ingredientSerializer(i)
+
+        self.assertEqual(f"{serializer.data['quantity_metric_unit']}", f"{i.quantity_base_units.units}")
