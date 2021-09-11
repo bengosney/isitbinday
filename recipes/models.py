@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 
 # Third Party
+import pint
 from django_extensions.db.fields import AutoSlugField
 from django_oso.models import AuthorizedModel
 
@@ -29,6 +30,22 @@ class Ingredient(OwnedModel):
 
     class Meta:
         pass
+
+    @property
+    def quantity_class(self) -> pint.Quantity:
+        return self.quantity * self.unit.unit_class
+
+    @property
+    def quantity_base_units(self):
+        return self.quantity_class.to_base_units()
+
+    @property
+    def quantity_metric(self):
+        return self.quantity_base_units.magnitude
+
+    @property
+    def quantity_metric_unit(self):
+        return self.quantity_base_units.units
 
     def __str__(self):
         return str(self.name)
@@ -69,11 +86,17 @@ class Unit(OwnedModel):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=30)
 
+    _units = pint.UnitRegistry(system="cgs")
+
     class Meta:
         pass
 
     def __str__(self):
         return str(self.name)
+
+    @property
+    def unit_class(self):
+        return self._units(self.name)
 
     def get_absolute_url(self):
         return reverse("recipes_unit_detail", args=(self.pk,))
