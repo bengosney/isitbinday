@@ -112,23 +112,23 @@ class IngredientTestCases(TestCase):
 
     def test_unit_class(self):
         for u, _ in self.units:
-            i = Ingredient(name="flour", unit=u, quantity=300)
+            i = Ingredient(name="flour", unit=u, quantity=300.0)
 
             self.assertIsInstance(i.quantity_class, pint.Quantity)
 
     def test_unit_names(self):
-        qty = 300
+        qty = 300.0
         for u, name in self.units:
             i = Ingredient(name="flour", unit=u, quantity=qty)
 
             self.assertEqual(f"{i.quantity_class}", f"{qty} {name}")
 
     def test_base_unit(self):
-        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10)
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
         self.assertAlmostEqual(i.quantity_base_units.magnitude, 0.283, 3)
 
     def test_serializer(self):
-        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10)
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
         serializer = ingredientSerializer(i)
 
         self.assertEqual(f"{serializer.data['qty']}", f"{i.quantity_base_units}")
