@@ -6,14 +6,17 @@ from abc import ABC
 
 # Django
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.urls import reverse
 
 # Third Party
+import pint
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 # Locals
-from .models import Recipe
+from .models import Ingredient, Recipe, Unit
+from .serializers import ingredientSerializer
 
 
 def getInsecurePassword(length):
@@ -86,3 +89,60 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Recipe.objects.count() - count, int(response.json()["count"]))
+
+
+class UnitsTestCases(TestCase):
+    def test_unit_class(self):
+        unit = Unit(name="g")
+        self.assertIsInstance(unit.unit_class, pint.Quantity)
+
+    def test_unit_class_type(self):
+        unit = Unit(name="g")
+        self.assertEqual(unit.unit_class.units, "gram")
+
+
+class IngredientTestCases(TestCase):
+    def setUp(self) -> None:
+        self.units = [
+            (Unit(name="gram"), "gram"),
+            (Unit(name="oz"), "ounce"),
+        ]
+
+        return super().setUp()
+
+    def test_unit_class(self):
+        for u, _ in self.units:
+            i = Ingredient(name="flour", unit=u, quantity=300.0)
+
+            self.assertIsInstance(i.quantity_class, pint.Quantity)
+
+    def test_unit_names(self):
+        qty = 300.0
+        for u, name in self.units:
+            i = Ingredient(name="flour", unit=u, quantity=qty)
+
+            self.assertEqual(f"{i.quantity_class}", f"{qty} {name}")
+
+    def test_base_unit(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        self.assertAlmostEqual(i.quantity_base_units.magnitude, 283.495, 3)
+
+    def test_metric_quantity(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        self.assertAlmostEqual(i.quantity_metric, 283.495, 3)
+
+    def test_metric_unit(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        self.assertEqual(i.quantity_metric_unit, "gram")
+
+    def test_serializer_quantity(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        serializer = ingredientSerializer(i)
+
+        self.assertEqual(f"{serializer.data['quantity_metric']}", f"{i.quantity_base_units.magnitude}")
+
+    def test_serializer_unit(self):
+        i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
+        serializer = ingredientSerializer(i)
+
+        self.assertEqual(f"{serializer.data['quantity_metric_unit']}", f"{i.quantity_base_units.units}")
