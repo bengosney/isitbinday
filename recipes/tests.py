@@ -106,6 +106,12 @@ class UnitsTestCases(TestCase):
         self.assertIsInstance(unit.unit_class, pint.Quantity)
         self.assertEqual(unit.unit_class.units, "imperial_pint")
 
+    def test_cooking_system(self):
+        unit = Unit(name="ml")
+        ing = Ingredient(name="water", unit=unit, quantity=300)
+
+        self.assertEqual(ing.quantity_metric_unit, "millilitres")
+
 
 class IngredientTestCases(TestCase):
     def setUp(self) -> None:
