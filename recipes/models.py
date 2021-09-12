@@ -86,7 +86,25 @@ class Unit(OwnedModel):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     name = models.CharField(max_length=30)
 
-    _units = pint.UnitRegistry(system="cgs")
+    _units = None
+
+    @classmethod
+    def _get_units(cls):
+        if cls._units is None:
+            cls._units = pint.UnitRegistry(system="cooking")
+            cls._units.load_definitions(
+                """
+@system cooking using international, Gaussian, ESU
+    centimeter
+    gram
+    second
+    millilitres
+@end
+            """.splitlines(),
+                is_resource=False,
+            )
+
+        return cls._units
 
     class Meta:
         pass
@@ -96,7 +114,7 @@ class Unit(OwnedModel):
 
     @property
     def unit_class(self):
-        return self._units(f"{self.name}".replace(" ", "_").lower())
+        return self._get_units()(f"{self.name}".replace(" ", "_").lower())
 
     def get_absolute_url(self):
         return reverse("recipes_unit_detail", args=(self.pk,))
