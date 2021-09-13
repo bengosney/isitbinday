@@ -15,8 +15,8 @@ class baseSerializerMeta:
 
 
 class ingredientSerializer(serializers.ModelSerializer):
-    quantity_metric = serializers.FloatField()
-    quantity_metric_unit = serializers.CharField()
+    quantity_metric = serializers.FloatField(read_only=True)
+    quantity_metric_unit = serializers.CharField(read_only=True)
 
     class Meta(baseSerializerMeta):
         model = models.Ingredient
@@ -33,8 +33,8 @@ class stepSerializer(serializers.ModelSerializer):
 
 
 class recipeSerializer(serializers.ModelSerializer):
-    ingredients = ingredientSerializer(many=True, read_only=True)
-    steps = stepSerializer(many=True, read_only=True)
+    ingredients = ingredientSerializer(many=True, read_only=False)
+    steps = stepSerializer(many=True, read_only=False)
 
     class Meta(baseSerializerMeta):
         model = models.Recipe
