@@ -1,3 +1,6 @@
+# Standard Library
+from typing import Union
+
 # Django
 from django.db import models
 from django.urls import reverse
@@ -37,6 +40,9 @@ class Ingredient(OwnedModel):
 
     @property
     def quantity_class(self) -> pint.Quantity:
+        if self.unit.unit_class is None:
+            raise pint.UndefinedUnitError
+
         return self.quantity * self.unit.unit_class
 
     @property
@@ -45,11 +51,17 @@ class Ingredient(OwnedModel):
 
     @property
     def quantity_metric(self):
-        return self.quantity_base_units.magnitude
+        try:
+            return self.quantity_base_units.magnitude
+        except pint.UndefinedUnitError:
+            return self.quantity
 
     @property
     def quantity_metric_unit(self):
-        return self.quantity_base_units.units
+        try:
+            return self.quantity_base_units.units
+        except pint.UndefinedUnitError:
+            return self.unit.name
 
     def __str__(self):
         return str(self.name)
@@ -93,7 +105,7 @@ class Unit(OwnedModel):
     _units = None
 
     @classmethod
-    def _get_units(cls):
+    def _get_units(cls) -> pint.UnitRegistry:
         if cls._units is None:
             cls._units = pint.UnitRegistry(system="cooking")
             cls._units.load_definitions(
@@ -117,8 +129,16 @@ class Unit(OwnedModel):
         return str(self.name)
 
     @property
-    def unit_class(self):
-        return self._get_units()(f"{self.name}".replace(" ", "_").lower())
+    def unit_class(self) -> Union[pint.Quantity, None]:
+        reg = self._get_units()
+        try:
+            cls = reg(f"{self.name}".replace(" ", "_").lower())
+            if not isinstance(cls, pint.Quantity):
+                raise pint.UndefinedUnitError()
+
+            return cls
+        except pint.UndefinedUnitError:
+            return None
 
     def get_absolute_url(self):
         return reverse("recipes_unit_detail", args=(self.pk,))
