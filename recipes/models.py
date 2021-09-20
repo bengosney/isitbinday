@@ -35,7 +35,11 @@ class Ingredient(OwnedModel):
         pass
 
     @property
-    def quantity_class(self) -> Union[pint.Quantity]:
+    def quantity_unit(self):
+        return self.unit.name
+
+    @property
+    def quantity_class(self) -> pint.Quantity:
         if self.unit.unit_class is None:
             raise pint.UndefinedUnitError
 

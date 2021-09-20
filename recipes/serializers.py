@@ -15,6 +15,7 @@ class baseSerializerMeta:
 
 
 class ingredientSerializer(serializers.ModelSerializer):
+    quantity_unit = serializers.CharField(read_only=True)
     quantity_metric = serializers.FloatField(read_only=True)
     quantity_metric_unit = serializers.CharField(read_only=True)
 
