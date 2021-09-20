@@ -112,6 +112,14 @@ class UnitsTestCases(TestCase):
 
         self.assertEqual(ing.quantity_metric_unit, "millilitres")
 
+    def test_invalid_unit(self):
+        unit_name = "qwerty"
+        unit = Unit(name=unit_name)
+        ing = Ingredient(name="stuff", unit=unit, quantity=5)
+
+        self.assertEqual(ing.quantity_metric, 5)
+        self.assertEqual(ing.quantity_metric_unit, unit_name)
+
 
 class IngredientTestCases(TestCase):
     def setUp(self) -> None:
