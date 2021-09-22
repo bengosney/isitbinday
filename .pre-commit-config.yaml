@@ -16,8 +16,13 @@ repos:
       - id: detect-private-key
       - id: no-commit-to-branch
         args: [--branch, master]
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.3.1
+    hooks:
+    -   id: django-upgrade
+        args: [--target-version, "3.2"]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.25.0
+    rev: v2.26.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -36,7 +41,7 @@ repos:
       - id: pycln
         args: [--config=pyproject.toml]
   - repo: https://github.com/psf/black
-    rev: 21.7b0
+    rev: 21.9b0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/isort
@@ -52,7 +57,7 @@ repos:
     hooks:
       - id: flake8
   - repo: https://github.com/jazzband/pip-tools
-    rev: 6.2.0
+    rev: 6.3.0
     hooks:
       - id: pip-compile
         files: ^(setup\.py|requirements.txt|requirements.in)$
