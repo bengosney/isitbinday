@@ -40,7 +40,7 @@ django==3.2.7
     #   djangorestframework-simplejwt
 django-admin-sortable2==1.0
     # via -r requirements.in
-django-appconf==1.0.4
+django-appconf==1.0.5
     # via
     #   -r requirements.in
     #   django-fsm-log
