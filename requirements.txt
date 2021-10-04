@@ -38,13 +38,13 @@ django==3.2.7
     #   django-stubs-ext
     #   djangorestframework
     #   djangorestframework-simplejwt
-django-admin-sortable2==1.0
+django-admin-sortable2==1.0.2
     # via -r requirements.in
 django-appconf==1.0.5
     # via
     #   -r requirements.in
     #   django-fsm-log
-django-cors-headers==3.8.0
+django-cors-headers==3.9.0
     # via -r requirements.in
 django-environ==0.7.0
     # via -r requirements.in
