@@ -169,7 +169,7 @@ typing-extensions==3.10.0.2
     #   django-stubs-ext
     #   djangorestframework-stubs
     #   mypy
-uritemplate==3.0.1
+uritemplate==4.0.0
     # via
     #   -r requirements.in
     #   coreapi
