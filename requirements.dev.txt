@@ -42,7 +42,7 @@ pep517==0.10.0
     # via pip-tools
 pip-chill==1.0.1
     # via -r requirements.dev.in
-pip-tools==6.3.1
+pip-tools==6.4.0
     # via -r requirements.dev.in
 pluggy==0.13.1
     # via pytest
@@ -70,7 +70,7 @@ pytest-django==4.4.0
     # via -r requirements.dev.in
 pytest-picked==0.4.6
     # via -r requirements.dev.in
-pyyaml==5.4.1
+pyyaml==6.0
     # via pre-commit
 rich==10.9.0
     # via pytest-clarity
