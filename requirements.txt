@@ -61,7 +61,7 @@ django-fsm-log==2.0.1
     # via -r requirements.in
 django-heroku==0.3.1
     # via -r requirements.in
-django-model-utils==4.1.1
+django-model-utils==4.2.0
     # via -r requirements.in
 django-oso==0.21.0
     # via -r requirements.in
