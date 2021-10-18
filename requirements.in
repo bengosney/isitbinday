@@ -17,7 +17,7 @@ openfoodfacts
 recurrent
 django-extensions
 django-model-utils
-pyyaml==5.4.1
+pyyaml==6.0
 uritemplate
 django-stubs
 djangorestframework-stubs
