@@ -75,7 +75,7 @@ djangorestframework==3.12.4
     # via
     #   -r requirements.in
     #   djangorestframework-simplejwt
-djangorestframework-simplejwt==4.8.0
+djangorestframework-simplejwt==5.0.0
     # via -r requirements.in
 djangorestframework-stubs==1.4.0
     # via -r requirements.in
