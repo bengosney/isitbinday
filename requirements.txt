@@ -133,7 +133,7 @@ pyparsing==2.4.7
     # via packaging
 pytz==2021.1
     # via django
-pyyaml==5.4.1
+pyyaml==6.0
     # via -r requirements.in
 recurrent==0.4.1
     # via -r requirements.in
