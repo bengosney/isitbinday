@@ -8,4 +8,4 @@ pytest-django
 pytest-clarity
 pytest-picked
 
-packaging==21.0
+packaging==21.2
