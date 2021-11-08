@@ -22,7 +22,7 @@ coreschema==0.0.4
     # via coreapi
 dj-database-url==0.5.0
     # via django-heroku
-django==3.2.8
+django==3.2.9
     # via
     #   -r requirements.in
     #   django-admin-sortable2
@@ -50,7 +50,7 @@ django-environ==0.8.1
     # via -r requirements.in
 django-extensions==3.1.5
     # via -r requirements.in
-django-fsm==2.7.1
+django-fsm==2.8.0
     # via
     #   -r requirements.in
     #   django-fsm-admin
