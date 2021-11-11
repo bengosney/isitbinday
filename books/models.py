@@ -49,6 +49,7 @@ class Book(AuthorizedModel):
 
     class Meta:
         unique_together = [["isbn", "owner"], ["title", "owner"]]
+        ordering = ["-pk"]
 
     def __str__(self):
         return str(self.pk)
