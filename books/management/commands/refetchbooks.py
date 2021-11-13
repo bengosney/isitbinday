@@ -8,8 +8,12 @@ from books.models import Book
 class Command(BaseCommand):
     help = "Refetch remote book data"
 
+    def add_arguments(self, parser):
+        parser.add_argument("limit", type=int)
+
     def handle(self, *args, **options):
-        books = Book.objects.filter(requires_refetch=True)
+        limit = options["limit"]
+        books = Book.objects.filter(requires_refetch=True)[:limit]
 
         for book in books:
             self.stdout.write(f"Refetching {book.title}")
