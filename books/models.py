@@ -43,6 +43,19 @@ class Author(AuthorizedModel):
         return reverse("books_author_update", args=(self.pk,))
 
 
+class FailedScan(AuthorizedModel):
+    class Meta:
+        unique_together = ["isbn", "owner"]
+
+    owner = models.ForeignKey("auth.User", related_name="failedBookScan", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    isbn = models.CharField(max_length=30)
+
+    def __str__(self) -> str:
+        return f"{self.isbn}"
+
+
 class Book(AuthorizedModel):
 
     # Relationships
@@ -116,11 +129,16 @@ class Book(AuthorizedModel):
     def _lookup(cls, code, owner=None):
         try:
             return cls._lookupGoogle(code, owner)
-        except NotFoundException:
+        except Exception:
             try:
                 return cls._lookupOpenBooks(code, owner)
-            except NotFoundException:
-                return None
+            except Exception:
+                try:
+                    fail = FailedScan(isbn=code, owner=owner)
+                    fail.save()
+                except Exception:
+                    pass
+                raise Exception("Failed to lookup")
 
     @classmethod
     @transaction.atomic
