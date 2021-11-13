@@ -3,12 +3,16 @@ import json
 
 # Django
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
+from django.db import models, transaction
 from django.urls import reverse
 
 # Third Party
 from django_oso.models import AuthorizedModel
 from requests import get
+
+
+class NotFoundException(Exception):
+    pass
 
 
 class Author(AuthorizedModel):
@@ -69,9 +73,51 @@ class Book(AuthorizedModel):
 
     @classmethod
     def _lookup(cls, code, owner=None):
+        try:
+            return cls._lookupGoogle(code, owner)
+        except NotFoundException:
+            try:
+                return cls._lookupOpenBooks(code, owner)
+            except NotFoundException:
+                return None
+
+    @classmethod
+    @transaction.atomic
+    def _lookupGoogle(cls, code, owner=None):
+        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{code}"
+        response = get(url)
+
+        try:
+            data = json.loads(response.text)["items"][0]["volumeInfo"]
+        except AttributeError:
+            raise NotFoundException
+
+        book = Book(
+            title=data["title"],
+            isbn=code,
+            publish_date=data["publishedDate"],
+            owner=owner,
+        )
+
+        book.save()
+
+        for author_data in data["authors"]:
+            author, _ = Author.objects.get_or_create(name=author_data, owner=owner)
+            book.authors.add(author)
+
+        return book
+
+    @classmethod
+    @transaction.atomic
+    def _lookupOpenBooks(cls, code, owner=None):
         url = f"https://openlibrary.org/api/books?bibkeys={code}&jscmd=data&format=json"
         response = get(url)
-        data = json.loads(response.text)[code]
+
+        try:
+            data = json.loads(response.text)[code]
+        except AttributeError:
+            raise NotFoundException
+
         isbn = ""
         for ident in data["identifiers"]:
             if f"{ident}".startswith("isbn"):
