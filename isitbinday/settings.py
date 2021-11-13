@@ -136,6 +136,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+THUMBNAIL_DEFAULT_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "isitbinday"
+AWS_S3_REGION_NAME = "eu-west-2"
+AWS_QUERYSTRING_AUTH = False
+
+AWS_S3_OBJECT_PARAMETERS = {
+    "Expires": "Thu, 31 Dec 2099 20:00:00 GMT",
+    "CacheControl": "max-age=94608000",
+}
+
+AWS_S3_CUSTOM_DOMAIN = "cdn.isitbinday.com"
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 
 REST_FRAMEWORK = {
@@ -188,11 +205,9 @@ if LIVE:
     # Third Party
     import rollbar
 
-    print("init rollbar")
-
     ROLLBAR = {
         "access_token": "3a3fe8e9f333404cb12863601ce495e0",
-        "environment": "development" if DEBUG else "production",
+        "environment": "production",
         "root": BASE_DIR,
     }
     rollbar.init(**ROLLBAR)

@@ -265,3 +265,4 @@ flycheck_*.el
 # End of https://www.toptal.com/developers/gitignore/api/django,python,visualstudiocode,emacs
 
 .direnv
+.envrc
