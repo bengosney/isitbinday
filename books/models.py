@@ -72,12 +72,14 @@ class Book(AuthorizedModel):
     cover = models.ImageField(upload_to="book/cover", blank=True, default="")
     tmp_cover = models.CharField(max_length=512, blank=True, null=True, default=None)
 
+    requires_refetch = models.BooleanField(default=False)
+
     class Meta:
         unique_together = [["isbn", "owner"], ["title", "owner"]]
         ordering = ["-pk"]
 
     def __str__(self):
-        return str(self.pk)
+        return f"{self.title}"
 
     def get_absolute_url(self):
         return reverse("books_book_detail", args=(self.pk,))
@@ -118,6 +120,12 @@ class Book(AuthorizedModel):
         self.tmp_cover = None
         return True
 
+    def refetch_remote_data(self):
+        try:
+            self._lookup(self.isbn, owner=self.owner)
+        except Exception:
+            pass
+
     @classmethod
     def get_or_lookup(cls, code: str, owner=None):
         try:
@@ -126,19 +134,25 @@ class Book(AuthorizedModel):
             return cls._lookup(code, owner=owner)
 
     @classmethod
-    def _lookup(cls, code, owner=None):
+    def _lookup(cls, code, owner=None, create_fail=True):
         try:
             return cls._lookupGoogle(code, owner)
         except Exception:
+            pass
+
+        try:
+            return cls._lookupOpenBooks(code, owner)
+        except Exception:
+            pass
+
+        if create_fail:
             try:
-                return cls._lookupOpenBooks(code, owner)
+                fail = FailedScan(isbn=code, owner=owner)
+                fail.save()
             except Exception:
-                try:
-                    fail = FailedScan(isbn=code, owner=owner)
-                    fail.save()
-                except Exception:
-                    pass
-                raise Exception("Failed to lookup")
+                pass
+
+        raise Exception("Failed to lookup")
 
     @classmethod
     @transaction.atomic
@@ -151,19 +165,18 @@ class Book(AuthorizedModel):
         except AttributeError:
             raise NotFoundException
 
-        book = Book(
-            title=data["title"],
-            isbn=code,
-            publish_date=data["publishedDate"],
-            owner=owner,
-        )
+        defaults = {
+            "title": data["title"],
+            "publish_date": data["publishedDate"],
+            "requires_refetch": False,
+        }
 
         try:
-            book.tmp_cover = data["imageLinks"]["thumbnail"]
+            defaults["tmp_cover"] = data["imageLinks"]["thumbnail"]
         except AttributeError:
             pass
 
-        book.save()
+        book, _ = Book.objects.update_or_create(isbn=code, owner=owner, defaults=defaults)
 
         for author_data in data["authors"]:
             author, _ = Author.objects.get_or_create(name=author_data, owner=owner)
@@ -187,19 +200,22 @@ class Book(AuthorizedModel):
             if f"{ident}".startswith("isbn"):
                 isbn = data["identifiers"][ident][0]
 
-        book = Book(
-            title=data["title"],
-            isbn=isbn,
-            publish_date=data["publish_date"],
-            owner=owner,
-        )
+        defaults = {
+            "title": data["title"],
+            "publish_date": data["publish_date"],
+            "requires_refetch": False,
+        }
 
         try:
-            book.tmp_cover = data["covers"]["large"]
+            defaults["tmp_cover"] = data["covers"]["large"]
         except AttributeError:
             pass
 
-        book.save()
+        book, _ = Book.objects.update_or_create(
+            isbn=isbn,
+            owner=owner,
+            defaults=defaults,
+        )
 
         for author_data in data["authors"]:
             author, _ = Author.objects.get_or_create(name=author_data["name"], owner=owner)
