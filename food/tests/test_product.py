@@ -27,11 +27,11 @@ class ProductTestCase(BaseTestCase):
         product = Product.get_or_create(**args)
 
         self.assertIsInstance(product, Product)
-        for key in args:
+        for key, value in args.items():
             prop = getattr(product, key)
             try:
                 prop = ", ".join(f"{p.name}" for p in prop.all())
             except AttributeError:
                 pass
 
-            self.assertEqual(f"{key}: {prop}", f"{key}: {args[key]}")
+            self.assertEqual(f"{key}: {prop}", f'{key}: {value}')
