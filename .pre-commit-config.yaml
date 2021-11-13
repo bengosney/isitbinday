@@ -14,6 +14,8 @@ repos:
       - id: check-merge-conflict
       - id: detect-aws-credentials
       - id: detect-private-key
+      - id: file-contents-sorter
+        files: requirements.*\.in
       - id: no-commit-to-branch
         args: [--branch, master]
   - repo: https://github.com/asottile/pyupgrade
