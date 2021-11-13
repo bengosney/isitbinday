@@ -22,3 +22,4 @@ uritemplate
 django-stubs
 djangorestframework-stubs
 pint
+Pillow

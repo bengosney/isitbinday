@@ -7,6 +7,9 @@ REQS=$(subst in,txt,$(INS))
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+.envrc:
+	echo "layout python python3.8" >> $@
+
 requirements.%.txt: requirements.%.in
 	@echo "Builing $@"
 	@pip-compile -q -o $@ $^
@@ -26,4 +29,4 @@ install-dev: requirements.txt $(REQS) ## Install development requirements (defau
 _init:
 	pip install wheel pip-tools
 
-init: _init install-dev
+init: .envrc _init install-dev
