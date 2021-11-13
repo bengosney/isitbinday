@@ -50,5 +50,10 @@ class bookAdmin(admin.ModelAdmin):
     ]
 
 
+class failedAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(models.Author, authorAdmin)
 admin.site.register(models.Book, bookAdmin)
+admin.site.register(models.FailedScan, failedAdmin)
