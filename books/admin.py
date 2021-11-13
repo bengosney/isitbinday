@@ -26,6 +26,11 @@ class authorAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.action(description="Mark as requiring data refetch")
+def requires_refetch(modeladmin, request, queryset):
+    queryset.update(requires_refetch=True)
+
+
 class bookAdminForm(forms.ModelForm):
     class Meta:
         model = models.Book
@@ -35,19 +40,17 @@ class bookAdminForm(forms.ModelForm):
 class bookAdmin(admin.ModelAdmin):
     form = bookAdminForm
     list_display = [
-        "publish_date",
-        "created",
         "title",
-        "last_updated",
+        "publish_date",
         "isbn",
+        "requires_refetch",
     ]
     readonly_fields = [
-        "publish_date",
         "created",
-        "title",
         "last_updated",
         "isbn",
     ]
+    actions = [requires_refetch]
 
 
 class failedAdmin(admin.ModelAdmin):

@@ -8,8 +8,12 @@ from books.models import Book
 class Command(BaseCommand):
     help = "Fetch any book covers that need processing"
 
+    def add_arguments(self, parser):
+        parser.add_argument("limit", type=int)
+
     def handle(self, *args, **options):
-        books = Book.objects.filter(tmp_cover__isnull=False)
+        limit = options["limit"]
+        books = Book.objects.filter(tmp_cover__isnull=False)[:limit]
 
         for book in books:
             self.stdout.write(f"Processing {book.title}")
