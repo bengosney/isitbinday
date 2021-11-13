@@ -206,7 +206,7 @@ if LIVE:
     import rollbar
 
     ROLLBAR = {
-        "access_token": "***REMOVED***",
+        "access_token": os.environ.get("ROLLBAR_ACCESS_TOKEN"),
         "environment": "production",
         "root": BASE_DIR,
     }
