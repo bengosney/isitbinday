@@ -50,6 +50,9 @@ class bookAdmin(admin.ModelAdmin):
         "last_updated",
         "isbn",
     ]
+    search_fields = [
+        "title",
+    ]
     actions = [requires_refetch]
 
 
