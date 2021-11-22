@@ -1,5 +1,5 @@
 # Third Party
-from rest_framework import permissions, status, viewsets
+from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -27,6 +27,11 @@ class bookViewSet(viewsets.ModelViewSet):
     # queryset = models.Book.objects.all()
     serializer_class = serializers.bookSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "title",
+    ]
 
     def get_queryset(self):
         return models.Book.objects.authorize(self.request, action="retrieve")
