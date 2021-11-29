@@ -307,9 +307,9 @@ class Product(models.Model):
         prod = cls.objects.get_or_create(code=code, defaults=defaults)[0]
         prod.categories.set(categories)
 
-        for key in defaults:
+        for key, value in defaults.items():
             if getattr(prod, key) is None:
-                setattr(prod, key, defaults[key])
+                setattr(prod, key, value)
         prod.save()
 
         return prod
