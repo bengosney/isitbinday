@@ -153,7 +153,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def due_date_states(self, request):
-        return Response({"states": [s for s in Task.STATES_DUE_DATE_MATTERS]})
+        return Response({"states": list(Task.STATES_DUE_DATE_MATTERS)})
 
     @action(detail=False)
     def auto_archive(self, request):
