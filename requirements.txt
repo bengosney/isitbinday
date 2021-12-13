@@ -70,7 +70,7 @@ django-heroku==0.3.1
     # via -r requirements.in
 django-model-utils==4.2.0
     # via -r requirements.in
-django-oso==0.23.0
+django-oso==0.24.0
     # via -r requirements.in
 django-storages==1.12.3
     # via -r requirements.in
@@ -128,7 +128,7 @@ mypy-extensions==0.4.3
     # via mypy
 openfoodfacts==0.1.2
     # via -r requirements.in
-oso==0.23.0
+oso==0.24.0
     # via django-oso
 packaging==21.3
     # via pint
