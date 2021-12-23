@@ -1,6 +1,6 @@
 # Django
 from django.db import transaction
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 
 # Third Party
@@ -47,7 +47,7 @@ class AcctivateSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         try:
-            uid = force_text(urlsafe_base64_decode(validated_data["uid"]))
+            uid = force_str(urlsafe_base64_decode(validated_data["uid"]))
             user = User.objects.get(id=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
