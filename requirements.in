@@ -7,7 +7,7 @@ django-cors-headers
 django-environ
 django-extensions
 django-fsm
-django-fsm-admin
+django-fsm-admin2
 django-fsm-log
 django-heroku
 django-model-utils
