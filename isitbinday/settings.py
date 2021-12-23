@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "adminsortable2",
     "django_fsm",
     "django_fsm_log",
-    "fsm_admin",
+    "fsm_admin2",
     "accounts",
     "tasks",
     "food",
