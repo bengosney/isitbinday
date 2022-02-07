@@ -47,7 +47,7 @@ django==4.0.1
     #   django-stubs-ext
     #   djangorestframework
     #   djangorestframework-simplejwt
-django-admin-sortable2==1.0.3
+django-admin-sortable2==1.0.4
     # via -r requirements.in
 django-appconf==1.0.5
     # via
