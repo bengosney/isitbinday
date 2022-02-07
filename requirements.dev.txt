@@ -58,7 +58,7 @@ pygments==2.9.0
     #   rich
 pyparsing==2.4.7
     # via packaging
-pytest==6.2.5
+pytest==7.0.0
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
@@ -82,7 +82,8 @@ toml==0.10.2
     # via
     #   pep517
     #   pre-commit
-    #   pytest
+tomli==2.0.0
+    # via pytest
 virtualenv==20.4.6
     # via pre-commit
 wheel==0.37.0
