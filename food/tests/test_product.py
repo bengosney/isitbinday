@@ -18,12 +18,13 @@ class ProductTestCase(BaseTestCase):
     def test_create_product(self):
         args = {
             "categories": "Stock Cubes, Stock",
-            "code": "".join(random.choice(string.digits) for i in range(13)),
+            "code": "".join(random.choice(string.digits) for _ in range(13)),
             "name": "Beef Stock Cubes",
             "brand": "ASDA",
             "quantity": "12",
             "unit_of_measure": "Each",
         }
+
         product = Product.get_or_create(**args)
 
         self.assertIsInstance(product, Product)
