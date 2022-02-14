@@ -20,7 +20,7 @@ from .models import Task
 
 
 def getInsecurePassword(length):
-    return "".join(random.choice(string.ascii_lowercase) for i in range(length))  # nosec
+    return "".join(random.choice(string.ascii_lowercase) for _ in range(length))
 
 
 class APITestCaseWithUser(ABC, APITestCase):
@@ -119,7 +119,10 @@ class TaskModelTestCase(TestCase):
             task.done()
             task.save()
 
-        tomorrow = timezone.make_aware(datetime.datetime.today() + datetime.timedelta(days=1))
+        tomorrow = timezone.make_aware(
+            datetime.datetime.now() + datetime.timedelta(days=1)
+        )
+
         Task.auto_archive(tomorrow)
         archivedTasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
 

@@ -20,7 +20,7 @@ from .serializers import ingredientSerializer
 
 
 def getInsecurePassword(length):
-    return "".join(random.choice(string.ascii_lowercase) for i in range(length))  # nosec
+    return "".join(random.choice(string.ascii_lowercase) for _ in range(length))
 
 
 class APITestCaseWithUser(ABC, APITestCase):

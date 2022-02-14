@@ -21,13 +21,19 @@ class BaseTestCase(ABC, TestCase):
         self.product = Product.get_or_create("5050854977411", "Beef Stock Cubes", "ASDA", "Stock Cubes", 6, "Each")
         self.location = Location.objects.get_or_create(name="Kitchen", default=True)
 
-        self.password = "".join(random.choice(string.ascii_lowercase) for i in range(12))  # nosec
+        self.password = "".join(
+            random.choice(string.ascii_lowercase) for _ in range(12)
+        )
+
         self.user: User = User.objects.create_user(username="jacob", email="jacob@example.com", password=self.password)
 
 
 class APIBaseTestCase(ABC, APITestCase):
     def setUp(self):
-        self.password = "".join(random.choice(string.ascii_lowercase) for i in range(12))  # nosec
+        self.password = "".join(
+            random.choice(string.ascii_lowercase) for _ in range(12)
+        )
+
         self.user = User.objects.create_user(username="jacob", email="jacob@example.com", password=self.password)
         self.product = Product.get_or_create("5000354904790", "Gravy Granules", "Bisto", "Gravy", 170, "g")
         self.pack = Product.get_or_create("5050854977411", "Beef Stock Cubes", "ASDA", "Stock Cubes", 6, "Each", True)
