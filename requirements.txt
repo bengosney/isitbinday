@@ -6,7 +6,7 @@
 #
 asgiref==3.4.1
     # via django
-backports-zoneinfo==0.2.1
+backports.zoneinfo==0.2.1
     # via django
 boto3==1.21.3
     # via -r requirements.in

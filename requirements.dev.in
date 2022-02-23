@@ -1,11 +1,9 @@
-pre-commit
+icecream
+packaging==21.3
 pip-chill
 pip-tools
+pre-commit
 pytest
-icecream
-
-pytest-django
 pytest-clarity
+pytest-django
 pytest-picked
-
-packaging==21.3

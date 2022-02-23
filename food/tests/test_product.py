@@ -13,7 +13,7 @@ class ProductTestCase(BaseTestCase):
     def test_transfer_in(self):
         stock = self.product.transfer_in(self.user, quantity=2)
         self.assertIsInstance(stock, Stock)
-        self.assertEquals(stock.quantity, 2)
+        self.assertEqual(stock.quantity, 2)
 
     def test_create_product(self):
         args = {
@@ -35,4 +35,4 @@ class ProductTestCase(BaseTestCase):
             except AttributeError:
                 pass
 
-            self.assertEqual(f"{key}: {prop}", f'{key}: {value}')
+            self.assertEqual(f"{key}: {prop}", f"{key}: {value}")
