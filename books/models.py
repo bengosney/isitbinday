@@ -162,8 +162,8 @@ class Book(AuthorizedModel):
 
         try:
             data = json.loads(response.text)["items"][0]["volumeInfo"]
-        except AttributeError:
-            raise NotFoundException
+        except AttributeError as e:
+            raise NotFoundException from e
 
         defaults = {
             "title": data["title"],
@@ -192,8 +192,8 @@ class Book(AuthorizedModel):
 
         try:
             data = json.loads(response.text)[code]
-        except AttributeError:
-            raise NotFoundException
+        except AttributeError as e:
+            raise NotFoundException from e
 
         isbn = ""
         for ident in data["identifiers"]:
