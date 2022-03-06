@@ -219,3 +219,5 @@ if LIVE := not DEBUG and not TESTING:
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+CSRF_TRUSTED_ORIGINS = ["https://api.isitbinday.com"]
