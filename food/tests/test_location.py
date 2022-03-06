@@ -12,4 +12,4 @@ class LocationTestCase(TestCase):
         location, _ = Location.objects.get_or_create(name="Kitchen", default=True)
         retrieved = Location.get_default()
 
-        self.assertEquals(location, retrieved)
+        self.assertEqual(location, retrieved)

@@ -119,9 +119,7 @@ class TaskModelTestCase(TestCase):
             task.done()
             task.save()
 
-        tomorrow = timezone.make_aware(
-            datetime.datetime.now() + datetime.timedelta(days=1)
-        )
+        tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
 
         Task.auto_archive(tomorrow)
         archivedTasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
