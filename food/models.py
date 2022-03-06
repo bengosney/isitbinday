@@ -56,14 +56,37 @@ class UnitOfMeasure(models.Model):
     class Meta:
         pass
 
-    def __str__(self):
-        return str(self.name)
-
     def get_absolute_url(self):
         return reverse("food_UnitOfMeasure_detail", args=(self.pk,))
 
     def get_update_url(self):
         return reverse("food_UnitOfMeasure_update", args=(self.pk,))
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Transfer(AuthorizedModel):
+    origin = models.ForeignKey("food.Stock", on_delete=models.CASCADE, null=True, blank=True, related_name="transferred_to")
+    destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name="transferred_from")
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    owner = models.ForeignKey("auth.User", related_name="transfers", on_delete=models.CASCADE)
+
+    def __init__(self, *args, **kwargs) -> None:
+        if "owner" not in kwargs:
+            if "origin" in kwargs:
+                kwargs["owner"] = kwargs["origin"].owner
+            if "destination" in kwargs:
+                kwargs["owner"] = kwargs["destination"].owner
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        pass
+
+    def __str__(self) -> str:
+        return f"{self.origin} to {self.destination}".strip()
 
 
 class Stock(AuthorizedModel):
@@ -108,9 +131,6 @@ class Stock(AuthorizedModel):
 
     class Meta:
         pass
-
-    def __str__(self):
-        return f"{self.product} - {self.quantity}"
 
     def get_absolute_url(self):
         return reverse("food_Stock_detail", args=(self.pk,))
@@ -182,6 +202,9 @@ class Stock(AuthorizedModel):
     def product_code(self):
         return f"{self.product.code}"
 
+    def __str__(self):
+        return f"{self.product} - {self.quantity}"
+
 
 class Category(models.Model):
 
@@ -193,14 +216,74 @@ class Category(models.Model):
     class Meta:
         pass
 
-    def __str__(self):
-        return str(self.name)
-
     def get_absolute_url(self):
         return reverse("food_Category_detail", args=(self.pk,))
 
     def get_update_url(self):
         return reverse("food_Category_update", args=(self.pk,))
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Brand(models.Model):
+
+    # Fields
+    name = models.CharField(max_length=50)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        pass
+
+    def get_absolute_url(self):
+        return reverse("food_Brand_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("food_Brand_update", args=(self.pk,))
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Location(models.Model):
+    TEMPERATURES = Stock.TEMPERATURES
+
+    # Fields
+    temperature = models.CharField(max_length=30, choices=TEMPERATURES)
+    name = models.CharField(max_length=30)
+    can_move_to = models.BooleanField(default=True)
+    default = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        pass
+
+    def save(self, *args, **kwargs):
+        if not self.default:
+            return super().save(*args, **kwargs)
+        with transaction.atomic():
+            Location.objects.filter(default=True).update(default=False)
+            return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("food_Location_detail", args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse("food_Location_update", args=(self.pk,))
+
+    @classmethod
+    def get_default(cls):
+        try:
+            return cls.objects.filter(default=True).get()
+        except cls.DoesNotExist:
+            location = cls(name="Default", default=True)
+            location.save()
+            return location
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Product(models.Model):
@@ -221,9 +304,6 @@ class Product(models.Model):
     class Meta:
         pass
 
-    def __str__(self):
-        return str(self.name)
-
     def get_absolute_url(self):
         return reverse("food_Product_detail", args=(self.pk,))
 
@@ -231,11 +311,35 @@ class Product(models.Model):
         return reverse("food_Product_update", args=(self.pk,))
 
     @classmethod
-    def get_or_lookup(cls, code: str):
-        try:
-            return cls.objects.get(code=code)
-        except ObjectDoesNotExist:
-            return cls.lookup(code)
+    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None, is_pack=False) -> "Product":
+        if isinstance(brand, str):
+            brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
+
+        if isinstance(categories, str):
+            categories = [c.strip() for c in categories.split(",")]
+
+        if not isinstance(categories[0], Category):
+            categories = [Category.objects.get_or_create(name=name)[0] for name in categories]
+
+        if unit_of_measure is not None:
+            unit_of_measure = UnitOfMeasure.objects.get_or_create(name=unit_of_measure)[0]
+
+        defaults = {
+            "name": name,
+            "brand": brand,
+            "quantity": quantity,
+            "unit_of_measure": unit_of_measure,
+            "is_pack": is_pack,
+        }
+        prod = cls.objects.get_or_create(code=code, defaults=defaults)[0]
+        prod.categories.set(categories)
+
+        for key, value in defaults.items():
+            if getattr(prod, key) is None:
+                setattr(prod, key, value)
+        prod.save()
+
+        return prod
 
     @classmethod
     def lookup(cls, code):
@@ -284,35 +388,11 @@ class Product(models.Model):
         return cls.get_or_create(code, name, brand, categories, quantity, unit_of_measure)
 
     @classmethod
-    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None, is_pack=False) -> "Product":
-        if isinstance(brand, str):
-            brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
-
-        if isinstance(categories, str):
-            categories = [c.strip() for c in categories.split(",")]
-
-        if not isinstance(categories[0], Category):
-            categories = [Category.objects.get_or_create(name=name)[0] for name in categories]
-
-        if unit_of_measure is not None:
-            unit_of_measure = UnitOfMeasure.objects.get_or_create(name=unit_of_measure)[0]
-
-        defaults = {
-            "name": name,
-            "brand": brand,
-            "quantity": quantity,
-            "unit_of_measure": unit_of_measure,
-            "is_pack": is_pack,
-        }
-        prod = cls.objects.get_or_create(code=code, defaults=defaults)[0]
-        prod.categories.set(categories)
-
-        for key, value in defaults.items():
-            if getattr(prod, key) is None:
-                setattr(prod, key, value)
-        prod.save()
-
-        return prod
+    def get_or_lookup(cls, code: str):
+        try:
+            return cls.objects.get(code=code)
+        except ObjectDoesNotExist:
+            return cls.lookup(code)
 
     @transaction.atomic
     def transfer_in(self, owner: User, quantity=1, expires=None, location=None):
@@ -325,85 +405,5 @@ class Product(models.Model):
 
         return stock
 
-
-class Transfer(AuthorizedModel):
-    origin = models.ForeignKey("food.Stock", on_delete=models.CASCADE, null=True, blank=True, related_name="transferred_to")
-    destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name="transferred_from")
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    owner = models.ForeignKey("auth.User", related_name="transfers", on_delete=models.CASCADE)
-
-    def __init__(self, *args, **kwargs) -> None:
-        if "owner" not in kwargs:
-            if "origin" in kwargs:
-                kwargs["owner"] = kwargs["origin"].owner
-            if "destination" in kwargs:
-                kwargs["owner"] = kwargs["destination"].owner
-        super().__init__(*args, **kwargs)
-
-    class Meta:
-        pass
-
-    def __str__(self) -> str:
-        return f"{self.origin} to {self.destination}".strip()
-
-
-class Brand(models.Model):
-
-    # Fields
-    name = models.CharField(max_length=50)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        pass
-
     def __str__(self):
         return str(self.name)
-
-    def get_absolute_url(self):
-        return reverse("food_Brand_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("food_Brand_update", args=(self.pk,))
-
-
-class Location(models.Model):
-    TEMPERATURES = Stock.TEMPERATURES
-
-    # Fields
-    temperature = models.CharField(max_length=30, choices=TEMPERATURES)
-    name = models.CharField(max_length=30)
-    can_move_to = models.BooleanField(default=True)
-    default = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        pass
-
-    def save(self, *args, **kwargs):
-        if not self.default:
-            return super().save(*args, **kwargs)
-        with transaction.atomic():
-            Location.objects.filter(default=True).update(default=False)
-            return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return str(self.name)
-
-    def get_absolute_url(self):
-        return reverse("food_Location_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("food_Location_update", args=(self.pk,))
-
-    @classmethod
-    def get_default(cls):
-        try:
-            return cls.objects.filter(default=True).get()
-        except cls.DoesNotExist:
-            location = cls(name="Default", default=True)
-            location.save()
-            return location

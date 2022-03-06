@@ -63,9 +63,6 @@ class Task(StateMixin, AuthorizedModel):
     class Meta:
         ordering = ["position"]
 
-    def __str__(self):
-        return f"{self.title}"
-
     @classmethod
     def auto_archive(cls, before):
         tasks = cls.objects.filter((Q(state=cls.STATE_DONE) | Q(state=cls.STATE_CANCELED)) & Q(completed__lte=before))
@@ -113,6 +110,9 @@ class Task(StateMixin, AuthorizedModel):
     def archive(self):
         pass
 
+    def __str__(self):
+        return f"{self.title}"
+
 
 class Sprint(StateMixin, AuthorizedModel):
     STATE_PLANNING = "planning"
@@ -140,9 +140,6 @@ class Sprint(StateMixin, AuthorizedModel):
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
 
-    def __str__(self):
-        return f"{self.title}"
-
     @transition(field=state, source=STATE_PLANNING, target=STATE_IN_PROGRESS)
     def start(self):
         self.started = datetime.now()
@@ -154,3 +151,6 @@ class Sprint(StateMixin, AuthorizedModel):
     @transition(field=state, source=STATE_PLANNING, target=STATE_CANCELED)
     def cancel(self):
         pass
+
+    def __str__(self):
+        return f"{self.title}"

@@ -63,14 +63,14 @@ class Ingredient(OwnedModel):
         except pint.UndefinedUnitError:
             return self.unit.name
 
-    def __str__(self):
-        return str(self.name)
-
     def get_absolute_url(self):
         return reverse("recipes_ingredient_detail", args=(self.pk,))
 
     def get_update_url(self):
         return reverse("recipes_ingredient_update", args=(self.pk,))
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Recipe(OwnedModel):
@@ -85,14 +85,14 @@ class Recipe(OwnedModel):
     class Meta:
         pass
 
-    def __str__(self):
-        return str(self.name)
-
     def get_absolute_url(self):
         return reverse("recipes_recipe_detail", args=(self.pk,))
 
     def get_update_url(self):
         return reverse("recipes_recipe_update", args=(self.pk,))
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Unit(OwnedModel):
@@ -125,9 +125,6 @@ class Unit(OwnedModel):
     class Meta:
         pass
 
-    def __str__(self):
-        return str(self.name)
-
     @property
     def unit_class(self) -> Union[pint.Quantity, None]:
         reg = self._get_units()
@@ -146,6 +143,9 @@ class Unit(OwnedModel):
     def get_update_url(self):
         return reverse("recipes_unit_update", args=(self.pk,))
 
+    def __str__(self):
+        return str(self.name)
+
 
 class Step(OwnedModel):
 
@@ -160,11 +160,11 @@ class Step(OwnedModel):
     class Meta:
         pass
 
-    def __str__(self):
-        return str(self.pk)
-
     def get_absolute_url(self):
         return reverse("recipes_step_detail", args=(self.pk,))
 
     def get_update_url(self):
         return reverse("recipes_step_update", args=(self.pk,))
+
+    def __str__(self):
+        return str(self.pk)

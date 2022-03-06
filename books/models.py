@@ -33,24 +33,25 @@ class Author(AuthorizedModel):
     class Meta:
         unique_together = ["name", "owner"]
 
-    def __str__(self):
-        return str(self.name)
-
     def get_absolute_url(self):
         return reverse("books_author_detail", args=(self.pk,))
 
     def get_update_url(self):
         return reverse("books_author_update", args=(self.pk,))
 
+    def __str__(self):
+        return str(self.name)
+
 
 class FailedScan(AuthorizedModel):
-    class Meta:
-        unique_together = ["isbn", "owner"]
 
     owner = models.ForeignKey("auth.User", related_name="failedBookScan", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     isbn = models.CharField(max_length=30)
+
+    class Meta:
+        unique_together = ["isbn", "owner"]
 
     def __str__(self) -> str:
         return f"{self.isbn}"
@@ -77,9 +78,6 @@ class Book(AuthorizedModel):
     class Meta:
         unique_together = [["isbn", "owner"], ["title", "owner"]]
         ordering = ["-pk"]
-
-    def __str__(self):
-        return f"{self.title}"
 
     def get_absolute_url(self):
         return reverse("books_book_detail", args=(self.pk,))
@@ -119,40 +117,6 @@ class Book(AuthorizedModel):
         self.cover = files.File(f, name=f"{slugify(self.title)}-cover{ext}")
         self.tmp_cover = None
         return True
-
-    def refetch_remote_data(self):
-        try:
-            self._lookup(self.isbn, owner=self.owner)
-        except Exception:
-            pass
-
-    @classmethod
-    def get_or_lookup(cls, code: str, owner=None):
-        try:
-            return cls.objects.get(isbn=code)
-        except ObjectDoesNotExist:
-            return cls._lookup(code, owner=owner)
-
-    @classmethod
-    def _lookup(cls, code, owner=None, create_fail=True):
-        try:
-            return cls._lookupGoogle(code, owner)
-        except Exception:
-            pass
-
-        try:
-            return cls._lookupOpenBooks(code, owner)
-        except Exception:
-            pass
-
-        if create_fail:
-            try:
-                fail = FailedScan(isbn=code, owner=owner)
-                fail.save()
-            except Exception:
-                pass
-
-        raise Exception("Failed to lookup")
 
     @classmethod
     @transaction.atomic
@@ -222,3 +186,40 @@ class Book(AuthorizedModel):
             book.authors.add(author)
 
         return book
+
+    @classmethod
+    def _lookup(cls, code, owner=None, create_fail=True):
+        try:
+            return cls._lookupGoogle(code, owner)
+        except Exception:
+            pass
+
+        try:
+            return cls._lookupOpenBooks(code, owner)
+        except Exception:
+            pass
+
+        if create_fail:
+            try:
+                fail = FailedScan(isbn=code, owner=owner)
+                fail.save()
+            except Exception:
+                pass
+
+        raise Exception("Failed to lookup")
+
+    def refetch_remote_data(self):
+        try:
+            self._lookup(self.isbn, owner=self.owner)
+        except Exception:
+            pass
+
+    @classmethod
+    def get_or_lookup(cls, code: str, owner=None):
+        try:
+            return cls.objects.get(isbn=code)
+        except ObjectDoesNotExist:
+            return cls._lookup(code, owner=owner)
+
+    def __str__(self):
+        return f"{self.title}"
