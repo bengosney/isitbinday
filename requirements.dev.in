@@ -1,5 +1,8 @@
+-c requirements.txt
+black
+commitizen
 icecream
-packaging==21.3
+packaging
 pip-chill
 pip-tools
 pre-commit
