@@ -27,6 +27,6 @@ install-dev: requirements.txt $(REQS) ## Install development requirements (defau
 	@pip-sync $^
 
 _init:
-	pip install wheel pip-tools
+	pip install --upgrade pip setuptools wheel pip-tools
 
 init: .envrc _init install-dev
