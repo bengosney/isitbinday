@@ -19,7 +19,7 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, master]
   - repo: https://github.com/bwhmather/ssort
-    rev: v0.10.2
+    rev: v0.11.1
     hooks:
     - id: ssort
   - repo: https://github.com/asottile/pyupgrade
@@ -62,3 +62,14 @@ repos:
     hooks:
       - id: pip-compile
         files: ^(setup\.py|requirements.txt|requirements.in)$
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.0
+    hooks:
+      - id: pyupgrade
+        args: [--py310-plus]
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.21.2
+    hooks:
+      - id: commitizen
+        stages:
+          - commit-msg

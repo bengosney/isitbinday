@@ -21,7 +21,7 @@ googletrans
 gunicorn
 openfoodfacts
 pint
-pyyaml==6.0
+pyyaml
 recurrent
 requests
 rollbar
