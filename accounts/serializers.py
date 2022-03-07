@@ -11,8 +11,6 @@ from accounts.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    url_template = serializers.CharField(max_length=512, write_only=True)
-
     class Meta:
         model = User
         fields = ("email", "password", "first_name", "last_name", "url_template")
@@ -22,6 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name": {"required": True, "allow_blank": False},
             "password": {"write_only": True},
         }
+
+    url_template = serializers.CharField(max_length=512, write_only=True)
 
     @transaction.atomic
     def create(self, validated_data):

@@ -47,14 +47,13 @@ def transitionAndSave(*args, **kwargs):
 
 
 class UnitOfMeasure(models.Model):
+    class Meta:
+        pass
 
     # Fields
     name = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("food_UnitOfMeasure_detail", args=(self.pk,))
@@ -67,6 +66,9 @@ class UnitOfMeasure(models.Model):
 
 
 class Transfer(AuthorizedModel):
+    class Meta:
+        pass
+
     origin = models.ForeignKey("food.Stock", on_delete=models.CASCADE, null=True, blank=True, related_name="transferred_to")
     destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name="transferred_from")
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -82,14 +84,14 @@ class Transfer(AuthorizedModel):
                 kwargs["owner"] = kwargs["destination"].owner
         super().__init__(*args, **kwargs)
 
-    class Meta:
-        pass
-
     def __str__(self) -> str:
         return f"{self.origin} to {self.destination}".strip()
 
 
 class Stock(AuthorizedModel):
+    class Meta:
+        pass
+
     STATE_IN_STOCK = "In Stock"
     STATE_CONSUMED = "Consumed"
     STATE_TRANSFERRED = "Transferred"
@@ -128,9 +130,6 @@ class Stock(AuthorizedModel):
     quantity = models.FloatField(blank=True, default=1)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("food_Stock_detail", args=(self.pk,))
@@ -207,14 +206,13 @@ class Stock(AuthorizedModel):
 
 
 class Category(models.Model):
+    class Meta:
+        pass
 
     # Fields
     name = models.CharField(max_length=50)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("food_Category_detail", args=(self.pk,))
@@ -227,14 +225,13 @@ class Category(models.Model):
 
 
 class Brand(models.Model):
+    class Meta:
+        pass
 
     # Fields
     name = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("food_Brand_detail", args=(self.pk,))
@@ -247,6 +244,9 @@ class Brand(models.Model):
 
 
 class Location(models.Model):
+    class Meta:
+        pass
+
     TEMPERATURES = Stock.TEMPERATURES
 
     # Fields
@@ -256,9 +256,6 @@ class Location(models.Model):
     default = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        pass
 
     def save(self, *args, **kwargs):
         if not self.default:
@@ -287,6 +284,8 @@ class Location(models.Model):
 
 
 class Product(models.Model):
+    class Meta:
+        pass
 
     # Relationships
     categories = models.ManyToManyField("food.Category")
@@ -300,9 +299,6 @@ class Product(models.Model):
     code = models.CharField(max_length=30, unique=True)
     quantity = models.FloatField(blank=True, null=True, default=None)
     is_pack = models.BooleanField(default=False)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("food_Product_detail", args=(self.pk,))

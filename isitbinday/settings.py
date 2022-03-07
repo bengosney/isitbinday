@@ -3,7 +3,7 @@ import datetime
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 # Third Party
 import django_heroku
@@ -26,7 +26,7 @@ SECRET_KEY = "uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz"
 DEBUG = os.environ.get("ENV") != "production"
 TESTING = sys.argv[1:2] == ["test"]
 
-ALLOWED_HOSTS: List[str] = []
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
@@ -89,7 +89,7 @@ WSGI_APPLICATION = "isitbinday.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES: Dict[str, Dict[str, Any]] = {
+DATABASES: dict[str, dict[str, Any]] = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",

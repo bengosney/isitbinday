@@ -6,11 +6,6 @@ from .models import Sprint, Task
 
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
-
-    owner = serializers.ReadOnlyField(source="owner.username")
-    completed = serializers.ReadOnlyField()
-    state = serializers.ReadOnlyField()
-
     class Meta:
         model = Task
         fields = [
@@ -30,6 +25,10 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
             "previous_state",
         ]
 
+    owner = serializers.ReadOnlyField(source="owner.username")
+    completed = serializers.ReadOnlyField()
+    state = serializers.ReadOnlyField()
+
     def to_internal_value(self, data):
         if data.get("due_date", None) == "":
             data.pop("due_date")
@@ -37,9 +36,6 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SprintSerializer(serializers.HyperlinkedModelSerializer):
-
-    owner = serializers.ReadOnlyField(source="owner.username")
-
     class Meta:
         model = Sprint
         fields = [
@@ -53,3 +49,5 @@ class SprintSerializer(serializers.HyperlinkedModelSerializer):
             "last_updated",
             "owner",
         ]
+
+    owner = serializers.ReadOnlyField(source="owner.username")

@@ -21,6 +21,8 @@ class NotFoundException(Exception):
 
 
 class Author(AuthorizedModel):
+    class Meta:
+        unique_together = ["name", "owner"]
 
     # Relationships
     owner = models.ForeignKey("auth.User", related_name="authors", on_delete=models.CASCADE)
@@ -29,9 +31,6 @@ class Author(AuthorizedModel):
     name = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        unique_together = ["name", "owner"]
 
     def get_absolute_url(self):
         return reverse("books_author_detail", args=(self.pk,))
@@ -44,20 +43,22 @@ class Author(AuthorizedModel):
 
 
 class FailedScan(AuthorizedModel):
+    class Meta:
+        unique_together = ["isbn", "owner"]
 
     owner = models.ForeignKey("auth.User", related_name="failedBookScan", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     isbn = models.CharField(max_length=30)
 
-    class Meta:
-        unique_together = ["isbn", "owner"]
-
     def __str__(self) -> str:
         return f"{self.isbn}"
 
 
 class Book(AuthorizedModel):
+    class Meta:
+        unique_together = [["isbn", "owner"], ["title", "owner"]]
+        ordering = ["-pk"]
 
     # Relationships
     authors = models.ManyToManyField("books.Author", related_name="books")
@@ -74,10 +75,6 @@ class Book(AuthorizedModel):
     tmp_cover = models.CharField(max_length=512, blank=True, null=True, default=None)
 
     requires_refetch = models.BooleanField(default=False)
-
-    class Meta:
-        unique_together = [["isbn", "owner"], ["title", "owner"]]
-        ordering = ["-pk"]
 
     def get_absolute_url(self):
         return reverse("books_book_detail", args=(self.pk,))

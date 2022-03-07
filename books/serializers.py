@@ -24,8 +24,6 @@ class simpleBookSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class authorSerializer(serializers.HyperlinkedModelSerializer):
-    books = simpleBookSerializer(many=True, read_only=True)
-
     class Meta:
         model = models.Author
         fields = [
@@ -35,10 +33,10 @@ class authorSerializer(serializers.HyperlinkedModelSerializer):
             "books",
         ]
 
+    books = simpleBookSerializer(many=True, read_only=True)
+
 
 class bookSerializer(serializers.HyperlinkedModelSerializer):
-    authors = simpleAuthorSerializer(many=True, read_only=True)
-
     class Meta:
         model = models.Book
         fields = [
@@ -50,3 +48,5 @@ class bookSerializer(serializers.HyperlinkedModelSerializer):
             "created",
             "authors",
         ]
+
+    authors = simpleAuthorSerializer(many=True, read_only=True)

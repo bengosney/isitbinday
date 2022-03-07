@@ -38,33 +38,31 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-
-    brand = BrandSerializer(many=False, read_only=True)
-    categories = CategorySerializer(many=True, read_only=True)
-
     class Meta:
         model = models.Product
         exclude = [f for f in defaultExcludes if getattr(models.Product, f, False)]
 
+    brand = BrandSerializer(many=False, read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
+
 
 class StockSerializer(serializers.ModelSerializer):
-
-    product = ProductSerializer(many=False, read_only=True)
-
     class Meta:
         model = models.Stock
         exclude = [f for f in defaultExcludes if getattr(models.Stock, f, False)]
 
+    product = ProductSerializer(many=False, read_only=True)
+
 
 class LookupSerializer(serializers.ModelSerializer):
+    class Meta(ProductSerializer.Meta):
+        pass
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             if field != "code":
                 self.fields[field].read_only = True
-
-    class Meta(ProductSerializer.Meta):
-        pass
 
     def create(self, validated_data):
         code = validated_data.get("code")
