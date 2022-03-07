@@ -6,7 +6,7 @@
 #
 asgiref==3.4.1
     # via django
-backports.zoneinfo==0.2.1
+backports-zoneinfo==0.2.1
     # via django
 boto3==1.21.8
     # via -r requirements.in
@@ -30,7 +30,7 @@ coreschema==0.0.4
     # via coreapi
 dj-database-url==0.5.0
     # via django-heroku
-django==4.0.2
+django==4.0.3
     # via
     #   -r requirements.in
     #   django-admin-sortable2
