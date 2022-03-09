@@ -1,5 +1,4 @@
 # Standard Library
-from typing import Union
 
 # Django
 from django.db import models
@@ -13,13 +12,15 @@ from django_oso.models import AuthorizedModel
 
 
 class OwnedModel(AuthorizedModel):
-    owner = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
-
     class Meta:
         abstract = True
 
+    owner = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
+
 
 class Ingredient(OwnedModel):
+    class Meta:
+        pass
 
     # Relationships
     unit = models.ForeignKey("recipes.unit", related_name="ingredients", on_delete=models.CASCADE)
@@ -30,9 +31,6 @@ class Ingredient(OwnedModel):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
-
-    class Meta:
-        pass
 
     @property
     def quantity_unit(self):
@@ -74,6 +72,9 @@ class Ingredient(OwnedModel):
 
 
 class Recipe(OwnedModel):
+    class Meta:
+        pass
+
     name = models.CharField(_("Name"), max_length=30)
     time = models.DurationField(_("Time to cook"), default=0)
     description = models.TextField(_("Description"), max_length=512, default="", blank=True)
@@ -81,9 +82,6 @@ class Recipe(OwnedModel):
     link = models.URLField(_("Original URL"), max_length=200, default="", blank=True)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("recipes_recipe_detail", args=(self.pk,))
@@ -96,6 +94,8 @@ class Recipe(OwnedModel):
 
 
 class Unit(OwnedModel):
+    class Meta:
+        pass
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -122,11 +122,8 @@ class Unit(OwnedModel):
 
         return cls._units
 
-    class Meta:
-        pass
-
     @property
-    def unit_class(self) -> Union[pint.Quantity, None]:
+    def unit_class(self) -> pint.Quantity | None:
         reg = self._get_units()
         try:
             cls = reg(f"{self.name}".replace(" ", "_").lower())
@@ -148,6 +145,8 @@ class Unit(OwnedModel):
 
 
 class Step(OwnedModel):
+    class Meta:
+        pass
 
     # Relationships
     recipe = models.ForeignKey("recipes.recipe", related_name="steps", on_delete=models.CASCADE)
@@ -156,9 +155,6 @@ class Step(OwnedModel):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     description = models.TextField(max_length=512)
-
-    class Meta:
-        pass
 
     def get_absolute_url(self):
         return reverse("recipes_step_detail", args=(self.pk,))
