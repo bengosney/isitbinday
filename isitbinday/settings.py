@@ -1,7 +1,6 @@
 # Standard Library
 import datetime
 import os
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -24,7 +23,7 @@ SECRET_KEY = "uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("ENV") != "production"
-TESTING = sys.argv[1:2] == ["test"]
+TESTING = os.environ.get("CI") == "true"
 
 ALLOWED_HOSTS: list[str] = []
 
@@ -192,6 +191,8 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "system@isitbinday.com"
 
 django_heroku.settings(locals())
+
+print(DATABASES)
 
 if TESTING:
     try:
