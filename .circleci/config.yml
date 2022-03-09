@@ -18,18 +18,20 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v2-deps-{{ checksum "requirements.dev.txt" }}
+          key: v3-deps-{{ checksum "requirements.dev.txt" }}-{{ checksum "requirements.txt" }}
       - python/install-packages:
           pkg-manager: pipenv
       - run:
           name: install dependencies
           command: pipenv install --dev -r requirements.dev.txt
       - save_cache:
-          key: v2-deps-{{ checksum "requirements.dev.txt" }}
+          key: v3-deps-{{ checksum "requirements.dev.txt" }}-{{ checksum "requirements.txt" }}
           paths:
             - /home/circleci/.local/share/virtualenvs
             - /home/circleci/.cache/pip
             - /home/circleci/.cache/pipenv
+            - ./Pipfile.lock
+            - ./Pipfile
       - run:
           name: Run tests
           command: pipenv run ./manage.py test
