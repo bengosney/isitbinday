@@ -170,7 +170,7 @@ class Stock(AuthorizedModel):
         return newStock, stockLeft
 
     def _split(self, quantity: float = None) -> Optional["Stock"]:
-        quantity = self.quantity if quantity is None else float(quantity)
+        quantity = self.quantity if quantity is None else quantity
         if quantity > self.quantity:
             raise Exception("Can not effect more than you have")
 
