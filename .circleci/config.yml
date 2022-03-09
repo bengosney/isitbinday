@@ -35,3 +35,8 @@ jobs:
       - run:
           name: Run tests
           command: pipenv run ./manage.py test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: tr1
