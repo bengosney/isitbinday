@@ -9,7 +9,7 @@ jobs:
         environment:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/circle_test?sslmode=disable
           ENV: testing
-      - image: circleci/postgres:12.9
+      - image: cimg/postgres:12.9
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: circle_test
@@ -18,16 +18,18 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-deps-{{ checksum "requirements.dev.txt" }}
+          key: v2-deps-{{ checksum "requirements.dev.txt" }}
       - python/install-packages:
           pkg-manager: pipenv
       - run:
           name: install dependencies
           command: pipenv install --dev -r requirements.dev.txt
       - save_cache:
-          key: v1-deps-{{ checksum "requirements.dev.txt" }}
+          key: v2-deps-{{ checksum "requirements.dev.txt" }}
           paths:
             - /home/circleci/.local/share/virtualenvs
+            - /home/circleci/.cache/pip
+            - /home/circleci/.cache/pipenv
       - run:
           name: Run tests
           command: pipenv run ./manage.py test
