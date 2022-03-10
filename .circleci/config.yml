@@ -34,7 +34,9 @@ jobs:
             - ./Pipfile
       - run:
           name: Run tests
-          command: pipenv run ./manage.py test
+          command: |
+            mkdir test-results
+            pipenv run pytest --junitxml=test-results/junit.xml
       - store_test_results:
           path: test-results
       - store_artifacts:
