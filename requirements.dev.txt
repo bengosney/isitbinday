@@ -23,7 +23,7 @@ colorama==0.4.4
     #   commitizen
     #   icecream
     #   rich
-commitizen==2.21.2
+commitizen==2.23.0
     # via -r requirements.dev.in
 commonmark==0.9.1
     # via rich
@@ -120,9 +120,7 @@ six==1.16.0
 termcolor==1.1.0
     # via commitizen
 toml==0.10.2
-    # via
-    #   -c requirements.txt
-    #   pre-commit
+    # via pre-commit
 tomli==2.0.1
     # via
     #   -c requirements.txt
