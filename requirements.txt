@@ -86,7 +86,7 @@ djangorestframework==3.13.1
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.1.0
     # via -r requirements.in
-djangorestframework-stubs==1.4.0
+djangorestframework-stubs==1.5.0
     # via -r requirements.in
 googletrans==3.0.0
     # via -r requirements.in
@@ -181,10 +181,18 @@ tomli==2.0.1
     # via
     #   django-stubs
     #   mypy
+types-markdown==3.3.12
+    # via djangorestframework-stubs
 types-pytz==2021.3.5
     # via django-stubs
 types-pyyaml==6.0.4
-    # via django-stubs
+    # via
+    #   django-stubs
+    #   djangorestframework-stubs
+types-requests==2.27.16
+    # via djangorestframework-stubs
+types-urllib3==1.26.11
+    # via types-requests
 typing-extensions==4.1.1
     # via
     #   django-stubs
