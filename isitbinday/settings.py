@@ -1,4 +1,5 @@
 # Standard Library
+import contextlib
 import datetime
 import os
 from pathlib import Path
@@ -194,14 +195,10 @@ DEFAULT_FROM_EMAIL = "system@isitbinday.com"
 
 django_heroku.settings(locals())
 
-print(DATABASES)
 
 if TESTING:
-    try:
+    with contextlib.suppress(KeyError):
         del DATABASES["default"]["OPTIONS"]["sslmode"]
-    except KeyError:
-        pass
-
 if LIVE := not DEBUG and not TESTING:
     # Third Party
     import rollbar
