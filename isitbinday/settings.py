@@ -45,11 +45,13 @@ INSTALLED_APPS = [
     "django_fsm",
     "django_fsm_log",
     "fsm_admin2",
+    "taggit",
     "accounts",
     "tasks",
     "food",
     "books",
     "recipes",
+    "hiit",
 ]
 
 MIDDLEWARE = [
@@ -222,3 +224,5 @@ if LIVE := not DEBUG and not TESTING:
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CSRF_TRUSTED_ORIGINS = ["https://api.isitbinday.com"]
+
+TAGGIT_CASE_INSENSITIVE = True

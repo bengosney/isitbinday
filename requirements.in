@@ -14,6 +14,7 @@ django-model-utils
 django-oso
 django-storages
 django-stubs
+django-taggit
 djangorestframework
 djangorestframework-simplejwt
 djangorestframework-stubs
