@@ -29,7 +29,7 @@ class Workout(models.Model):
 
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    exercises = models.ManyToManyField(Exercise, blank=True)
+    exercises = models.ManyToManyField(Exercise)
     tags = TaggableManager(blank=True)
 
     round_count = models.IntegerField(default=20)
@@ -41,3 +41,6 @@ class Workout(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def fill_exercises(self):
+        pass

@@ -10,3 +10,4 @@ pytest
 pytest-clarity
 pytest-django
 pytest-picked
+model_bakery
