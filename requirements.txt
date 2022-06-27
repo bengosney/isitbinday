@@ -86,7 +86,7 @@ djangorestframework==3.13.1
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.2.0
     # via -r requirements.in
-djangorestframework-stubs==1.6.0
+djangorestframework-stubs==1.7.0
     # via -r requirements.in
 googletrans==3.0.0
     # via -r requirements.in
@@ -120,7 +120,7 @@ jmespath==0.10.0
     #   botocore
 markupsafe==2.1.0
     # via jinja2
-mypy==0.931
+mypy==0.961
     # via
     #   django-stubs
     #   djangorestframework-stubs
