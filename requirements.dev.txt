@@ -12,6 +12,8 @@ attrs==21.4.0
     # via pytest
 black==22.3.0
     # via -r requirements.dev.in
+build==0.8.0
+    # via pip-tools
 cfgv==3.3.1
     # via pre-commit
 click==8.0.4
@@ -58,15 +60,16 @@ nodeenv==1.6.0
 packaging==21.3
     # via
     #   -r requirements.dev.in
+    #   build
     #   commitizen
     #   pytest
 pathspec==0.9.0
     # via black
 pep517==0.12.0
-    # via pip-tools
+    # via build
 pip-chill==1.0.1
     # via -r requirements.dev.in
-pip-tools==6.6.2
+pip-tools==6.8.0
     # via -r requirements.dev.in
 platformdirs==2.5.1
     # via
@@ -122,6 +125,7 @@ tomli==2.0.1
     # via
     #   -c requirements.txt
     #   black
+    #   build
     #   pep517
     #   pytest
 tomlkit==0.10.0
