@@ -79,7 +79,7 @@ pluggy==1.0.0
     # via pytest
 pprintpp==0.4.0
     # via pytest-clarity
-pre-commit==2.19.0
+pre-commit==2.20.0
     # via -r requirements.dev.in
 prompt-toolkit==3.0.28
     # via questionary
