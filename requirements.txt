@@ -80,7 +80,7 @@ django-stubs==1.12.0
     #   djangorestframework-stubs
 django-stubs-ext==0.4.0
     # via django-stubs
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   djangorestframework-simplejwt
