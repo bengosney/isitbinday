@@ -20,7 +20,7 @@ class OwnedModel(AuthorizedModel):
 
 class Ingredient(OwnedModel):
     class Meta:
-        pass
+        unique_together = [["owner", "name", "recipe"]]
 
     # Relationships
     unit = models.ForeignKey("recipes.unit", related_name="ingredients", on_delete=models.CASCADE)
@@ -73,7 +73,7 @@ class Ingredient(OwnedModel):
 
 class Recipe(OwnedModel):
     class Meta:
-        pass
+        unique_together = [["owner", "name"]]
 
     name = models.CharField(_("Name"), max_length=30)
     time = models.DurationField(_("Time to cook"), default=0)
@@ -95,7 +95,7 @@ class Recipe(OwnedModel):
 
 class Unit(OwnedModel):
     class Meta:
-        pass
+        unique_together = [["owner", "name"]]
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -146,7 +146,7 @@ class Unit(OwnedModel):
 
 class Step(OwnedModel):
     class Meta:
-        pass
+        unique_together = [["owner", "description", "recipe"]]
 
     # Relationships
     recipe = models.ForeignKey("recipes.recipe", related_name="steps", on_delete=models.CASCADE)
