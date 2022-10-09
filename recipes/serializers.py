@@ -40,3 +40,7 @@ class recipeSerializer(serializers.ModelSerializer):
 
     ingredients = ingredientSerializer(many=True, required=False)
     steps = stepSerializer(many=True, required=False)
+
+
+class recipeURLSerializer(serializers.Serializer):
+    url = serializers.URLField()

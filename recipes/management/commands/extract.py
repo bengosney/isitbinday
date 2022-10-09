@@ -1,4 +1,5 @@
 # Django
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
 # First Party
@@ -9,6 +10,7 @@ class Command(BaseCommand):
     help = "Test extracting"
 
     def add_arguments(self, parser):
+        parser.add_argument("owner", type=int)
         parser.add_argument("url", type=str)
 
     def handle(self, *args, **options):
@@ -18,5 +20,10 @@ class Command(BaseCommand):
         url = options["url"]
         self.stdout.write(self.style.SUCCESS(f"Getting recipe from {url}"))
 
-        extractor = schema_org()
+        owner = User.objects.get(pk=options["owner"])
+
+        if owner is None:
+            raise Exception(f"User with id {options['owner']} was not found")
+
+        extractor = schema_org(owner)
         extractor.extract(url)

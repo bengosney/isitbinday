@@ -56,23 +56,27 @@ def get_raw_html(url: str) -> str:
 
 
 class schema_org:
-    def parse(self, raw_html: str, url: str | None = None) -> None:
+    def __init__(self, owner: User) -> None:
+        self.owner = owner
+
+    def parse(self, raw_html: str, url: str | None = None) -> int:
         ingredientRegex = re.compile(r"^(([\d\.\/]+)\s*([\w,]+))\s+(.+)$")
         defaultUnit, _ = Unit.objects.get_or_create(name="of")
-        owner = User.objects.get(id=1)
 
         html = HTML(raw_html)
+        found = 0
         for e in html.query('script[type="application/ld+json"]'):
             data = json.loads(e.text or "")
 
             if "@type" not in data or f"{data['@type']}".lower() != "recipe":
                 continue
 
+            found += 1
             cook_time = parse_isoduration(data["cookTime"])
             prep_time = parse_isoduration(data["prepTime"])
 
             recipe, _ = Recipe.objects.update_or_create(
-                owner=owner,
+                owner=self.owner,
                 name=data["name"],
                 defaults={
                     "description": data["description"],
@@ -97,7 +101,7 @@ class schema_org:
                     defaults["quantity"] = float(matches[2])
 
                 ingredient, _ = Ingredient.objects.update_or_create(
-                    owner=owner,
+                    owner=self.owner,
                     recipe=recipe,
                     name=name,
                     defaults=defaults,
@@ -105,11 +109,13 @@ class schema_org:
 
             for instruction in data["recipeInstructions"]:
                 Step.objects.get_or_create(
-                    owner=owner,
+                    owner=self.owner,
                     recipe=recipe,
                     description=instruction["text"],
                 )
 
-    def extract(self, url: str):
+        return found
+
+    def extract(self, url: str) -> int:
         raw_html = get_raw_html(url)
-        self.parse("".join(raw_html), url)
+        return self.parse("".join(raw_html), url)
