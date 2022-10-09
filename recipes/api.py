@@ -1,7 +1,13 @@
+# Django
+from django.core.exceptions import PermissionDenied
+
 # Third Party
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 # First Party
+from recipes.extrators import schema_org
 from tasks.permissions import IsOwner
 
 # Locals
@@ -31,6 +37,20 @@ class recipeViewSet(baseViewSet):
     serializer_class = serializers.recipeSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     lookup_field = "slug"
+
+    @action(detail=False, methods=["put", "post"])
+    def from_url(self, request):
+        user = request.user
+        if user is None:
+            raise PermissionDenied
+
+        serializer = serializers.recipeURLSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        extractor = schema_org(user)
+        found = extractor.extract(serializer.validated_data["url"])
+
+        return Response({"found": found})
 
 
 class unitViewSet(baseViewSet):

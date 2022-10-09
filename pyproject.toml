@@ -1,11 +1,10 @@
 [project]
-name = "Is It Bin Day"
+name = "is-it-bin-day"
 version = "0.1.3"
-description = "More usefull task list"
-authors = ["Ben Gosney <bengosney@googlemail.com>"]
-python = "3.10.2"
-homepage = "https://www.isitbinday.com/"
-repository = "https://github.com/bengosney/isitbinday/"
+description = "More useful task list"
+authors = [
+  {email = "bengosney@googlemail.com", name = "Ben Gosney"}
+]
 
 [build-system]
 requires = ["setuptools", "wheel"]

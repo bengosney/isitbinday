@@ -1,6 +1,7 @@
 -c requirements.txt
 black
 commitizen
+django-stubs
 icecream
 packaging
 pip-chill
@@ -10,3 +11,4 @@ pytest
 pytest-clarity
 pytest-django
 pytest-picked
+validate-pyproject[all]
