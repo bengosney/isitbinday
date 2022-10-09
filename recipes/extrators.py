@@ -3,6 +3,7 @@ import fractions
 import json
 import re
 from datetime import timedelta
+from fractions import Fraction
 from functools import lru_cache
 from unicodedata import normalize
 
@@ -11,6 +12,7 @@ from django.contrib.auth.models import User
 
 # Third Party
 import requests
+from icecream import ic
 from minestrone import HTML
 
 # Locals
@@ -60,7 +62,7 @@ class schema_org:
         self.owner = owner
 
     def parse(self, raw_html: str, url: str | None = None) -> int:
-        ingredientRegex = re.compile(r"^(([\d\.\/]+)\s*([\w,]+))\s+(.+)$")
+        ingredientRegex = re.compile(r"^(([\d\.\/]+)\s*([\w,\.]+))\s+(.+)$")
         defaultUnit, _ = Unit.objects.get_or_create(name="of")
 
         html = HTML(raw_html)
@@ -98,7 +100,9 @@ class schema_org:
                     else:
                         name = f"{matches[3]} {name}"
 
-                    defaults["quantity"] = float(matches[2])
+                    ic([ingredient, norm])
+
+                    defaults["quantity"] = float(Fraction(matches[2]))
 
                 ingredient, _ = Ingredient.objects.update_or_create(
                     owner=self.owner,
