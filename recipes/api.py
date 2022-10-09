@@ -45,13 +45,12 @@ class recipeViewSet(baseViewSet):
             raise PermissionDenied
 
         serializer = serializers.recipeURLSerializer(data=request.data)
-        if serializer.is_valid():
-            extractor = schema_org(user)
-            found = extractor.extract(serializer.validated_data["url"])
-
-            return Response({"found": found})
-        else:
+        if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        extractor = schema_org(user)
+        found = extractor.extract(serializer.validated_data["url"])
+
+        return Response({"found": found})
 
 
 class unitViewSet(baseViewSet):
