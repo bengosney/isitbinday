@@ -134,6 +134,18 @@ class Unit(OwnedModel):
         except pint.UndefinedUnitError:
             return None
 
+    @classmethod
+    def is_unit(cls, unit: str) -> bool:
+        reg = cls._get_units()
+        try:
+            cls = reg(unit.lower())
+            if not isinstance(cls, pint.Quantity):
+                raise pint.UndefinedUnitError()
+
+            return True
+        except pint.UndefinedUnitError:
+            return False
+
     def get_absolute_url(self):
         return reverse("recipes_unit_detail", args=(self.pk,))
 

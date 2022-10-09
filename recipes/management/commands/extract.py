@@ -2,20 +2,21 @@
 from django.core.management.base import BaseCommand
 
 # First Party
-from recipes.extrators import get_raw_html, schema_org
+from recipes.extrators import schema_org
 
 
 class Command(BaseCommand):
     help = "Test extracting"
 
     def add_arguments(self, parser):
-        pass
+        parser.add_argument("url", type=str)
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.SUCCESS("run"))
+        if "url" not in options:
+            raise Exception("URL not specified")
 
-        url = "https://www.waitrose.com/ecom/recipe/vegan-banana-cake-with-chocolate-frosting"
+        url = options["url"]
+        self.stdout.write(self.style.SUCCESS(f"Getting recipe from {url}"))
+
         extractor = schema_org()
-
-        rawHTML = get_raw_html(url)
-        extractor.extract("".join(rawHTML))
+        extractor.extract(url)
