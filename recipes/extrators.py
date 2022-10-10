@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 
 # Third Party
 import requests
-from icecream import ic
 from minestrone import HTML
 
 # Locals
@@ -99,8 +98,6 @@ class schema_org:
                         defaults["unit"] = unit
                     else:
                         name = f"{matches[3]} {name}"
-
-                    ic([ingredient, norm])
 
                     defaults["quantity"] = float(Fraction(matches[2]))
 
