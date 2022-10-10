@@ -27,7 +27,7 @@ class Ingredient(OwnedModel):
     recipe = models.ForeignKey("recipes.recipe", related_name="ingredients", on_delete=models.CASCADE)
 
     # Fields
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
@@ -75,7 +75,7 @@ class Recipe(OwnedModel):
     class Meta:
         unique_together = [["owner", "name"]]
 
-    name = models.CharField(_("Name"), max_length=30)
+    name = models.CharField(_("Name"), max_length=255)
     time = models.DurationField(_("Time to cook"), default=0)
     description = models.TextField(_("Description"), max_length=512, default="", blank=True)
     slug = AutoSlugField(_("Slug"), populate_from=("name",))
@@ -100,7 +100,7 @@ class Unit(OwnedModel):
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=127)
 
     _units = None
 

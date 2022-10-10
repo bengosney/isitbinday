@@ -12,7 +12,6 @@ repos:
       - id: check-toml
       - id: check-added-large-files
       - id: check-merge-conflict
-      - id: detect-aws-credentials
       - id: detect-private-key
       - id: file-contents-sorter
         files: requirements.*\.in
@@ -57,11 +56,6 @@ repos:
     rev: 3.9.2
     hooks:
       - id: flake8
-  - repo: https://github.com/jazzband/pip-tools
-    rev: 6.9.0
-    hooks:
-      - id: pip-compile
-        files: ^(setup\.py|requirements.txt|requirements.in)$
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.0.0
     hooks:
