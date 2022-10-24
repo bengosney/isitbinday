@@ -121,7 +121,7 @@ jmespath==1.0.1
     #   botocore
 markupsafe==2.1.1
     # via jinja2
-minestrone==0.3.0
+minestrone==0.4.0
     # via -r requirements.in
 mypy==0.982
     # via
