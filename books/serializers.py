@@ -47,6 +47,7 @@ class bookSerializer(serializers.HyperlinkedModelSerializer):
             "last_updated",
             "created",
             "authors",
+            "cover",
         ]
 
     authors = simpleAuthorSerializer(many=True, read_only=True)

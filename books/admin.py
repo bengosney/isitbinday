@@ -20,7 +20,6 @@ class authorAdmin(admin.ModelAdmin):
         "last_updated",
     ]
     readonly_fields = [
-        "name",
         "created",
         "last_updated",
     ]
