@@ -1,47 +1,25 @@
 pull_request_rules:
-  - name: Automatic approve on dependabot PR
+  - name: Merge Mine
     conditions:
-      - author~=^dependabot(|-preview)\[bot\]$
-      - check-success=workflow
+      - and:
+          - author~=^bengosney$
+          - check-success=workflow
+          - check-success=Sourcery
     actions:
-      review:
-        type: APPROVE
+      merge:
+        method: merge
 
-  - name: Automatic merge on approval
+  - name: Automatic merge dependabot PR
     conditions:
       - author~=^dependabot(|-preview)\[bot\]$
       - check-success=workflow
     actions:
       merge:
         method: merge
-
-  - name: Automatic approve on Sourcery AI PR
-    conditions:
-      - author~=^sourcery.*$
-      - base!=master
-    actions:
-      review:
-        type: APPROVE
 
   - name: Automatic merge on approval of Sourcery AI PR
     conditions:
       - author~=^sourcery.*$
-      - base!=master
-    actions:
-      merge:
-        method: merge
-
-  - name: Automatic approve my PR
-    conditions:
-      - author~=^bengosney$
-      - check-success=workflow
-    actions:
-      review:
-        type: APPROVE
-
-  - name: Automatic merge on approval
-    conditions:
-      - author~=^bengosney$
       - check-success=workflow
     actions:
       merge:
