@@ -107,7 +107,7 @@ pluggy==1.0.0
     # via pytest
 pprintpp==0.4.0
     # via pytest-clarity
-pre-commit==2.20.0
+pre-commit==2.21.0
     # via -r requirements.dev.in
 prompt-toolkit==3.0.31
     # via questionary
@@ -148,8 +148,6 @@ sqlparse==0.4.3
     #   django
 termcolor==2.0.1
     # via commitizen
-toml==0.10.2
-    # via pre-commit
 tomli==2.0.1
     # via
     #   -c requirements.txt
