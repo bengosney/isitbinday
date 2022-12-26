@@ -84,7 +84,7 @@ mypy-extensions==0.4.3
     #   mypy
 nodeenv==1.7.0
     # via pre-commit
-packaging==21.3
+packaging==22.0
     # via
     #   -r requirements.dev.in
     #   build
@@ -115,8 +115,6 @@ pygments==2.13.0
     # via
     #   icecream
     #   rich
-pyparsing==3.0.9
-    # via packaging
 pytest==7.2.0
     # via
     #   -r requirements.dev.in
