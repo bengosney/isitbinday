@@ -153,7 +153,7 @@ pyyaml==6.0
     # via -r requirements.in
 recurrent==0.4.1
     # via -r requirements.in
-requests==2.28.1
+requests==2.28.2
     # via
     #   -r requirements.in
     #   coreapi
