@@ -45,11 +45,11 @@ django==4.1.5
     #   -c requirements.txt
     #   django-stubs
     #   django-stubs-ext
-django-stubs==1.12.0
+django-stubs==1.14.0
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
-django-stubs-ext==0.5.0
+django-stubs-ext==0.7.0
     # via
     #   -c requirements.txt
     #   django-stubs
@@ -66,13 +66,9 @@ identify==2.5.6
 iniconfig==1.1.1
     # via pytest
 jinja2==3.1.2
-    # via
-    #   -c requirements.txt
-    #   commitizen
+    # via commitizen
 markupsafe==2.1.1
-    # via
-    #   -c requirements.txt
-    #   jinja2
+    # via jinja2
 mypy==0.982
     # via
     #   -c requirements.txt
