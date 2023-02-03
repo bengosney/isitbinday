@@ -14,7 +14,7 @@ asttokens==2.0.8
     # via icecream
 attrs==22.1.0
     # via pytest
-black==22.12.0
+black==23.1.0
     # via -r requirements.dev.in
 build==0.8.0
     # via pip-tools
@@ -83,6 +83,7 @@ nodeenv==1.7.0
 packaging==23.0
     # via
     #   -r requirements.dev.in
+    #   black
     #   build
     #   commitizen
     #   pytest
