@@ -83,7 +83,7 @@ djangorestframework==3.14.0
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.2.2
     # via -r requirements.in
-djangorestframework-stubs==1.9.1
+djangorestframework-stubs==1.10.0
     # via -r requirements.in
 googletrans==3.0.0
     # via -r requirements.in
