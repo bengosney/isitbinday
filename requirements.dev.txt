@@ -174,7 +174,7 @@ typing-extensions==4.4.0
     #   django-stubs
     #   django-stubs-ext
     #   mypy
-validate-pyproject[all]==0.12.1
+validate-pyproject[all]==0.12.2
     # via -r requirements.dev.in
 virtualenv==20.16.5
     # via pre-commit
