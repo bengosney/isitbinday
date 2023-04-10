@@ -6,7 +6,7 @@
 #
 argcomplete==2.0.0
     # via commitizen
-asgiref==3.5.2
+asgiref==3.6.0
     # via
     #   -c requirements.txt
     #   django
@@ -40,7 +40,7 @@ decli==0.5.2
     # via commitizen
 distlib==0.3.6
     # via virtualenv
-django==4.1.7
+django==4.2
     # via
     #   -c requirements.txt
     #   django-stubs
