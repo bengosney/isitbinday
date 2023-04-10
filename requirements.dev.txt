@@ -12,8 +12,6 @@ asgiref==3.6.0
     #   django
 asttokens==2.0.8
     # via icecream
-attrs==22.1.0
-    # via pytest
 black==23.3.0
     # via -r requirements.dev.in
 build==0.8.0
@@ -114,7 +112,7 @@ pygments==2.13.0
     # via
     #   icecream
     #   rich
-pytest==7.2.2
+pytest==7.3.0
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
