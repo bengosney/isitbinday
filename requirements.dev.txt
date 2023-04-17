@@ -92,7 +92,7 @@ pathspec==0.10.1
     # via black
 pep517==0.13.0
     # via build
-pip-chill==1.0.1
+pip-chill==1.0.3
     # via -r requirements.dev.in
 pip-tools==6.13.0
     # via -r requirements.dev.in
