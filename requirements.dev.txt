@@ -38,16 +38,16 @@ decli==0.6.0
     # via commitizen
 distlib==0.3.6
     # via virtualenv
-django==4.2.1
+django==4.2.2
     # via
     #   -c requirements.txt
     #   django-stubs
     #   django-stubs-ext
-django-stubs==1.14.0
+django-stubs==4.2.1
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
-django-stubs-ext==0.7.0
+django-stubs-ext==4.2.1
     # via
     #   -c requirements.txt
     #   django-stubs
