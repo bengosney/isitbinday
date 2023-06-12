@@ -43,11 +43,11 @@ django==4.2.1
     #   -c requirements.txt
     #   django-stubs
     #   django-stubs-ext
-django-stubs==1.14.0
+django-stubs==4.2.1
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
-django-stubs-ext==0.7.0
+django-stubs-ext==4.2.1
     # via
     #   -c requirements.txt
     #   django-stubs
