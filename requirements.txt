@@ -54,7 +54,7 @@ django-cors-headers==4.0.0
     # via -r requirements.in
 django-environ==0.10.0
     # via -r requirements.in
-django-extensions==3.2.1
+django-extensions==3.2.3
     # via -r requirements.in
 django-fsm==2.8.1
     # via
