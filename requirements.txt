@@ -26,7 +26,7 @@ charset-normalizer==2.1.1
     # via requests
 dj-database-url==1.0.0
     # via django-heroku
-django==4.2.2
+django==4.2.3
     # via
     #   -r requirements.in
     #   dj-database-url
