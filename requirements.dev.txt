@@ -110,7 +110,7 @@ pre-commit==3.3.3
     # via -r requirements.dev.in
 prompt-toolkit==3.0.31
     # via questionary
-pygments==2.13.0
+pygments==2.15.0
     # via
     #   icecream
     #   rich
