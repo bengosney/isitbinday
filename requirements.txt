@@ -87,7 +87,7 @@ djangorestframework-stubs==3.14.2
     # via -r requirements.in
 googletrans==3.0.0
     # via -r requirements.in
-gunicorn==20.1.0
+gunicorn==21.2.0
     # via -r requirements.in
 h11==0.9.0
     # via httpcore
@@ -123,6 +123,8 @@ openfoodfacts==0.1.3
     # via -r requirements.in
 oso==0.27.0
     # via django-oso
+packaging==23.1
+    # via gunicorn
 parsedatetime==2.6
     # via recurrent
 pillow==10.0.0
@@ -195,6 +197,3 @@ urllib3==1.26.12
     #   requests
 whitenoise==6.2.0
     # via django-heroku
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
