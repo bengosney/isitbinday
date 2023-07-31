@@ -84,6 +84,7 @@ nodeenv==1.7.0
     # via pre-commit
 packaging==23.1
     # via
+    #   -c requirements.txt
     #   -r requirements.dev.in
     #   black
     #   build
@@ -124,7 +125,7 @@ pytest-clarity==1.0.1
     # via -r requirements.dev.in
 pytest-django==4.5.2
     # via -r requirements.dev.in
-pytest-picked==0.4.6
+pytest-picked==0.5.0
     # via -r requirements.dev.in
 pyyaml==6.0.1
     # via
