@@ -115,7 +115,7 @@ pygments==2.15.0
     # via
     #   icecream
     #   rich
-pytest==7.4.0
+pytest==7.4.1
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
