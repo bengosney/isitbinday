@@ -52,7 +52,7 @@ django-appconf==1.0.5
     #   django-fsm-log
 django-cors-headers==4.2.0
     # via -r requirements.in
-django-environ==0.10.0
+django-environ==0.11.2
     # via -r requirements.in
 django-extensions==3.2.3
     # via -r requirements.in
