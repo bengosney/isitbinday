@@ -38,7 +38,7 @@ decli==0.6.0
     # via commitizen
 distlib==0.3.6
     # via virtualenv
-django==4.2.4
+django==4.2.5
     # via
     #   -c requirements.txt
     #   django-stubs
