@@ -30,7 +30,7 @@ colorama==0.4.5
     # via
     #   commitizen
     #   icecream
-commitizen==3.7.0
+commitizen==3.8.2
     # via -r requirements.dev.in
 commonmark==0.9.1
     # via rich
