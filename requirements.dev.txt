@@ -38,12 +38,12 @@ decli==0.6.0
     # via commitizen
 distlib==0.3.6
     # via virtualenv
-django==4.2.5
+django==4.2.6
     # via
     #   -c requirements.txt
     #   django-stubs
     #   django-stubs-ext
-django-stubs==4.2.3
+django-stubs==4.2.4
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
@@ -169,7 +169,7 @@ types-pyyaml==6.0.12
     # via
     #   -c requirements.txt
     #   django-stubs
-typing-extensions==4.4.0
+typing-extensions==4.8.0
     # via
     #   -c requirements.txt
     #   black
