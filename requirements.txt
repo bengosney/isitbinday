@@ -73,7 +73,7 @@ django-model-utils==4.3.1
     # via -r requirements.in
 django-oso==0.27.0
     # via -r requirements.in
-django-storages==1.14.1
+django-storages==1.14.2
     # via -r requirements.in
 django-stubs==4.2.4
     # via djangorestframework-stubs
