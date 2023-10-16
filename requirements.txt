@@ -113,7 +113,7 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-minestrone==0.6.2
+minestrone==0.7.0
     # via -r requirements.in
 mypy==1.2.0
     # via
