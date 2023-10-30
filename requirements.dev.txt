@@ -43,11 +43,11 @@ django==4.2.6
     #   -c requirements.txt
     #   django-stubs
     #   django-stubs-ext
-django-stubs==4.2.4
+django-stubs==4.2.5
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
-django-stubs-ext==4.2.2
+django-stubs-ext==4.2.5
     # via
     #   -c requirements.txt
     #   django-stubs
@@ -115,7 +115,7 @@ pygments==2.15.0
     # via
     #   icecream
     #   rich
-pytest==7.4.2
+pytest==7.4.3
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
