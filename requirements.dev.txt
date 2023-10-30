@@ -12,7 +12,7 @@ asgiref==3.6.0
     #   django
 asttokens==2.0.8
     # via icecream
-black==23.10.0
+black==23.10.1
     # via -r requirements.dev.in
 build==0.8.0
     # via pip-tools
@@ -43,11 +43,11 @@ django==4.2.6
     #   -c requirements.txt
     #   django-stubs
     #   django-stubs-ext
-django-stubs==4.2.4
+django-stubs==4.2.5
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
-django-stubs-ext==4.2.2
+django-stubs-ext==4.2.5
     # via
     #   -c requirements.txt
     #   django-stubs
