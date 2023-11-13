@@ -123,7 +123,7 @@ pytest==7.4.3
     #   pytest-picked
 pytest-clarity==1.0.1
     # via -r requirements.dev.in
-pytest-django==4.6.0
+pytest-django==4.7.0
     # via -r requirements.dev.in
 pytest-picked==0.5.0
     # via -r requirements.dev.in
