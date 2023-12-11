@@ -6,7 +6,7 @@
 #
 annotated-types==0.6.0
     # via pydantic
-asgiref==3.6.0
+asgiref==3.7.2
     # via
     #   django
     #   django-cors-headers
@@ -30,7 +30,7 @@ charset-normalizer==2.1.1
     # via requests
 dj-database-url==1.0.0
     # via django-heroku
-django==4.2.7
+django==5.0
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -193,6 +193,7 @@ types-urllib3==1.26.25
     # via types-requests
 typing-extensions==4.8.0
     # via
+    #   asgiref
     #   django-stubs
     #   django-stubs-ext
     #   djangorestframework-stubs
