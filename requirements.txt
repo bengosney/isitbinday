@@ -131,7 +131,7 @@ packaging==23.1
     # via gunicorn
 parsedatetime==2.6
     # via recurrent
-pillow==10.1.0
+pillow==10.2.0
     # via -r requirements.in
 pint==0.19.2
     # via -r requirements.in
