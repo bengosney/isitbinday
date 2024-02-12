@@ -6,7 +6,7 @@
 #
 argcomplete==2.0.0
     # via commitizen
-asgiref==3.6.0
+asgiref==3.7.2
     # via
     #   -c requirements.txt
     #   django
@@ -38,7 +38,7 @@ decli==0.6.0
     # via commitizen
 distlib==0.3.6
     # via virtualenv
-django==4.2.7
+django==5.0.2
     # via
     #   -c requirements.txt
     #   django-stubs
@@ -172,6 +172,7 @@ types-pyyaml==6.0.12
 typing-extensions==4.8.0
     # via
     #   -c requirements.txt
+    #   asgiref
     #   black
     #   django-stubs
     #   django-stubs-ext
