@@ -27,4 +27,3 @@ requests
 requests
 rollbar
 uritemplate
-uvicorn
