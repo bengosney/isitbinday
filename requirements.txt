@@ -77,9 +77,9 @@ django-oso==0.27.0
     # via -r requirements.in
 django-storages==1.14.2
     # via -r requirements.in
-django-stubs==4.2.5
+django-stubs==4.2.7
     # via djangorestframework-stubs
-django-stubs-ext==4.2.5
+django-stubs-ext==4.2.7
     # via django-stubs
 djangorestframework==3.14.0
     # via
@@ -87,7 +87,7 @@ djangorestframework==3.14.0
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.3.0
     # via -r requirements.in
-djangorestframework-stubs==3.14.4
+djangorestframework-stubs==3.14.5
     # via -r requirements.in
 googletrans==3.0.0
     # via -r requirements.in
@@ -117,12 +117,6 @@ jmespath==1.0.1
     #   botocore
 minestrone==0.7.0
     # via -r requirements.in
-mypy==1.2.0
-    # via
-    #   django-stubs
-    #   djangorestframework-stubs
-mypy-extensions==1.0.0
-    # via mypy
 openfoodfacts==0.1.12
     # via -r requirements.in
 oso==0.27.0
@@ -176,9 +170,7 @@ soupsieve==2.3.2.post1
 sqlparse==0.4.3
     # via django
 tomli==2.0.1
-    # via
-    #   django-stubs
-    #   mypy
+    # via django-stubs
 tqdm==4.65.0
     # via openfoodfacts
 types-pytz==2022.4.0.0
@@ -196,7 +188,6 @@ typing-extensions==4.8.0
     #   django-stubs
     #   django-stubs-ext
     #   djangorestframework-stubs
-    #   mypy
     #   pydantic
     #   pydantic-core
 uritemplate==4.1.1
