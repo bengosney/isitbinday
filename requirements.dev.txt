@@ -14,7 +14,7 @@ asttokens==2.0.8
     # via icecream
 black==23.11.0
     # via -r requirements.dev.in
-build==0.8.0
+build==1.0.3
     # via pip-tools
 cfgv==3.3.1
     # via pre-commit
@@ -93,11 +93,9 @@ packaging==23.1
     #   validate-pyproject
 pathspec==0.10.1
     # via black
-pep517==0.13.0
-    # via build
 pip-chill==1.0.3
     # via -r requirements.dev.in
-pip-tools==7.3.0
+pip-tools==7.4.0
     # via -r requirements.dev.in
 platformdirs==2.5.2
     # via
@@ -115,6 +113,10 @@ pygments==2.15.0
     # via
     #   icecream
     #   rich
+pyproject-hooks==1.0.0
+    # via
+    #   build
+    #   pip-tools
 pytest==7.4.3
     # via
     #   -r requirements.dev.in
@@ -153,8 +155,8 @@ tomli==2.0.1
     #   build
     #   django-stubs
     #   mypy
-    #   pep517
     #   pip-tools
+    #   pyproject-hooks
     #   pytest
     #   validate-pyproject
 tomlkit==0.11.5
