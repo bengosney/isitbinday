@@ -103,7 +103,7 @@ platformdirs==2.5.2
     # via
     #   black
     #   virtualenv
-pluggy==1.0.0
+pluggy==1.4.0
     # via pytest
 pprintpp==0.4.0
     # via pytest-clarity
@@ -115,7 +115,7 @@ pygments==2.15.0
     # via
     #   icecream
     #   rich
-pytest==7.4.3
+pytest==8.1.0
     # via
     #   -r requirements.dev.in
     #   pytest-clarity
