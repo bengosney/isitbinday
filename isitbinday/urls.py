@@ -1,5 +1,6 @@
 # Django
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
 
@@ -34,4 +35,5 @@ urlpatterns = [
     path("openapi/", get_schema_view(title=API_TITLE, description=API_DESCRIPTION, version=API_VERSION), name="openapi-schema"),
     path("swagger/", TemplateView.as_view(template_name="swagger-ui.html", extra_context=context), name="swagger-ui"),
     path("redoc/", TemplateView.as_view(template_name="redoc.html", extra_context=context), name="redoc"),
+    path("", lambda request: HttpResponse("Health: OK")),
 ]
