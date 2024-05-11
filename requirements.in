@@ -1,5 +1,6 @@
 Pillow
 boto3
+dj-database-url
 django
 django-admin-sortable2
 django-appconf
@@ -9,7 +10,6 @@ django-extensions
 django-fsm
 django-fsm-admin2
 django-fsm-log
-django-heroku
 django-model-utils
 django-oso
 django-storages

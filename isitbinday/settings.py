@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 # Third Party
-import django_heroku
+import dj_database_url
 import environ
 from corsheaders.defaults import default_methods
 
@@ -94,7 +94,8 @@ DATABASES: dict[str, dict[str, Any]] = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
+if not DEBUG:
+    DATABASES["default"] = dj_database_url.config()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -189,10 +190,6 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "system@isitbinday.com"
 
-django_heroku.settings(locals())
-
-print(DATABASES)
-
 if TESTING:
     try:
         del DATABASES["default"]["OPTIONS"]["sslmode"]
@@ -200,15 +197,16 @@ if TESTING:
         pass
 
 if LIVE := not DEBUG and not TESTING:
-    # Third Party
-    import rollbar
+    if "ROLLBAR_ACCESS_TOKEN" in os.environ:
+        # Third Party
+        import rollbar
 
-    ROLLBAR = {
-        "access_token": os.environ.get("ROLLBAR_ACCESS_TOKEN"),
-        "environment": "production",
-        "root": BASE_DIR,
-    }
-    rollbar.init(**ROLLBAR)
+        ROLLBAR = {
+            "access_token": os.environ.get("ROLLBAR_ACCESS_TOKEN"),
+            "environment": "production",
+            "root": BASE_DIR,
+        }
+        rollbar.init(**ROLLBAR)
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = env.str("EMAIL_HOST")

@@ -29,9 +29,9 @@ requirements.%.txt: requirements.%.in
 	@echo "Builing $@"
 	@python -m piptools compile -q -o $@ $^
 
-requirements.txt: pyproject.toml
+requirements.txt: requirements.in
 	@echo "Builing $@"
-	@python -m piptools compile -q pyproject.toml
+	@python -m piptools compile -q requirements.in
 
 .direnv: .envrc
 	python -m pip install --upgrade pip
