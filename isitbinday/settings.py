@@ -25,7 +25,7 @@ SECRET_KEY = "uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz"
 DEBUG = os.environ.get("ENV") != "production"
 TESTING = os.environ.get("CI") == "true"
 
-ALLOWED_HOSTS: list[str] = ["localhost:8000", "localhost"]
+ALLOWED_HOSTS: list[str] = ["localhost:8000", "localhost"] + env.list("ALLOWED_HOSTS", default=[])
 
 
 # Application definition
