@@ -127,6 +127,8 @@ pillow==10.3.0
     # via -r requirements.in
 pint==0.23
     # via -r requirements.in
+psycopg2==2.9.9
+    # via -r requirements.in
 pycparser==2.22
     # via cffi
 pydantic==2.7.1

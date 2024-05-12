@@ -21,6 +21,7 @@ gunicorn
 minestrone
 openfoodfacts
 pint
+psycopg2
 pyyaml
 recurrent
 requests
