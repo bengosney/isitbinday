@@ -4,7 +4,6 @@ pull_request_rules:
       - and:
           - author~=^bengosney$
           - check-success=workflow
-          - check-success=Sourcery
     actions:
       merge:
         method: merge
@@ -12,14 +11,6 @@ pull_request_rules:
   - name: Automatic merge dependabot PR
     conditions:
       - author~=^dependabot(|-preview)\[bot\]$
-      - check-success=workflow
-    actions:
-      merge:
-        method: merge
-
-  - name: Automatic merge on approval of Sourcery AI PR
-    conditions:
-      - author~=^sourcery.*$
       - check-success=workflow
     actions:
       merge:
