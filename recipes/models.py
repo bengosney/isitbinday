@@ -39,7 +39,7 @@ class Ingredient(OwnedModel):
     @property
     def quantity_class(self) -> pint.Quantity:
         if self.unit.unit_class is None:
-            raise pint.UndefinedUnitError
+            raise pint.UndefinedUnitError(self.unit.unit_class)
 
         return self.quantity * self.unit.unit_class
 
@@ -126,9 +126,10 @@ class Unit(OwnedModel):
     def unit_class(self) -> pint.Quantity | None:
         reg = self._get_units()
         try:
-            cls = reg(f"{self.name}".replace(" ", "_").lower())
+            name = f"{self.name}".replace(" ", "_").lower()
+            cls = reg(name)
             if not isinstance(cls, pint.Quantity):
-                raise pint.UndefinedUnitError()
+                raise pint.UndefinedUnitError(name)
 
             return cls
         except pint.UndefinedUnitError:
@@ -140,7 +141,7 @@ class Unit(OwnedModel):
         try:
             cls = reg(unit.lower())
             if not isinstance(cls, pint.Quantity):
-                raise pint.UndefinedUnitError()
+                raise pint.UndefinedUnitError(unit.lower())
 
             return True
         except pint.UndefinedUnitError:

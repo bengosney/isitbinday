@@ -9,7 +9,7 @@ from . import models
 class authorAdminForm(forms.ModelForm):
     class Meta:
         model = models.Author
-        fields = "__all__"
+        fields = ["name"]
 
 
 class authorAdmin(admin.ModelAdmin):
@@ -34,7 +34,7 @@ def requires_refetch(modeladmin, request, queryset):
 class bookAdminForm(forms.ModelForm):
     class Meta:
         model = models.Book
-        fields = "__all__"
+        fields = ["authors", "publish_date", "title", "isbn", "cover", "requires_refetch"]
 
 
 class bookAdmin(admin.ModelAdmin):

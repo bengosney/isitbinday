@@ -15,13 +15,13 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 INSTALLED_APPS += [
-    "django_browser_reload",
-    "debug_toolbar",
+    # "debug_toolbar",
+    # "django_browser_reload",
 ]
 
 MIDDLEWARE += [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 INTERNAL_IPS = [

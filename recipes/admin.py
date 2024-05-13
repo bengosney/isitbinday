@@ -17,7 +17,11 @@ class stepInline(admin.TabularInline):
 class ingredientAdminForm(forms.ModelForm):
     class Meta:
         model = models.Ingredient
-        fields = "__all__"
+        fields = [
+            "name",
+            "unit",
+            "quantity",
+        ]
 
 
 class ingredientAdmin(admin.ModelAdmin):
@@ -37,7 +41,11 @@ class ingredientAdmin(admin.ModelAdmin):
 class recipeAdminForm(forms.ModelForm):
     class Meta:
         model = models.Recipe
-        fields = "__all__"
+        fields = [
+            "name",
+            "time",
+            "description",
+        ]
 
 
 class recipeAdmin(admin.ModelAdmin):
@@ -64,7 +72,9 @@ class recipeAdmin(admin.ModelAdmin):
 class unitAdminForm(forms.ModelForm):
     class Meta:
         model = models.Unit
-        fields = "__all__"
+        fields = [
+            "name",
+        ]
 
 
 class unitAdmin(admin.ModelAdmin):
@@ -83,7 +93,7 @@ class unitAdmin(admin.ModelAdmin):
 class stepAdminForm(forms.ModelForm):
     class Meta:
         model = models.Step
-        fields = "__all__"
+        fields = ["description"]
 
 
 class stepAdmin(admin.ModelAdmin):

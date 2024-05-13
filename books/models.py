@@ -72,7 +72,7 @@ class Book(AuthorizedModel):
     isbn = models.CharField(max_length=30)
 
     cover = models.ImageField(upload_to="book/cover", blank=True, default="")
-    tmp_cover = models.CharField(max_length=512, blank=True, null=True, default=None)
+    tmp_cover = models.CharField(max_length=512, blank=True, default="")
 
     requires_refetch = models.BooleanField(default=False)
 
