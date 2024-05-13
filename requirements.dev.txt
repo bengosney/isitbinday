@@ -159,6 +159,8 @@ requests==2.31.0
     #   djangorestframework-stubs
 rich==13.7.1
     # via pytest-clarity
+ruff==0.4.4
+    # via -r requirements.dev.in
 six==1.16.0
     # via
     #   -c requirements.txt

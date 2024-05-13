@@ -25,7 +25,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "UP", "C90", ] # Add DJ and N back in when I have time to fix them
+select = ["E4", "E7", "E9", "F", "UP", "C90", "DJ" ] # Add DJ and N back in when I have time to fix them
 
 [tool.pycln]
 all = true

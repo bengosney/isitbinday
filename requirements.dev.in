@@ -15,4 +15,5 @@ pytest
 pytest-clarity
 pytest-django
 pytest-picked
+ruff
 validate-pyproject[all]
