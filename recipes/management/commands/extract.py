@@ -2,8 +2,8 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
-# First Party
-from recipes.extrators import schema_org
+# Locals
+from ...extrators import SchemaOrg
 
 
 class Command(BaseCommand):
@@ -25,5 +25,5 @@ class Command(BaseCommand):
         if owner is None:
             raise Exception(f"User with id {options['owner']} was not found")
 
-        extractor = schema_org(owner)
+        extractor = SchemaOrg(owner)
         extractor.extract(url)

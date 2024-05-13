@@ -20,7 +20,7 @@ from googletrans import Translator
 from model_utils.fields import MonitorField
 
 
-def saveAfter(func):
+def save_after(func):
     @functools.wraps(func)
     def wrapper_decorator(*args, **kwargs):
         value = func(*args, **kwargs)
@@ -32,10 +32,10 @@ def saveAfter(func):
     return wrapper_decorator
 
 
-def transitionAndSave(*args, **kwargs):
+def transition_and_save(*args, **kwargs):
     def decorator(func):
         @transaction.atomic
-        @saveAfter
+        @save_after
         @transition(*args, **kwargs)
         @functools.wraps(func)
         def wrapper_decorator(*args, **kwargs):
@@ -47,13 +47,12 @@ def transitionAndSave(*args, **kwargs):
 
 
 class UnitOfMeasure(models.Model):
-    class Meta:
-        pass
-
-    # Fields
     name = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return str(self.name)
 
     def get_absolute_url(self):
         return reverse("food_UnitOfMeasure_detail", args=(self.pk,))
@@ -61,15 +60,18 @@ class UnitOfMeasure(models.Model):
     def get_update_url(self):
         return reverse("food_UnitOfMeasure_update", args=(self.pk,))
 
-    def __str__(self):
-        return str(self.name)
-
 
 class Transfer(AuthorizedModel):
     class Meta:
         pass
 
-    origin = models.ForeignKey("food.Stock", on_delete=models.CASCADE, null=True, blank=True, related_name="transferred_to")
+    origin = models.ForeignKey(
+        "food.Stock",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="transferred_to",
+    )
     destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name="transferred_from")
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -124,7 +126,12 @@ class Stock(AuthorizedModel):
     added = models.DateTimeField(auto_now_add=True, editable=False)
     state = FSMField(_("State"), default=STATE_IN_STOCK, choices=list(zip(STATES, STATES)), protected=True)
     state_changed = MonitorField(monitor="state")
-    temperature = models.CharField(max_length=50, default=TEMPERATURE_ROOM_TEMPERATURE, choices=TEMPERATURES, blank=True)
+    temperature = models.CharField(
+        max_length=50,
+        default=TEMPERATURE_ROOM_TEMPERATURE,
+        choices=TEMPERATURES,
+        blank=True,
+    )
     temperature_changed = MonitorField(monitor="temperature")
     expires = models.DateField(blank=True, null=True, editable=False)
     quantity = models.FloatField(blank=True, default=1)
@@ -137,9 +144,8 @@ class Stock(AuthorizedModel):
     def get_update_url(self):
         return reverse("food_Stock_update", args=(self.pk,))
 
-    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
+    @transition_and_save(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
     def transfer(self, location, quantity=None):
-
         if self.location == location:
             raise Exception("Can not move to the same location")
 
@@ -153,23 +159,23 @@ class Stock(AuthorizedModel):
             raise Exception("Can not move more than you have")
 
         if quantity < self.quantity:
-            stockLeft = copy(self)
-            stockLeft.pk = None
-            stockLeft.quantity = self.quantity - quantity
-            stockLeft.save()
+            stock_left = copy(self)
+            stock_left.pk = None
+            stock_left.quantity = self.quantity - quantity
+            stock_left.save()
         else:
-            stockLeft = None
+            stock_left = None
 
-        newStock = copy(self)
-        newStock.pk = None
-        newStock.quantity = quantity
-        newStock.save()
+        new_stock = copy(self)
+        new_stock.pk = None
+        new_stock.quantity = quantity
+        new_stock.save()
 
-        Transfer(origin=self, destination=newStock)
+        Transfer(origin=self, destination=new_stock)
 
-        return newStock, stockLeft
+        return new_stock, stock_left
 
-    def _split(self, quantity: float = None) -> Optional["Stock"]:
+    def _split(self, quantity: float | None = None) -> Optional["Stock"]:
         quantity = self.quantity if quantity is None else float(quantity)
         if quantity > self.quantity:
             raise Exception("Can not effect more than you have")
@@ -177,23 +183,23 @@ class Stock(AuthorizedModel):
         if quantity <= 0:
             raise Exception("Can not have negative or no effect")
 
-        stockLeft = None
+        stock_left = None
 
         if quantity < self.quantity:
-            stockLeft = copy(self)
-            stockLeft.pk = None
-            stockLeft.quantity = self.quantity - quantity
-            stockLeft.save()
+            stock_left = copy(self)
+            stock_left.pk = None
+            stock_left.quantity = self.quantity - quantity
+            stock_left.save()
 
         self.quantity = quantity
 
-        return stockLeft
+        return stock_left
 
-    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_CONSUMED)
+    @transition_and_save(field=state, source=[STATE_IN_STOCK], target=STATE_CONSUMED)
     def consume(self, quantity=None):
         return self._split(quantity)
 
-    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
+    @transition_and_save(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
     def remove(self, quantity=None):
         return self._split(quantity)
 
@@ -206,13 +212,12 @@ class Stock(AuthorizedModel):
 
 
 class Category(models.Model):
-    class Meta:
-        pass
-
-    # Fields
     name = models.CharField(max_length=50)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return str(self.name)
 
     def get_absolute_url(self):
         return reverse("food_Category_detail", args=(self.pk,))
@@ -220,18 +225,14 @@ class Category(models.Model):
     def get_update_url(self):
         return reverse("food_Category_update", args=(self.pk,))
 
-    def __str__(self):
-        return str(self.name)
-
 
 class Brand(models.Model):
-    class Meta:
-        pass
-
-    # Fields
     name = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return str(self.name)
 
     def get_absolute_url(self):
         return reverse("food_Brand_detail", args=(self.pk,))
@@ -239,14 +240,8 @@ class Brand(models.Model):
     def get_update_url(self):
         return reverse("food_Brand_update", args=(self.pk,))
 
-    def __str__(self):
-        return str(self.name)
-
 
 class Location(models.Model):
-    class Meta:
-        pass
-
     TEMPERATURES = Stock.TEMPERATURES
 
     # Fields
@@ -256,6 +251,9 @@ class Location(models.Model):
     default = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return str(self.name)
 
     def save(self, *args, **kwargs):
         if not self.default:
@@ -279,26 +277,27 @@ class Location(models.Model):
             location.save()
             return location
 
-    def __str__(self):
-        return str(self.name)
-
 
 class Product(models.Model):
-    class Meta:
-        pass
-
-    # Relationships
     categories = models.ManyToManyField("food.Category")
     brand = models.ForeignKey("food.Brand", on_delete=models.CASCADE)
-    unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True, default=None)
+    unit_of_measure = models.ForeignKey(
+        "food.UnitOfMeasure",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None,
+    )
 
-    # Fields
     name = models.CharField(max_length=50)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     code = models.CharField(max_length=30, unique=True)
     quantity = models.FloatField(blank=True, null=True, default=None)
     is_pack = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.name)
 
     def get_absolute_url(self):
         return reverse("food_Product_detail", args=(self.pk,))
@@ -307,7 +306,16 @@ class Product(models.Model):
         return reverse("food_Product_update", args=(self.pk,))
 
     @classmethod
-    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None, is_pack=False) -> "Product":
+    def get_or_create(
+        cls,
+        code,
+        name,
+        brand,
+        categories,
+        quantity=None,
+        unit_of_measure=None,
+        is_pack=False,
+    ) -> "Product":
         if isinstance(brand, str):
             brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
 
@@ -395,11 +403,14 @@ class Product(models.Model):
         if location is None:
             location = Location.get_default()
 
-        stock = Stock(owner=owner, product=self, quantity=quantity, expires=expires, location=location)
+        stock = Stock(
+            owner=owner,
+            product=self,
+            quantity=quantity,
+            expires=expires,
+            location=location,
+        )
         stock.save()
         Transfer(destination=stock).save()
 
         return stock
-
-    def __str__(self):
-        return str(self.name)

@@ -16,16 +16,16 @@ from rest_framework.test import APITestCase
 
 # Locals
 from .models import Ingredient, Recipe, Unit
-from .serializers import ingredientSerializer
+from .serializers import IngredientSerializer
 
 
-def getInsecurePassword(length):
+def get_insecure_password(length):
     return "".join(random.choice(string.ascii_lowercase) for _ in range(length))
 
 
 class APITestCaseWithUser(ABC, APITestCase):
     def setUp(self):
-        self.password = getInsecurePassword(12)
+        self.password = get_insecure_password(12)
         self.user = User.objects.create_user(username="jacob", email="jacob@example.com", password=self.password)
 
 
@@ -34,7 +34,7 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         super().setUp()
         self.client.login(username=self.user.username, password=self.password)
 
-    def createRecipes(self, count):
+    def create_recipes(self, count):
         url = reverse("recipe-list")
 
         for i in range(count):
@@ -44,20 +44,23 @@ class RecipeViewsTestCase(APITestCaseWithUser):
                 "description": "string",
                 "link": "http://example.com",
             }
-            self.assertEqual(status.HTTP_201_CREATED, self.client.post(url, data, format="json").status_code)
+            self.assertEqual(
+                status.HTTP_201_CREATED,
+                self.client.post(url, data, format="json").status_code,
+            )
 
     def test_create(self, data={}):
         url = reverse("recipe-list")
         print(url)
         name = "Test Recipe"
-        defaultData = {
+        default_data = {
             "name": name,
             "time": "00:00:00",
             "description": "string",
             "link": "http://example.com",
         }
 
-        response = self.client.post(url, {**defaultData, **data}, format="json")
+        response = self.client.post(url, {**default_data, **data}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Recipe.objects.count(), 1)
         self.assertEqual(name, Recipe.objects.get(name=name).name)
@@ -66,7 +69,7 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         url = reverse("recipe-list")
         count = 5
 
-        self.createRecipes(count)
+        self.create_recipes(count)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -74,17 +77,17 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         self.assertEqual(Recipe.objects.count(), int(response.json()["count"]))
 
     def test_list_only_mine(self):
-        password = getInsecurePassword(12)
-        secondUser = User.objects.create_user(username="keith", email="keith@example.com", password=password)
+        password = get_insecure_password(12)
+        second_user = User.objects.create_user(username="keith", email="keith@example.com", password=password)
 
         url = reverse("recipe-list")
         count = 5
 
-        self.createRecipes(count)
+        self.create_recipes(count)
         self.client.logout()
 
-        self.client.login(username=secondUser.username, password=password)
-        self.createRecipes(count)
+        self.client.login(username=second_user.username, password=password)
+        self.create_recipes(count)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -157,12 +160,18 @@ class IngredientTestCases(TestCase):
 
     def test_serializer_quantity(self):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
-        serializer = ingredientSerializer(i)
+        serializer = IngredientSerializer(i)
 
-        self.assertEqual(f"{serializer.data['quantity_metric']}", f"{i.quantity_base_units.magnitude}")
+        self.assertEqual(
+            f"{serializer.data['quantity_metric']}",
+            f"{i.quantity_base_units.magnitude}",
+        )
 
     def test_serializer_unit(self):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
-        serializer = ingredientSerializer(i)
+        serializer = IngredientSerializer(i)
 
-        self.assertEqual(f"{serializer.data['quantity_metric_unit']}", f"{i.quantity_base_units.units}")
+        self.assertEqual(
+            f"{serializer.data['quantity_metric_unit']}",
+            f"{i.quantity_base_units.units}",
+        )

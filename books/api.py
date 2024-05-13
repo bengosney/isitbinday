@@ -10,22 +10,22 @@ from tasks.permissions import IsOwner
 from . import models, serializers
 
 
-class authorViewSet(viewsets.ModelViewSet):
+class AuthorViewSet(viewsets.ModelViewSet):
     """ViewSet for the author class."""
 
     # queryset = models.Author.objects.all()
-    serializer_class = serializers.authorSerializer
+    serializer_class = serializers.AuthorSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         return models.Author.objects.authorize(self.request, action="retrieve")
 
 
-class bookViewSet(viewsets.ModelViewSet):
+class BookViewSet(viewsets.ModelViewSet):
     """ViewSet for the book class."""
 
     # queryset = models.Book.objects.all()
-    serializer_class = serializers.bookSerializer
+    serializer_class = serializers.BookSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     filter_backends = [filters.SearchFilter]

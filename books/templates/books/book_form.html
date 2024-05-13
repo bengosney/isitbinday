@@ -3,40 +3,40 @@
 {% load static %}
 {% block content %}
 
-<p>
+  <p>
     <a class="btn btn-light" href="{% url 'books_book_list' %}">
-    book Listing
+      book Listing
     </a>
-</p>
+  </p>
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{form.errors}}
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label" for="number_of_pages">number_of_pages: </label>
-  <input class="form-control col-sm-10" id="number_of_pages" type="number" name="number_of_pages" value="{{ object.number_of_pages }}">
-  </div>
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label" for="publish_date">publish_date: </label>
-  <input class="form-control col-sm-10" id="publish_date" type="text" name="publish_date" value="{{ object.publish_date }}">
-  </div>
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label" for="created">created: </label>
-  <input class="form-control col-sm-10" id="created" type="datetime-local" name="created" value="{{ object.created }}" disabled>
-  </div>
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label" for="title">title: </label>
-  <input class="form-control col-sm-10" id="title" type="text" name="title" value="{{ object.title }}">
-  </div>
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
-  <input class="form-control col-sm-10" id="last_updated" type="datetime-local" name="last_updated" value="{{ object.last_updated }}" disabled>
-  </div>
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label" for="isbn">isbn: </label>
-  <input class="form-control col-sm-10" id="isbn" type="text" name="isbn" value="{{ object.isbn }}">
-  </div>
-  <input type="submit" value="Save" class="btn btn-primary">
-</form>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.errors}}
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="number_of_pages">number_of_pages: </label>
+      <input class="form-control col-sm-10" id="number_of_pages" type="number" name="number_of_pages" value="{{ object.number_of_pages }}">
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="publish_date">publish_date: </label>
+      <input class="form-control col-sm-10" id="publish_date" type="text" name="publish_date" value="{{ object.publish_date }}">
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="created">created: </label>
+      <input class="form-control col-sm-10" id="created" type="datetime-local" name="created" value="{{ object.created }}" disabled>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="title">title: </label>
+      <input class="form-control col-sm-10" id="title" type="text" name="title" value="{{ object.title }}">
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="last_updated">last_updated: </label>
+      <input class="form-control col-sm-10" id="last_updated" type="datetime-local" name="last_updated" value="{{ object.last_updated }}" disabled>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="isbn">isbn: </label>
+      <input class="form-control col-sm-10" id="isbn" type="text" name="isbn" value="{{ object.isbn }}">
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary">
+  </form>
 
 {% endblock %}

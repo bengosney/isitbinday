@@ -3,18 +3,18 @@
 {% load static %}
 {% block content %}
 
-<p>
-    <a class="btn btn-light" href="{% url 'food_Stock_list' %}">
-    Stock Listing
-    </a>
-</p>
+    <p>
+        <a class="btn btn-light" href="{% url 'food_Stock_list' %}">
+            Stock Listing
+        </a>
+    </p>
 
-<table class="table">
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-    <tr><td>added</td><td>{{ object.added }}</td></tr>
-    <tr><td>quantity</td><td>{{ object.quantity }}</td></tr>
-    <tr><td>created</td><td>{{ object.created }}</td></tr>
-</table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+    <table class="table">
+        <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+        <tr><td>added</td><td>{{ object.added }}</td></tr>
+        <tr><td>quantity</td><td>{{ object.quantity }}</td></tr>
+        <tr><td>created</td><td>{{ object.created }}</td></tr>
+    </table>
+    <a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
 
 {% endblock %}

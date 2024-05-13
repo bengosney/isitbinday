@@ -9,7 +9,7 @@ from . import models
 class UnitOfMeasureAdminForm(forms.ModelForm):
     class Meta:
         model = models.UnitOfMeasure
-        fields = "__all__"
+        fields = ["name"]
 
 
 class UnitOfMeasureAdmin(admin.ModelAdmin):
@@ -28,7 +28,12 @@ class UnitOfMeasureAdmin(admin.ModelAdmin):
 class StockAdminForm(forms.ModelForm):
     class Meta:
         model = models.Stock
-        fields = "__all__"
+        fields = [
+            "location",
+            "product",
+            "unit_of_measure",
+            "quantity",
+        ]
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -52,7 +57,7 @@ class StockAdmin(admin.ModelAdmin):
 class TransferAdminForm(forms.ModelForm):
     class Meta:
         model = models.Transfer
-        fields = "__all__"
+        fields = ["destination"]
 
 
 class TransferAdmin(admin.ModelAdmin):
@@ -70,7 +75,7 @@ class TransferAdmin(admin.ModelAdmin):
 class CategoryAdminForm(forms.ModelForm):
     class Meta:
         model = models.Category
-        fields = "__all__"
+        fields = ["name"]
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -89,7 +94,15 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdminForm(forms.ModelForm):
     class Meta:
         model = models.Product
-        fields = "__all__"
+        fields = [
+            "name",
+            "categories",
+            "brand",
+            "unit_of_measure",
+            "code",
+            "quantity",
+            "is_pack",
+        ]
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -109,7 +122,7 @@ class ProductAdmin(admin.ModelAdmin):
 class BrandAdminForm(forms.ModelForm):
     class Meta:
         model = models.Brand
-        fields = "__all__"
+        fields = ["name"]
 
 
 class BrandAdmin(admin.ModelAdmin):
@@ -128,7 +141,12 @@ class BrandAdmin(admin.ModelAdmin):
 class LocationAdminForm(forms.ModelForm):
     class Meta:
         model = models.Location
-        fields = "__all__"
+        fields = [
+            "name",
+            "temperature",
+            "can_move_to",
+            "default",
+        ]
 
 
 class LocationAdmin(admin.ModelAdmin):

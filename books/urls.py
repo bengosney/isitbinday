@@ -5,5 +5,5 @@ from rest_framework import routers
 from . import api
 
 router = routers.DefaultRouter()
-router.register("author", api.authorViewSet, basename="author")
-router.register("book", api.bookViewSet, basename="book")
+router.register("author", api.AuthorViewSet, basename="author")
+router.register("book", api.BookViewSet, basename="book")

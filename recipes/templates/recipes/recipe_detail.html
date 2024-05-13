@@ -3,20 +3,20 @@
 {% load static %}
 {% block content %}
 
-<p>
-    <a class="btn btn-light" href="{% url 'recipes_recipe_list' %}">
-    recipe Listing
-    </a>
-</p>
+    <p>
+        <a class="btn btn-light" href="{% url 'recipes_recipe_list' %}">
+            recipe Listing
+        </a>
+    </p>
 
-<table class="table">
-    <tr><td>name</td><td>{{ object.name }}</td></tr>
-    <tr><td>time</td><td>{{ object.time }}</td></tr>
-    <tr><td>description</td><td>{{ object.description }}</td></tr>
-    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-    <tr><td>link</td><td>{{ object.link }}</td></tr>
-    <tr><td>created</td><td>{{ object.created }}</td></tr>
-</table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+    <table class="table">
+        <tr><td>name</td><td>{{ object.name }}</td></tr>
+        <tr><td>time</td><td>{{ object.time }}</td></tr>
+        <tr><td>description</td><td>{{ object.description }}</td></tr>
+        <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+        <tr><td>link</td><td>{{ object.link }}</td></tr>
+        <tr><td>created</td><td>{{ object.created }}</td></tr>
+    </table>
+    <a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
 
 {% endblock %}

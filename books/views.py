@@ -5,43 +5,43 @@ from django.views import generic
 from . import forms, models
 
 
-class authorListView(generic.ListView):
+class AuthorListView(generic.ListView):
     model = models.Author
-    form_class = forms.authorForm
+    form_class = forms.AuthorForm
 
 
-class authorCreateView(generic.CreateView):
+class AuthorCreateView(generic.CreateView):
     model = models.Author
-    form_class = forms.authorForm
+    form_class = forms.AuthorForm
 
 
-class authorDetailView(generic.DetailView):
+class AuthorDetailView(generic.DetailView):
     model = models.Author
-    form_class = forms.authorForm
+    form_class = forms.AuthorForm
 
 
-class authorUpdateView(generic.UpdateView):
+class AuthorUpdateView(generic.UpdateView):
     model = models.Author
-    form_class = forms.authorForm
+    form_class = forms.AuthorForm
     pk_url_kwarg = "pk"
 
 
-class bookListView(generic.ListView):
+class BookListView(generic.ListView):
     model = models.Book
-    form_class = forms.bookForm
+    form_class = forms.BbookForm
 
 
-class bookCreateView(generic.CreateView):
+class BookCreateView(generic.CreateView):
     model = models.Book
-    form_class = forms.bookForm
+    form_class = forms.BbookForm
 
 
-class bookDetailView(generic.DetailView):
+class BookDetailView(generic.DetailView):
     model = models.Book
-    form_class = forms.bookForm
+    form_class = forms.BbookForm
 
 
-class bookUpdateView(generic.UpdateView):
+class BookUpdateView(generic.UpdateView):
     model = models.Book
-    form_class = forms.bookForm
+    form_class = forms.BbookForm
     pk_url_kwarg = "pk"

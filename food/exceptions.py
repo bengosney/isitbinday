@@ -1,2 +1,2 @@
-class ImmutableException(Exception):
+class ImmutableError(Exception):
     pass

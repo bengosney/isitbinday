@@ -5,7 +5,7 @@ from rest_framework import serializers
 from . import models
 
 
-class simpleAuthorSerializer(serializers.HyperlinkedModelSerializer):
+class SimpleAuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Author
         fields = [
@@ -14,7 +14,7 @@ class simpleAuthorSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class simpleBookSerializer(serializers.HyperlinkedModelSerializer):
+class SimpleBookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Book
         fields = [
@@ -23,7 +23,7 @@ class simpleBookSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class authorSerializer(serializers.HyperlinkedModelSerializer):
+class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Author
         fields = [
@@ -33,10 +33,10 @@ class authorSerializer(serializers.HyperlinkedModelSerializer):
             "books",
         ]
 
-    books = simpleBookSerializer(many=True, read_only=True)
+    books = SimpleBookSerializer(many=True, read_only=True)
 
 
-class bookSerializer(serializers.HyperlinkedModelSerializer):
+class BookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Book
         fields = [
@@ -50,4 +50,4 @@ class bookSerializer(serializers.HyperlinkedModelSerializer):
             "tmp_cover",
         ]
 
-    authors = simpleAuthorSerializer(many=True, read_only=True)
+    authors = SimpleAuthorSerializer(many=True, read_only=True)

@@ -10,6 +10,7 @@ from fsm_admin2.admin import FSMTransitionMixin
 from .models import Sprint, Task
 
 
+@admin.register(Task)
 class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
     list_display = ["title", "effort", "due_date", "state", "owner", "completed"]
     list_filter = ["state"]
@@ -18,11 +19,8 @@ class TaskAdmin(SortableAdminMixin, FSMTransitionMixin, admin.ModelAdmin):
     inlines = [StateLogInline]
 
 
+@admin.register(Sprint)
 class SprintAdmin(FSMTransitionMixin, admin.ModelAdmin):
     list_display = ["title", "state", "owner"]
     readonly_fields = ["state", "started", "finished", "created", "last_updated"]
     fsm_fields = ["state"]
-
-
-admin.site.register(Task, TaskAdmin)
-admin.site.register(Sprint, SprintAdmin)

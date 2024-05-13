@@ -8,14 +8,12 @@ from django.utils.http import urlencode
 # Third Party
 from rest_framework import status
 
-# First Party
-from food.models import Stock
-
 # Locals
+from ..models import Stock
 from .base import APIBaseTestCase
 
 
-class testProductAPI(APIBaseTestCase):
+class TestProductAPI(APIBaseTestCase):
     def setUp(self):
         super().setUp()
         self.login()
@@ -32,8 +30,8 @@ class testProductAPI(APIBaseTestCase):
 
     def test_transfer_quantity_in(self, quantity=10):
         url = reverse("product-transfer-in", kwargs={"code": self.product.code})
-        urlWithQuery = f"{url}?{urlencode({'quantity': quantity})}"
-        response = self.client.get(urlWithQuery, format="json")
+        url_with_query = f"{url}?{urlencode({'quantity': quantity})}"
+        response = self.client.get(url_with_query, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         stocks = self.product.stocks.all()
@@ -43,8 +41,8 @@ class testProductAPI(APIBaseTestCase):
 
     def test_transfer_pack_in(self, quantity=2):
         url = reverse("product-transfer-in", kwargs={"code": self.pack.code})
-        urlWithQuery = f"{url}?{urlencode({'quantity': quantity})}"
-        response = self.client.get(urlWithQuery, format="json")
+        url_with_query = f"{url}?{urlencode({'quantity': quantity})}"
+        response = self.client.get(url_with_query, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         stocks = self.pack.stocks.all()
@@ -55,10 +53,10 @@ class testProductAPI(APIBaseTestCase):
     def test_consume_some(self, quantity=10):
         stock = self.product.transfer_in(self.user, quantity)
         url = reverse("stock-consume", kwargs={"pk": stock.pk})
-        toConsume = quantity // 2
-        urlWithQuery = f"{url}?{urlencode({'quantity': toConsume})}"
-        response = self.client.get(urlWithQuery, format="json")
+        to_consume = quantity // 2
+        url_with_query = f"{url}?{urlencode({'quantity': to_consume})}"
+        response = self.client.get(url_with_query, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         content = json.loads(response.content)
-        self.assertEqual(content["quantity"], quantity - toConsume)
+        self.assertEqual(content["quantity"], quantity - to_consume)

@@ -5,85 +5,85 @@ from django.views import generic
 from . import forms, models
 
 
-class ingredientListView(generic.ListView):
+class IngredientListView(generic.ListView):
     model = models.Ingredient
-    form_class = forms.ingredientForm
+    form_class = forms.IngredientForm
 
 
-class ingredientCreateView(generic.CreateView):
+class IngredientCreateView(generic.CreateView):
     model = models.Ingredient
-    form_class = forms.ingredientForm
+    form_class = forms.IngredientForm
 
 
-class ingredientDetailView(generic.DetailView):
+class IngredientDetailView(generic.DetailView):
     model = models.Ingredient
-    form_class = forms.ingredientForm
+    form_class = forms.IngredientForm
 
 
-class ingredientUpdateView(generic.UpdateView):
+class IngredientUpdateView(generic.UpdateView):
     model = models.Ingredient
-    form_class = forms.ingredientForm
+    form_class = forms.IngredientForm
     pk_url_kwarg = "pk"
 
 
-class recipeListView(generic.ListView):
+class RecipeListView(generic.ListView):
     model = models.Recipe
-    form_class = forms.recipeForm
+    form_class = forms.RecipeForm
 
 
-class recipeCreateView(generic.CreateView):
+class RecipeCreateView(generic.CreateView):
     model = models.Recipe
-    form_class = forms.recipeForm
+    form_class = forms.RecipeForm
 
 
-class recipeDetailView(generic.DetailView):
+class RecipeDetailView(generic.DetailView):
     model = models.Recipe
-    form_class = forms.recipeForm
+    form_class = forms.RecipeForm
 
 
-class recipeUpdateView(generic.UpdateView):
+class RecipeUpdateView(generic.UpdateView):
     model = models.Recipe
-    form_class = forms.recipeForm
+    form_class = forms.RecipeForm
     pk_url_kwarg = "pk"
 
 
-class unitListView(generic.ListView):
+class UnitListView(generic.ListView):
     model = models.Unit
-    form_class = forms.unitForm
+    form_class = forms.UnitForm
 
 
-class unitCreateView(generic.CreateView):
+class UnitCreateView(generic.CreateView):
     model = models.Unit
-    form_class = forms.unitForm
+    form_class = forms.UnitForm
 
 
-class unitDetailView(generic.DetailView):
+class UnitDetailView(generic.DetailView):
     model = models.Unit
-    form_class = forms.unitForm
+    form_class = forms.UnitForm
 
 
-class unitUpdateView(generic.UpdateView):
+class UnitUpdateView(generic.UpdateView):
     model = models.Unit
-    form_class = forms.unitForm
+    form_class = forms.UnitForm
     pk_url_kwarg = "pk"
 
 
-class stepListView(generic.ListView):
+class StepListView(generic.ListView):
     model = models.Step
-    form_class = forms.stepForm
+    form_class = forms.StepForm
 
 
-class stepCreateView(generic.CreateView):
+class StepCreateView(generic.CreateView):
     model = models.Step
-    form_class = forms.stepForm
+    form_class = forms.StepForm
 
 
-class stepDetailView(generic.DetailView):
+class StepDetailView(generic.DetailView):
     model = models.Step
-    form_class = forms.stepForm
+    form_class = forms.StepForm
 
 
-class stepUpdateView(generic.UpdateView):
+class StepUpdateView(generic.UpdateView):
     model = models.Step
-    form_class = forms.stepForm
+    form_class = forms.StepForm
     pk_url_kwarg = "pk"

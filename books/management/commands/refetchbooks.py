@@ -1,8 +1,8 @@
 # Django
 from django.core.management.base import BaseCommand
 
-# First Party
-from books.models import Book
+# Locals
+from ...models import Book
 
 
 class Command(BaseCommand):

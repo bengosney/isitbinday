@@ -10,8 +10,8 @@ from django.test import TestCase
 # Third Party
 from rest_framework.test import APITestCase
 
-# First Party
-from food.models import Location, Product
+# Locals
+from ..models import Location, Product
 
 
 class BaseTestCase(ABC, TestCase):

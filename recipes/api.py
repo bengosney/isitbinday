@@ -7,14 +7,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # First Party
-from recipes.extrators import schema_org
 from tasks.permissions import IsOwner
 
 # Locals
 from . import models, serializers
+from .extrators import SchemaOrg
 
 
-class baseViewSet(viewsets.ModelViewSet):
+class BaseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return super().get_queryset().authorize(self.request, action="retrieve")
 
@@ -22,19 +22,19 @@ class baseViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class ingredientViewSet(baseViewSet):
+class IngredientViewSet(BaseViewSet):
     """ViewSet for the ingredient class."""
 
     queryset = models.Ingredient.objects.all()
-    serializer_class = serializers.ingredientSerializer
+    serializer_class = serializers.IngredientSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class recipeViewSet(baseViewSet):
+class RecipeViewSet(BaseViewSet):
     """ViewSet for the recipe class."""
 
     queryset = models.Recipe.objects.all()
-    serializer_class = serializers.recipeSerializer
+    serializer_class = serializers.RecipeSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     lookup_field = "slug"
 
@@ -44,26 +44,26 @@ class recipeViewSet(baseViewSet):
         if user is None:
             raise PermissionDenied
 
-        serializer = serializers.recipeURLSerializer(data=request.data)
+        serializer = serializers.RecipeURLSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        extractor = schema_org(user)
+        extractor = SchemaOrg(user)
         found = extractor.extract(serializer.validated_data["url"])
 
         return Response({"found": found})
 
 
-class unitViewSet(baseViewSet):
+class UnitViewSet(BaseViewSet):
     """ViewSet for the unit class."""
 
     queryset = models.Unit.objects.all()
-    serializer_class = serializers.unitSerializer
+    serializer_class = serializers.UnitSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class stepViewSet(baseViewSet):
+class StepViewSet(BaseViewSet):
     """ViewSet for the step class."""
 
     queryset = models.Step.objects.all()
-    serializer_class = serializers.stepSerializer
+    serializer_class = serializers.StepSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
