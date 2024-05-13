@@ -3,8 +3,8 @@
 # Django
 from django.test import TestCase
 
-# First Party
-from food.models import Location
+# Locals
+from ..models import Location
 
 
 class LocationTestCase(TestCase):

@@ -2,10 +2,8 @@
 
 # Django
 
-# First Party
-from food.models import Location, Stock
-
 # Locals
+from ..models import Location, Stock
 from .base import BaseTestCase
 
 

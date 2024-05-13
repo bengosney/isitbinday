@@ -5,12 +5,10 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-# First Party
-from food.models import Location, Product
-from food.serializers import LookupSerializer, StockSerializer
-
 # Locals
 from . import models, serializers
+from .models import Location, Product
+from .serializers import LookupSerializer, StockSerializer
 
 
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):

@@ -8,10 +8,8 @@ from django.utils.http import urlencode
 # Third Party
 from rest_framework import status
 
-# First Party
-from food.models import Stock
-
 # Locals
+from ..models import Stock
 from .base import APIBaseTestCase
 
 

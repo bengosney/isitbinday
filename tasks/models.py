@@ -57,7 +57,12 @@ class Task(StateMixin, AuthorizedModel):
 
     owner = models.ForeignKey("auth.User", related_name="tasks", on_delete=models.CASCADE)
 
-    state = FSMField(_("State"), default=STATE_TODO, choices=list(zip(STATES, STATES)), protected=True)
+    state = FSMField(
+        _("State"),
+        default=STATE_TODO,
+        choices=list(zip(STATES, STATES)),
+        protected=True,
+    )
 
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
@@ -96,13 +101,22 @@ class Task(StateMixin, AuthorizedModel):
         self.completed = timezone.make_aware(datetime.now())
 
         if self.repeats != "":
-            next = self.__class__(title=self.title, effort=self.effort, owner=self.owner, repeats=self.repeats)
+            next = self.__class__(
+                title=self.title,
+                effort=self.effort,
+                owner=self.owner,
+                repeats=self.repeats,
+            )
             r = RecurringEvent(now_date=self.completed)
             next.show_after = r.parse(f"in {self.repeats}")
 
             next.save()
 
-    @transition(field=state, source=[STATE_DRAFT, STATE_TODO, STATE_DOING], target=STATE_CANCELED)
+    @transition(
+        field=state,
+        source=[STATE_DRAFT, STATE_TODO, STATE_DOING],
+        target=STATE_CANCELED,
+    )
     def cancel(self):
         pass
 
@@ -129,7 +143,12 @@ class Sprint(StateMixin, AuthorizedModel):
 
     title = models.CharField(_("Title"), max_length=255)
 
-    state = FSMField(_("State"), default=STATE_PLANNING, choices=list(zip(STATES, STATES)), protected=True)
+    state = FSMField(
+        _("State"),
+        default=STATE_PLANNING,
+        choices=list(zip(STATES, STATES)),
+        protected=True,
+    )
     started = models.DateTimeField(_("Started"), editable=False, null=True, blank=True)
     finished = models.DateTimeField(_("Finished"), editable=False, null=True, blank=True)
 

@@ -2,8 +2,8 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
-# First Party
-from recipes.extrators import schema_org
+# Locals
+from ...extrators import schema_org
 
 
 class Command(BaseCommand):

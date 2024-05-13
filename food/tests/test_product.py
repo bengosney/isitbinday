@@ -2,10 +2,8 @@
 import random
 import string
 
-# First Party
-from food.models import Product, Stock
-
 # Locals
+from ..models import Product, Stock
 from .base import BaseTestCase
 
 

@@ -7,11 +7,9 @@ from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-# First Party
-from tasks.models import Sprint, Task
-from tasks.permissions import IsOwner
-
 # Locals
+from .models import Sprint, Task
+from .permissions import IsOwner
 from .serializers import SprintSerializer, TaskSerializer
 
 

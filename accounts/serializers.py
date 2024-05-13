@@ -6,8 +6,8 @@ from django.utils.http import urlsafe_base64_decode
 # Third Party
 from rest_framework import serializers
 
-# First Party
-from accounts.models import User
+# Locals
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):

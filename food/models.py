@@ -69,7 +69,13 @@ class Transfer(AuthorizedModel):
     class Meta:
         pass
 
-    origin = models.ForeignKey("food.Stock", on_delete=models.CASCADE, null=True, blank=True, related_name="transferred_to")
+    origin = models.ForeignKey(
+        "food.Stock",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="transferred_to",
+    )
     destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name="transferred_from")
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -122,9 +128,19 @@ class Stock(AuthorizedModel):
 
     # Fields
     added = models.DateTimeField(auto_now_add=True, editable=False)
-    state = FSMField(_("State"), default=STATE_IN_STOCK, choices=list(zip(STATES, STATES)), protected=True)
+    state = FSMField(
+        _("State"),
+        default=STATE_IN_STOCK,
+        choices=list(zip(STATES, STATES)),
+        protected=True,
+    )
     state_changed = MonitorField(monitor="state")
-    temperature = models.CharField(max_length=50, default=TEMPERATURE_ROOM_TEMPERATURE, choices=TEMPERATURES, blank=True)
+    temperature = models.CharField(
+        max_length=50,
+        default=TEMPERATURE_ROOM_TEMPERATURE,
+        choices=TEMPERATURES,
+        blank=True,
+    )
     temperature_changed = MonitorField(monitor="temperature")
     expires = models.DateField(blank=True, null=True, editable=False)
     quantity = models.FloatField(blank=True, default=1)
@@ -139,7 +155,6 @@ class Stock(AuthorizedModel):
 
     @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
     def transfer(self, location, quantity=None):
-
         if self.location == location:
             raise Exception("Can not move to the same location")
 
@@ -290,7 +305,13 @@ class Product(models.Model):
     # Relationships
     categories = models.ManyToManyField("food.Category")
     brand = models.ForeignKey("food.Brand", on_delete=models.CASCADE)
-    unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True, default=None)
+    unit_of_measure = models.ForeignKey(
+        "food.UnitOfMeasure",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        default=None,
+    )
 
     # Fields
     name = models.CharField(max_length=50)
@@ -307,7 +328,16 @@ class Product(models.Model):
         return reverse("food_Product_update", args=(self.pk,))
 
     @classmethod
-    def get_or_create(cls, code, name, brand, categories, quantity=None, unit_of_measure=None, is_pack=False) -> "Product":
+    def get_or_create(
+        cls,
+        code,
+        name,
+        brand,
+        categories,
+        quantity=None,
+        unit_of_measure=None,
+        is_pack=False,
+    ) -> "Product":
         if isinstance(brand, str):
             brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
 
@@ -395,7 +425,13 @@ class Product(models.Model):
         if location is None:
             location = Location.get_default()
 
-        stock = Stock(owner=owner, product=self, quantity=quantity, expires=expires, location=location)
+        stock = Stock(
+            owner=owner,
+            product=self,
+            quantity=quantity,
+            expires=expires,
+            location=location,
+        )
         stock.save()
         Transfer(destination=stock).save()
 

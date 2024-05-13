@@ -44,7 +44,10 @@ class RecipeViewsTestCase(APITestCaseWithUser):
                 "description": "string",
                 "link": "http://example.com",
             }
-            self.assertEqual(status.HTTP_201_CREATED, self.client.post(url, data, format="json").status_code)
+            self.assertEqual(
+                status.HTTP_201_CREATED,
+                self.client.post(url, data, format="json").status_code,
+            )
 
     def test_create(self, data={}):
         url = reverse("recipe-list")
@@ -159,10 +162,16 @@ class IngredientTestCases(TestCase):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
         serializer = ingredientSerializer(i)
 
-        self.assertEqual(f"{serializer.data['quantity_metric']}", f"{i.quantity_base_units.magnitude}")
+        self.assertEqual(
+            f"{serializer.data['quantity_metric']}",
+            f"{i.quantity_base_units.magnitude}",
+        )
 
     def test_serializer_unit(self):
         i = Ingredient(name="flour", unit=Unit(name="oz"), quantity=10.0)
         serializer = ingredientSerializer(i)
 
-        self.assertEqual(f"{serializer.data['quantity_metric_unit']}", f"{i.quantity_base_units.units}")
+        self.assertEqual(
+            f"{serializer.data['quantity_metric_unit']}",
+            f"{i.quantity_base_units.units}",
+        )
