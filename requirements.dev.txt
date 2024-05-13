@@ -10,6 +10,7 @@ asgiref==3.8.1
     # via
     #   -c requirements.txt
     #   django
+    #   django-browser-reload
     #   django-stubs
 asttokens==2.4.1
     # via icecream
@@ -17,12 +18,17 @@ black==24.4.2
     # via -r requirements.dev.in
 build==1.2.1
     # via pip-tools
+certifi==2024.2.2
+    # via
+    #   -c requirements.txt
+    #   requests
 cfgv==3.4.0
     # via pre-commit
 charset-normalizer==3.3.2
     # via
     #   -c requirements.txt
     #   commitizen
+    #   requests
 click==8.1.7
     # via
     #   black
@@ -40,16 +46,27 @@ distlib==0.3.8
 django==5.0.6
     # via
     #   -c requirements.txt
+    #   django-browser-reload
+    #   django-debug-toolbar
     #   django-stubs
     #   django-stubs-ext
+django-browser-reload==1.12.1
+    # via -r requirements.dev.in
+django-debug-toolbar==4.3.0
+    # via -r requirements.dev.in
 django-stubs==5.0.0
     # via
     #   -c requirements.txt
     #   -r requirements.dev.in
+    #   djangorestframework-stubs
 django-stubs-ext==5.0.0
     # via
     #   -c requirements.txt
     #   django-stubs
+djangorestframework-stubs==3.15.0
+    # via
+    #   -c requirements.txt
+    #   -r requirements.dev.in
 exceptiongroup==1.2.1
     # via pytest
 executing==2.0.1
@@ -62,6 +79,10 @@ icecream==2.1.3
     # via -r requirements.dev.in
 identify==2.5.36
     # via pre-commit
+idna==2.10
+    # via
+    #   -c requirements.txt
+    #   requests
 importlib-metadata==7.1.0
     # via commitizen
 iniconfig==2.0.0
@@ -132,6 +153,10 @@ pyyaml==6.0.1
     #   pre-commit
 questionary==2.0.1
     # via commitizen
+requests==2.31.0
+    # via
+    #   -c requirements.txt
+    #   djangorestframework-stubs
 rich==13.7.1
     # via pytest-clarity
 six==1.16.0
@@ -142,6 +167,7 @@ sqlparse==0.5.0
     # via
     #   -c requirements.txt
     #   django
+    #   django-debug-toolbar
 termcolor==2.4.0
     # via commitizen
 tomli==2.0.1
@@ -161,6 +187,11 @@ types-pyyaml==6.0.12.20240311
     # via
     #   -c requirements.txt
     #   django-stubs
+    #   djangorestframework-stubs
+types-requests==2.31.0.20240406
+    # via
+    #   -c requirements.txt
+    #   djangorestframework-stubs
 typing-extensions==4.11.0
     # via
     #   -c requirements.txt
@@ -168,6 +199,12 @@ typing-extensions==4.11.0
     #   black
     #   django-stubs
     #   django-stubs-ext
+    #   djangorestframework-stubs
+urllib3==2.2.1
+    # via
+    #   -c requirements.txt
+    #   requests
+    #   types-requests
 validate-pyproject[all]==0.17
     # via -r requirements.dev.in
 virtualenv==20.26.1
