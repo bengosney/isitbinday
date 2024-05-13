@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any
 
 # Third Party
-import dj_database_url
 import environ
 from corsheaders.defaults import default_methods
 
@@ -15,17 +14,10 @@ env = environ.Env()
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "uc@ilyet8!v8dyj0$x@=ik0@ou4z@wow96fp#-6q&5c_4uq5pz"
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("ENV") != "production"
 TESTING = os.environ.get("CI") == "true"
 
-ALLOWED_HOSTS: list[str] = ["localhost:8000", "localhost"] + env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
@@ -94,8 +86,6 @@ DATABASES: dict[str, dict[str, Any]] = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-if not DEBUG:
-    DATABASES["default"] = dj_database_url.config()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -133,23 +123,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-THUMBNAIL_DEFAULT_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = "isitbinday"
-AWS_S3_REGION_NAME = "eu-west-2"
-AWS_QUERYSTRING_AUTH = False
-
-AWS_S3_OBJECT_PARAMETERS = {
-    "Expires": "Thu, 31 Dec 2099 20:00:00 GMT",
-    "CacheControl": "max-age=94608000",
-}
-
-AWS_S3_CUSTOM_DOMAIN = "cdn.isitbinday.com"
-
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 
 REST_FRAMEWORK = {
@@ -195,25 +168,6 @@ if TESTING:
         del DATABASES["default"]["OPTIONS"]["sslmode"]
     except KeyError:
         pass
-
-if LIVE := not DEBUG and not TESTING:
-    if "ROLLBAR_ACCESS_TOKEN" in os.environ:
-        # Third Party
-        import rollbar
-
-        ROLLBAR = {
-            "access_token": os.environ.get("ROLLBAR_ACCESS_TOKEN"),
-            "environment": "production",
-            "root": BASE_DIR,
-        }
-        rollbar.init(**ROLLBAR)
-
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = env.str("EMAIL_HOST")
-    EMAIL_PORT = env.int("EMAIL_PORT", default=587)
-    EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
-    EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

@@ -13,6 +13,6 @@ import os
 # Django
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'isitbinday.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'isitbinday.settings.dev')
 
 application = get_wsgi_application()
