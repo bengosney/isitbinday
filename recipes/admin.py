@@ -6,15 +6,15 @@ from django.contrib import admin
 from . import models
 
 
-class ingredientInline(admin.TabularInline):
+class IngredientInline(admin.TabularInline):
     model = models.Ingredient
 
 
-class stepInline(admin.TabularInline):
+class StepInline(admin.TabularInline):
     model = models.Step
 
 
-class ingredientAdminForm(forms.ModelForm):
+class IngredientAdminForm(forms.ModelForm):
     class Meta:
         model = models.Ingredient
         fields = [
@@ -24,8 +24,8 @@ class ingredientAdminForm(forms.ModelForm):
         ]
 
 
-class ingredientAdmin(admin.ModelAdmin):
-    form = ingredientAdminForm
+class IngredientAdmin(admin.ModelAdmin):
+    form = IngredientAdminForm
     list_display = [
         "name",
         "last_updated",
@@ -38,7 +38,7 @@ class ingredientAdmin(admin.ModelAdmin):
     ]
 
 
-class recipeAdminForm(forms.ModelForm):
+class RecipeAdminForm(forms.ModelForm):
     class Meta:
         model = models.Recipe
         fields = [
@@ -48,8 +48,8 @@ class recipeAdminForm(forms.ModelForm):
         ]
 
 
-class recipeAdmin(admin.ModelAdmin):
-    form = recipeAdminForm
+class RecipeAdmin(admin.ModelAdmin):
+    form = RecipeAdminForm
     list_display = [
         "name",
         "time",
@@ -64,12 +64,12 @@ class recipeAdmin(admin.ModelAdmin):
     ]
 
     inlines = [
-        ingredientInline,
-        stepInline,
+        IngredientInline,
+        StepInline,
     ]
 
 
-class unitAdminForm(forms.ModelForm):
+class UnitAdminForm(forms.ModelForm):
     class Meta:
         model = models.Unit
         fields = [
@@ -77,8 +77,8 @@ class unitAdminForm(forms.ModelForm):
         ]
 
 
-class unitAdmin(admin.ModelAdmin):
-    form = unitAdminForm
+class UnitAdmin(admin.ModelAdmin):
+    form = UnitAdminForm
     list_display = [
         "created",
         "last_updated",
@@ -90,14 +90,14 @@ class unitAdmin(admin.ModelAdmin):
     ]
 
 
-class stepAdminForm(forms.ModelForm):
+class StepAdminForm(forms.ModelForm):
     class Meta:
         model = models.Step
         fields = ["description"]
 
 
-class stepAdmin(admin.ModelAdmin):
-    form = stepAdminForm
+class StepAdmin(admin.ModelAdmin):
+    form = StepAdminForm
     list_display = [
         "created",
         "last_updated",
@@ -109,7 +109,7 @@ class stepAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(models.Ingredient, ingredientAdmin)
-admin.site.register(models.Recipe, recipeAdmin)
-admin.site.register(models.Unit, unitAdmin)
-admin.site.register(models.Step, stepAdmin)
+admin.site.register(models.Ingredient, IngredientAdmin)
+admin.site.register(models.Recipe, RecipeAdmin)
+admin.site.register(models.Unit, UnitAdmin)
+admin.site.register(models.Step, StepAdmin)

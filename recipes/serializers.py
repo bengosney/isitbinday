@@ -5,7 +5,7 @@ from rest_framework import serializers
 from . import models
 
 
-class baseSerializerMeta:
+class BaseSerializerMeta:
     exclude = ("owner",)
     read_only_fields = (
         "last_updated",
@@ -14,8 +14,8 @@ class baseSerializerMeta:
     owner = serializers.ReadOnlyField(source="owner.username")
 
 
-class ingredientSerializer(serializers.ModelSerializer):
-    class Meta(baseSerializerMeta):
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta(BaseSerializerMeta):
         model = models.Ingredient
 
     quantity_unit = serializers.CharField(read_only=True)
@@ -23,24 +23,24 @@ class ingredientSerializer(serializers.ModelSerializer):
     quantity_metric_unit = serializers.CharField(read_only=True)
 
 
-class unitSerializer(serializers.ModelSerializer):
-    class Meta(baseSerializerMeta):
+class UnitSerializer(serializers.ModelSerializer):
+    class Meta(BaseSerializerMeta):
         model = models.Unit
 
 
-class stepSerializer(serializers.ModelSerializer):
-    class Meta(baseSerializerMeta):
+class StepSerializer(serializers.ModelSerializer):
+    class Meta(BaseSerializerMeta):
         model = models.Step
 
 
-class recipeSerializer(serializers.ModelSerializer):
-    class Meta(baseSerializerMeta):
+class RecipeSerializer(serializers.ModelSerializer):
+    class Meta(BaseSerializerMeta):
         model = models.Recipe
         depth = 1
 
-    ingredients = ingredientSerializer(many=True, required=False)
-    steps = stepSerializer(many=True, required=False)
+    ingredients = IngredientSerializer(many=True, required=False)
+    steps = StepSerializer(many=True, required=False)
 
 
-class recipeURLSerializer(serializers.Serializer):
+class RecipeURLSerializer(serializers.Serializer):
     url = serializers.URLField()

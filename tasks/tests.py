@@ -19,13 +19,13 @@ from rest_framework.test import APITestCase
 from .models import Task
 
 
-def getInsecurePassword(length):
+def get_insecure_password(length):
     return "".join(random.choice(string.ascii_lowercase) for _ in range(length))
 
 
 class APITestCaseWithUser(ABC, APITestCase):
     def setUp(self):
-        self.password = getInsecurePassword(12)
+        self.password = get_insecure_password(12)
         self.user = User.objects.create_user(username="jacob", email="jacob@example.com", password=self.password)
 
 
@@ -41,7 +41,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         super().setUp()
         self.client.login(username=self.user.username, password=self.password)
 
-    def createTasks(self, count):
+    def create_tasks(self, count):
         url = reverse("task-list")
         for i in range(count):
             data = {
@@ -51,11 +51,11 @@ class TaskViewsTestCase(APITestCaseWithUser):
 
     def test_create(self, data={}):
         url = reverse("task-list")
-        defaultData = {
+        default_data = {
             "title": "test task",
         }
 
-        response = self.client.post(url, {**defaultData, **data}, format="json")
+        response = self.client.post(url, {**default_data, **data}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Task.objects.count(), 1)
 
@@ -63,24 +63,24 @@ class TaskViewsTestCase(APITestCaseWithUser):
         url = reverse("task-list")
         count = 5
 
-        self.createTasks(count)
+        self.create_tasks(count)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.count(), int(response.json()["count"]))
 
     def test_list_only_mine(self):
-        password = getInsecurePassword(12)
-        secondUser = User.objects.create_user(username="keith", email="keith@example.com", password=password)
+        password = get_insecure_password(12)
+        second_user = User.objects.create_user(username="keith", email="keith@example.com", password=password)
 
         url = reverse("task-list")
         count = 5
 
-        self.createTasks(count)
+        self.create_tasks(count)
         self.client.logout()
 
-        self.client.login(username=secondUser.username, password=password)
-        self.createTasks(count)
+        self.client.login(username=second_user.username, password=password)
+        self.create_tasks(count)
 
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -122,6 +122,6 @@ class TaskModelTestCase(TestCase):
         tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
 
         Task.auto_archive(tomorrow)
-        archivedTasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
+        archived_tasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
 
-        self.assertEqual(count, len(archivedTasks))
+        self.assertEqual(count, len(archived_tasks))

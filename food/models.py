@@ -20,7 +20,7 @@ from googletrans import Translator
 from model_utils.fields import MonitorField
 
 
-def saveAfter(func):
+def save_after(func):
     @functools.wraps(func)
     def wrapper_decorator(*args, **kwargs):
         value = func(*args, **kwargs)
@@ -32,10 +32,10 @@ def saveAfter(func):
     return wrapper_decorator
 
 
-def transitionAndSave(*args, **kwargs):
+def transition_and_save(*args, **kwargs):
     def decorator(func):
         @transaction.atomic
-        @saveAfter
+        @save_after
         @transition(*args, **kwargs)
         @functools.wraps(func)
         def wrapper_decorator(*args, **kwargs):
@@ -144,7 +144,7 @@ class Stock(AuthorizedModel):
     def get_update_url(self):
         return reverse("food_Stock_update", args=(self.pk,))
 
-    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
+    @transition_and_save(field=state, source=[STATE_IN_STOCK], target=STATE_TRANSFERRED)
     def transfer(self, location, quantity=None):
         if self.location == location:
             raise Exception("Can not move to the same location")
@@ -159,21 +159,21 @@ class Stock(AuthorizedModel):
             raise Exception("Can not move more than you have")
 
         if quantity < self.quantity:
-            stockLeft = copy(self)
-            stockLeft.pk = None
-            stockLeft.quantity = self.quantity - quantity
-            stockLeft.save()
+            stock_left = copy(self)
+            stock_left.pk = None
+            stock_left.quantity = self.quantity - quantity
+            stock_left.save()
         else:
-            stockLeft = None
+            stock_left = None
 
-        newStock = copy(self)
-        newStock.pk = None
-        newStock.quantity = quantity
-        newStock.save()
+        new_stock = copy(self)
+        new_stock.pk = None
+        new_stock.quantity = quantity
+        new_stock.save()
 
-        Transfer(origin=self, destination=newStock)
+        Transfer(origin=self, destination=new_stock)
 
-        return newStock, stockLeft
+        return new_stock, stock_left
 
     def _split(self, quantity: float | None = None) -> Optional["Stock"]:
         quantity = self.quantity if quantity is None else float(quantity)
@@ -183,23 +183,23 @@ class Stock(AuthorizedModel):
         if quantity <= 0:
             raise Exception("Can not have negative or no effect")
 
-        stockLeft = None
+        stock_left = None
 
         if quantity < self.quantity:
-            stockLeft = copy(self)
-            stockLeft.pk = None
-            stockLeft.quantity = self.quantity - quantity
-            stockLeft.save()
+            stock_left = copy(self)
+            stock_left.pk = None
+            stock_left.quantity = self.quantity - quantity
+            stock_left.save()
 
         self.quantity = quantity
 
-        return stockLeft
+        return stock_left
 
-    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_CONSUMED)
+    @transition_and_save(field=state, source=[STATE_IN_STOCK], target=STATE_CONSUMED)
     def consume(self, quantity=None):
         return self._split(quantity)
 
-    @transitionAndSave(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
+    @transition_and_save(field=state, source=[STATE_IN_STOCK], target=STATE_REMOVED)
     def remove(self, quantity=None):
         return self._split(quantity)
 

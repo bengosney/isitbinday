@@ -7,7 +7,7 @@ from rest_framework import routers
 from . import api
 
 router = routers.DefaultRouter()
-router.register("ingredient", api.ingredientViewSet)
-router.register("recipe", api.recipeViewSet)
-router.register("unit", api.unitViewSet)
-router.register("step", api.stepViewSet)
+router.register("ingredient", api.IngredientViewSet)
+router.register("recipe", api.RecipeViewSet)
+router.register("unit", api.UnitViewSet)
+router.register("step", api.StepViewSet)

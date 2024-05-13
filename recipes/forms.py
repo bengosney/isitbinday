@@ -5,7 +5,7 @@ from django import forms
 from . import models
 
 
-class ingredientForm(forms.ModelForm):
+class IngredientForm(forms.ModelForm):
     class Meta:
         model = models.Ingredient
         fields = [
@@ -16,7 +16,7 @@ class ingredientForm(forms.ModelForm):
         ]
 
 
-class recipeForm(forms.ModelForm):
+class RecipeForm(forms.ModelForm):
     class Meta:
         model = models.Recipe
         fields = [
@@ -27,7 +27,7 @@ class recipeForm(forms.ModelForm):
         ]
 
 
-class unitForm(forms.ModelForm):
+class UnitForm(forms.ModelForm):
     class Meta:
         model = models.Unit
         fields = [
@@ -35,7 +35,7 @@ class unitForm(forms.ModelForm):
         ]
 
 
-class stepForm(forms.ModelForm):
+class StepForm(forms.ModelForm):
     class Meta:
         model = models.Step
         fields = [

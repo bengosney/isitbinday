@@ -56,13 +56,13 @@ def get_raw_html(url: str) -> str:
     return r.text
 
 
-class schema_org:
+class SchemaOrg:
     def __init__(self, owner: User) -> None:
         self.owner = owner
 
     def parse(self, raw_html: str, url: str | None = None) -> int:
-        ingredientRegex = re.compile(r"^(([\d\.\/]+)\s*([\w,\.]+))\s+(.+)$")
-        defaultUnit, _ = Unit.objects.get_or_create(name="of")
+        ingredient_regex = re.compile(r"^(([\d\.\/]+)\s*([\w,\.]+))\s+(.+)$")
+        default_unit, _ = Unit.objects.get_or_create(name="of")
 
         html = HTML(raw_html)
         found = 0
@@ -88,9 +88,9 @@ class schema_org:
 
             for ingredient in data["recipeIngredient"]:
                 norm = un_unicode(ingredient)
-                matches = ingredientRegex.match(norm)
+                matches = ingredient_regex.match(norm)
                 name = norm
-                defaults = {"unit": defaultUnit, "quantity": 1}
+                defaults = {"unit": default_unit, "quantity": 1}
                 if matches:
                     name = matches[4]
                     if Unit.is_unit(matches[3]):

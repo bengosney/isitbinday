@@ -5,7 +5,7 @@ from django import forms
 from . import models
 
 
-class authorForm(forms.ModelForm):
+class AuthorForm(forms.ModelForm):
     class Meta:
         model = models.Author
         fields = [
@@ -13,7 +13,7 @@ class authorForm(forms.ModelForm):
         ]
 
 
-class bookForm(forms.ModelForm):
+class BbookForm(forms.ModelForm):
     class Meta:
         model = models.Book
         fields = [

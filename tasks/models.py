@@ -80,11 +80,11 @@ class Task(StateMixin, AuthorizedModel):
 
     @property
     def previous_state(self):
-        typeId = ContentType.objects.get_for_model(self)
-        stateLog = StateLog.objects.all().filter(object_id=self.pk, content_type_id=typeId).order_by("-timestamp")
+        type_id = ContentType.objects.get_for_model(self)
+        state_log = StateLog.objects.all().filter(object_id=self.pk, content_type_id=type_id).order_by("-timestamp")
 
         try:
-            return stateLog[0].source_state
+            return state_log[0].source_state
         except IndexError:
             return None
 

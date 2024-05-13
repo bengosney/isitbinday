@@ -16,7 +16,7 @@ from django_oso.models import AuthorizedModel
 from requests import get
 
 
-class NotFoundException(Exception):
+class NotFoundError(Exception):
     pass
 
 
@@ -97,8 +97,8 @@ class Book(AuthorizedModel):
             return True
 
         try:
-            contentType = request.headers["content-type"]
-            ext = mimetypes.guess_extension(contentType)
+            content_type = request.headers["content-type"]
+            ext = mimetypes.guess_extension(content_type)
         except AttributeError:
             ext = ""
 
@@ -117,14 +117,14 @@ class Book(AuthorizedModel):
 
     @classmethod
     @transaction.atomic
-    def _lookupGoogle(cls, code, owner=None):
+    def _lookup_google(cls, code, owner=None):
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{code}"
         response = get(url)
 
         try:
             data = json.loads(response.text)["items"][0]["volumeInfo"]
         except AttributeError as e:
-            raise NotFoundException from e
+            raise NotFoundError from e
 
         defaults = {
             "title": data["title"],
@@ -147,14 +147,14 @@ class Book(AuthorizedModel):
 
     @classmethod
     @transaction.atomic
-    def _lookupOpenBooks(cls, code, owner=None):
+    def _lookup_open_books(cls, code, owner=None):
         url = f"https://openlibrary.org/api/books?bibkeys={code}&jscmd=data&format=json"
         response = get(url)
 
         try:
             data = json.loads(response.text)[code]
         except AttributeError as e:
-            raise NotFoundException from e
+            raise NotFoundError from e
 
         isbn = ""
         for ident in data["identifiers"]:
@@ -187,12 +187,12 @@ class Book(AuthorizedModel):
     @classmethod
     def _lookup(cls, code, owner=None, create_fail=True):
         try:
-            return cls._lookupGoogle(code, owner)
+            return cls._lookup_google(code, owner)
         except Exception:
             pass
 
         try:
-            return cls._lookupOpenBooks(code, owner)
+            return cls._lookup_open_books(code, owner)
         except Exception:
             pass
 

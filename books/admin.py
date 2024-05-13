@@ -6,14 +6,14 @@ from django.contrib import admin
 from . import models
 
 
-class authorAdminForm(forms.ModelForm):
+class AuthorAdminForm(forms.ModelForm):
     class Meta:
         model = models.Author
         fields = ["name"]
 
 
-class authorAdmin(admin.ModelAdmin):
-    form = authorAdminForm
+class AuthorAdmin(admin.ModelAdmin):
+    form = AuthorAdminForm
     list_display = [
         "name",
         "created",
@@ -31,14 +31,14 @@ def requires_refetch(modeladmin, request, queryset):
     queryset.update(requires_refetch=True)
 
 
-class bookAdminForm(forms.ModelForm):
+class BookAdminForm(forms.ModelForm):
     class Meta:
         model = models.Book
         fields = ["authors", "publish_date", "title", "isbn", "cover", "requires_refetch"]
 
 
-class bookAdmin(admin.ModelAdmin):
-    form = bookAdminForm
+class BookAdmin(admin.ModelAdmin):
+    form = BookAdminForm
     list_display = [
         "title",
         "publish_date",
@@ -56,10 +56,10 @@ class bookAdmin(admin.ModelAdmin):
     actions = [requires_refetch]
 
 
-class failedAdmin(admin.ModelAdmin):
+class FailedAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(models.Author, authorAdmin)
-admin.site.register(models.Book, bookAdmin)
-admin.site.register(models.FailedScan, failedAdmin)
+admin.site.register(models.Author, AuthorAdmin)
+admin.site.register(models.Book, BookAdmin)
+admin.site.register(models.FailedScan, FailedAdmin)
