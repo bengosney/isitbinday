@@ -1,6 +1,7 @@
 # Standard Library
 import contextlib
 import os
+import socket
 
 # Third Party
 import dj_database_url
@@ -22,6 +23,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 DATABASES["default"] = dj_database_url.config()
+DATABASES["default"]["HOST"] = socket.gethostbyname(DATABASES["default"]["HOST"])
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
