@@ -1,4 +1,4 @@
-.PHONY: help clean test install all init dev dist, emails
+.PHONY: help clean test install all init dev dist emails
 .DEFAULT_GOAL := install
 .PRECIOUS: requirements.%.in
 
