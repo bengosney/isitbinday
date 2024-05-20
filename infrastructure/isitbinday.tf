@@ -1,7 +1,7 @@
 resource "dokku_app" "api" {
   app_name = "isitbinday"
 
-  domains = [var.domain]
+  domains = ["api.${var.domain}"]
 
   ports = {
     80 = {
