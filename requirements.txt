@@ -19,6 +19,8 @@ botocore==1.34.103
     # via
     #   boto3
     #   s3transfer
+brotli==1.1.0
+    # via whitenoise
 certifi==2024.2.2
     # via
     #   httpx
@@ -192,3 +194,5 @@ urllib3==2.2.1
     #   botocore
     #   requests
     #   types-requests
+whitenoise[brotli]==6.6.0
+    # via -r requirements.in

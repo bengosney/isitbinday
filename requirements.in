@@ -28,3 +28,5 @@ requests
 requests
 rollbar
 uritemplate
+whitenoise
+whitenoise[brotli]
