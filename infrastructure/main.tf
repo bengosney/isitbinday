@@ -43,6 +43,10 @@ variable "hosting_domain" {
   description = "Hosting domain"
 }
 
+variable "secret_key" {
+  description = "Django secret key"
+}
+
 variable "zoneid" {
   description = "Cloudflare zone ID"
 }
@@ -52,7 +56,7 @@ provider "aws" {
 }
 
 provider "dokku" {
-  ssh_host = "${var.hosting_domain}"
+  ssh_host = var.hosting_domain
 }
 
 provider "cloudflare" {

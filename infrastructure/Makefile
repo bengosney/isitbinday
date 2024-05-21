@@ -57,3 +57,7 @@ apply: check .terraform ## Apply the terraform
 
 destroy: check .terraform ## Destroy the terraform
 	$(CMD) destroy
+
+git-remote: ## Add the git remote
+	@git remote remove dokku
+	git remote add dokku $(shell tofu output -raw git-remote)

@@ -66,3 +66,11 @@ repos:
   rev: v6.2.0
   hooks:
   - id: rstcheck
+- repo: local
+  hooks:
+  - id: tofu-fmt
+    name: tofu format
+    description: Format .tf files
+    entry: tofu fmt
+    language: system
+    files: .tf$
