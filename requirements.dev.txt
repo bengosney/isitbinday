@@ -153,7 +153,7 @@ pyyaml==6.0.1
     #   pre-commit
 questionary==2.0.1
     # via commitizen
-requests==2.31.0
+requests==2.32.0
     # via
     #   -c requirements.txt
     #   djangorestframework-stubs
