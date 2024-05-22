@@ -12,6 +12,10 @@ terraform {
       source  = "aliksend/dokku"
       version = "~> 1.0.14"
     }
+    rollbar = {
+      source  = "rollbar/rollbar"
+      version = "~> 1.14.0"
+    }
   }
 
   backend "s3" {
@@ -51,6 +55,14 @@ variable "zoneid" {
   description = "Cloudflare zone ID"
 }
 
+variable "rollbar_token" {
+  description = "Rollbar API token"
+}
+
+variable "rollbar_project_token" {
+  description = "Rollbar project token"
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -61,4 +73,9 @@ provider "dokku" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "rollbar" {
+  api_key         = var.rollbar_token
+  project_api_key = var.rollbar_project_token
 }

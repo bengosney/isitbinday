@@ -15,6 +15,8 @@ resource "dokku_app" "api" {
     SMTP_PORT = "587"
     SMTP_HOST = "email-smtp.${var.aws_region}.amazonaws.com"
 
+    ROLLBAR_ACCESS_TOKEN = var.rollbar_project_token
+
     SECRET_KEY = var.secret_key
   }
 
