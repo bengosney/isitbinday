@@ -54,6 +54,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "rollbar.contrib.django.middleware.RollbarNotifierMiddleware",
+    "isitbinday.middleware.HealthCheckMiddleware",
 ]
 
 ROOT_URLCONF = "isitbinday.urls"

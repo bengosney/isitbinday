@@ -5,7 +5,7 @@
               "type":        "startup",
               "name":        "web check",
               "description": "Checking if the app is running",
-              "path":        "/",
+              "path":        "/health",
               "attempts": 3
           }
       ]
