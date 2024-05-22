@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "isitbinday.middleware.HealthCheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -54,7 +55,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "rollbar.contrib.django.middleware.RollbarNotifierMiddleware",
-    "isitbinday.middleware.HealthCheckMiddleware",
 ]
 
 ROOT_URLCONF = "isitbinday.urls"
