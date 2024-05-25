@@ -66,3 +66,7 @@ repos:
   rev: v6.2.0
   hooks:
   - id: rstcheck
+- repo: https://github.com/commitizen-tools/commitizen
+  rev: v3.27.0
+  hooks:
+  - id: commitizen

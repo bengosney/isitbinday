@@ -1,4 +1,4 @@
-.PHONY: help clean test install all init dev css js cog coverage
+.PHONY: help clean test install all init dev css js cog coverage git-hooks watch-assets upgrade
 .DEFAULT_GOAL := dev
 .PRECIOUS: requirements.%.in
 .FORCE:
@@ -36,6 +36,11 @@ help: ## Display this help
 	pre-commit autoupdate
 	@touch $@
 
+.git/hooks/%: .git $(PRE_COMMIT_PATH) .pre-commit-config.yaml
+	pre-commit install --hook-type $(notdir $@)
+
+git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg ## Install git hooks
+
 pyproject.toml:
 	curl https://gist.githubusercontent.com/bengosney/f703f25921628136f78449c32d37fcb5/raw/pyproject.toml > $@
 	@touch $@
@@ -52,9 +57,6 @@ requirements.txt: $(UV_PATH) pyproject.toml
 	@echo "Installing $(filter-out $<,$^)"
 	python -m uv pip sync requirements.txt $(REQS)
 	@touch $@
-
-.git/hooks/pre-commit: .git $(PRE_COMMIT_PATH) .pre-commit-config.yaml
-	pre-commit install
 
 .envrc:
 	@echo "Setting up .envrc then stopping"
@@ -75,7 +77,7 @@ $(UV_PATH): $(PIP_PATH) $(WHEEL_PATH)
 $(PRE_COMMIT_PATH): $(PIP_PATH) $(WHEEL_PATH)
 	@python -m pip install pre-commit
 
-init: .envrc $(UV_PATH) requirements.dev.txt .direnv .git/hooks/pre-commit ## Initalise a enviroment
+init: .envrc $(UV_PATH) requirements.dev.txt .direnv git-hooks ## Initalise a enviroment
 	@python -m pip install --upgrade pip
 
 clean: ## Remove all build files
