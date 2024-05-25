@@ -1,7 +1,6 @@
 # Django
 from django.conf import settings
 from django.contrib import admin
-from django.http import HttpResponse
 from django.urls import include, path
 from django.views.generic import TemplateView
 
@@ -10,14 +9,14 @@ from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 # First Party
-from accounts.urls import urlpatterns as user_urls
+from accounts import urls as user_urls
 from books.urls import router as book_router
 from food.urls import router as food_router
 from recipes.urls import router as recipes_router
 from tasks.urls import router as task_router
 
 API_TITLE = "Is it bin day"
-API_DESCRIPTION = "Help organise what you need to do"
+API_DESCRIPTION = "Help organize what you need to do"
 API_VERSION = "1.0.0"
 
 context = {"schema_url": "openapi"}
@@ -31,7 +30,7 @@ urlpatterns = [
     path("api/books/", include(book_router.urls)),
     path("api/recipes/", include(recipes_router.urls)),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/accounts/", include(user_urls)),
+    path("api/accounts/", include(user_urls.api_patterns)),
     path("admin/", admin.site.urls),
     path(
         "openapi/",
@@ -40,7 +39,7 @@ urlpatterns = [
     ),
     path("swagger/", TemplateView.as_view(template_name="swagger-ui.html", extra_context=context), name="swagger-ui"),
     path("redoc/", TemplateView.as_view(template_name="redoc.html", extra_context=context), name="redoc"),
-    path("", lambda request: HttpResponse("Health: OK")),
+    path("", include(user_urls.url_patterns)),
 ]
 
 if settings.DEBUG:
