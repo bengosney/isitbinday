@@ -36,10 +36,18 @@ help: ## Display this help
 	pre-commit autoupdate
 	@touch $@
 
-.git/hooks/%: .git $(PRE_COMMIT_PATH) .pre-commit-config.yaml
+.git/hooks/%: .git $(PRE_COMMIT_PATH)
 	pre-commit install --hook-type $(notdir $@)
 
-git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg ## Install git hooks
+.git/hooks/prepare-commit-msg:
+	wget -O $@ https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/$(notdir $@).py
+	chmod +x $@
+
+.git/hooks/post-commit:
+	wget -O $@ https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/$(notdir $@).py
+	chmod +x $@
+
+git-hooks: .git/hooks/pre-commit .git/hooks/commit-msg .git/hooks/prepare-commit-msg .git/hooks/post-commit ## Install git hooks
 
 pyproject.toml:
 	curl https://gist.githubusercontent.com/bengosney/f703f25921628136f78449c32d37fcb5/raw/pyproject.toml > $@
