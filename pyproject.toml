@@ -7,7 +7,7 @@ requires = [
 
 [project]
 name = "is-it-bin-day"
-version = "0.1.3"
+version = "0.1.4"
 description = "More useful task list"
 authors = [
   { email = "bengosney@googlemail.com", name = "Ben Gosney" },
@@ -55,22 +55,28 @@ dependencies = [
 ]
 
 optional-dependencies.dev = [
-  "black",
+  "cogapp",
   "commitizen",
   "django-browser-reload",
   "django-debug-toolbar",
   "django-stubs",
   "djangorestframework-stubs",
+  "faker",
+  "freezegun",
   "icecream",
+  "model-bakery",
+  "mypy",
   "packaging",
-  "pip-chill",
-  "pip-tools",
   "pre-commit",
   "pytest",
   "pytest-clarity",
+  "pytest-cov",
   "pytest-django",
+  "pytest-django-queries",
+  "pytest-freezegun",
   "pytest-picked",
   "ruff",
+  "uv",
   "validate-pyproject[all]",
 ]
 
@@ -100,3 +106,10 @@ lint.select = [
 
 [tool.pycln]
 all = true
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+update_changelog_on_bump = true
