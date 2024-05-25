@@ -9,7 +9,7 @@ REQS=$(shell python -c 'import tomllib;[print(f"requirements.{k}.txt") for k in 
 COG_FILE:=.cogfiles
 
 TS_FILES:=$(wildcard assets/typescript/*.ts)
-JS_FILES:=$(patsubst assets/typescript/%.ts,cerberus_crm/static/js/%.min.js,$(TS_FILES))
+JS_FILES:=$(patsubst assets/typescript/%.ts,static/js/%.min.js,$(TS_FILES))
 
 CSS_FILES:=$(wildcard assets/css/*.css)
 
