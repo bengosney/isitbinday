@@ -10,6 +10,7 @@ asgiref==3.8.1 \
     # via
     #   django
     #   django-cors-headers
+    #   django-htmx
     #   django-stubs
 beautifulsoup4==4.12.3 \
     --hash=sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051 \
@@ -279,6 +280,7 @@ django==5.0.8
     #   django-fsm-2
     #   django-fsm-admin2
     #   django-fsm-log
+    #   django-htmx
     #   django-model-utils
     #   django-oso
     #   django-storages
@@ -325,6 +327,10 @@ django-fsm-admin2==0.1.3 \
 django-fsm-log==3.1.0 \
     --hash=sha256:9ef766f5e6d7c573d1953cf91df73538a611373cc1ef97488eff19a3f71d6ed6 \
     --hash=sha256:ac4394f22659e7fb8e5ac42d1cc075490cd5a2af37202377ab2a1cb221c5f3db
+    # via is-it-bin-day (pyproject.toml)
+django-htmx==1.17.3 \
+    --hash=sha256:0de964ca257eda2a4ebeeaa8181320119378fa5f95a2fc2f2bfbdd35034ed424 \
+    --hash=sha256:a2069219920d7ef0883ddbf5e8d931069db145a0d4a8a032a2708f840c7a68a6
     # via is-it-bin-day (pyproject.toml)
 django-model-utils==4.5.1 \
     --hash=sha256:1220f22d9a467d53a1e0f4cda4857df0b2f757edf9a29955c42461988caa648a \

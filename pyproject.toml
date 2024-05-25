@@ -33,6 +33,7 @@ dependencies = [
   "django-fsm-2",
   "django-fsm-admin2",
   "django-fsm-log",
+  "django-htmx",
   "django-model-utils",
   "django-oso",
   "django-storages",
