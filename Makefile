@@ -11,7 +11,9 @@ COG_FILE:=.cogfiles
 TS_FILES:=$(wildcard assets/typescript/*.ts)
 JS_FILES:=$(patsubst assets/typescript/%.ts,static/js/%.min.js,$(TS_FILES))
 
+ALL_CSS_FILES:=$(shell find assets/css/ -mindepth 2 -name *.css)
 CSS_FILES:=$(wildcard assets/css/*.css)
+CSS_MIN_FILES:=$(patsubst assets/css/%.css,static/css/%.min.css,$(CSS_FILES))
 
 PYTHON_VERSION:=$(shell python --version | cut -d " " -f 2)
 PIP_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/pip
@@ -95,11 +97,11 @@ clean: ## Remove all build files
 	rm -f .testmondata
 	rm -rf *.egg-info
 
-static/css/%.min.css: assets/css/%.css $(CSS_FILES)
+static/css/%.min.css: assets/css/%.css $(ALL_CSS_FILES)
 	npx lightningcss-cli --minify --bundle --nesting --targets '>= 0.25%' $< -o $@
 	@touch $@
 
-css: $(CSS_FILES) ## Build the css
+css: $(CSS_MIN_FILES) ## Build the css
 
 watch-assets: ## Watch and build the css and js
 	@echo "Watching scss"
