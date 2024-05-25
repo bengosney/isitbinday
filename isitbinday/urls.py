@@ -1,4 +1,5 @@
 # Django
+from django.conf import settings
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
@@ -41,3 +42,9 @@ urlpatterns = [
     path("redoc/", TemplateView.as_view(template_name="redoc.html", extra_context=context), name="redoc"),
     path("", lambda request: HttpResponse("Health: OK")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls")),
+        path("__debug__/", include("debug_toolbar.urls")),
+    ]
