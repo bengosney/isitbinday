@@ -7,7 +7,7 @@ requires = [
 
 [project]
 name = "is-it-bin-day"
-version = "0.1.4"
+version = "0.2.0"
 description = "More useful task list"
 authors = [
   { email = "bengosney@googlemail.com", name = "Ben Gosney" },
