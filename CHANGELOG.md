@@ -1,3 +1,10 @@
+## 0.3.0 (2024-05-26)
+
+### Feat
+
+- **auth**: add all auth and cripy forms to render the signup
+- **css**: Switch to bulma css
+
 ## 0.2.0 (2024-05-25)
 
 ### Feat
