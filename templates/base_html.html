@@ -19,12 +19,13 @@
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% block body %}
       {% if messages %}
-        <div>
-          <strong>{% trans "Messages:" %}</strong>
-          <ul>
-            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
-          </ul>
-        </div>
+        <section>
+          <div class="container">
+            {% for message in messages %}
+              <div class="notification">{{ message }}</li>
+            {% endfor %}
+          </div>
+        </section>
       {% endif %}
       <header>
       </header>
