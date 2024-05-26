@@ -23,11 +23,14 @@ classifiers = [
 ]
 dependencies = [
   "boto3",
+  "crispy-bulma",
   "dj-database-url",
   "django",
   "django-admin-sortable2",
+  "django-allauth[socialaccount]",
   "django-appconf",
   "django-cors-headers",
+  "django-crispy-forms",
   "django-environ",
   "django-extensions",
   "django-fsm-2",

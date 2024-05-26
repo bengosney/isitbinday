@@ -170,7 +170,9 @@ cffi==1.16.0 \
     --hash=sha256:ee07e47c12890ef248766a6e55bd38ebfb2bb8edd4142d56db91b21ea68b7627 \
     --hash=sha256:fa3a0128b152627161ce47201262d3140edb5a5c3da88d73a1b790a959126956 \
     --hash=sha256:fcc8eb6d5902bb1cf6dc4f187ee3ea80a1eba0a89aba40a5cb20a5087d961357
-    # via oso
+    # via
+    #   cryptography
+    #   oso
 chardet==3.0.4 \
     --hash=sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae \
     --hash=sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691
@@ -272,10 +274,13 @@ dj-database-url==2.1.0
 django==5.0.8
     # via
     #   is-it-bin-day (pyproject.toml)
+    #   crispy-bulma
     #   dj-database-url
     #   django-admin-sortable2
+    #   django-allauth
     #   django-appconf
     #   django-cors-headers
+    #   django-crispy-forms
     #   django-extensions
     #   django-fsm-2
     #   django-fsm-admin2
@@ -292,6 +297,9 @@ django-admin-sortable2==2.2.1 \
     --hash=sha256:30a9527f93fc61b7a2c5954db57d8428931e37f462c3b46cb101053dc5f51751 \
     --hash=sha256:ae7ec1f0974202e27748fb618b13f23d1b1d44764374b09ad0a9a763f30b054f
     # via is-it-bin-day (pyproject.toml)
+django-allauth==0.63.2 \
+    --hash=sha256:8c971a677dd48ef9119fcd1e786d2286c0911b20f52e64aebf38a6827d934334
+    # via is-it-bin-day (pyproject.toml)
 django-appconf==1.0.6 \
     --hash=sha256:c3ae442fba1ff7ec830412c5184b17169a7a1e71cf0864a4c3f93cf4c98a1993 \
     --hash=sha256:cfe87ea827c4ee04b9a70fab90b86d704cb02f2981f89da8423cb0fabf88efbf
@@ -302,6 +310,12 @@ django-cors-headers==4.3.1 \
     --hash=sha256:0b1fd19297e37417fc9f835d39e45c8c642938ddba1acce0c1753d3edef04f36 \
     --hash=sha256:0bf65ef45e606aff1994d35503e6b677c0b26cafff6506f8fd7187f3be840207
     # via is-it-bin-day (pyproject.toml)
+django-crispy-forms==2.1 \
+    --hash=sha256:4d7ec431933ad4d4b5c5a6de4a584d24613c347db9ac168723c9aaf63af4bb96 \
+    --hash=sha256:d592044771412ae1bd539cc377203aa61d4eebe77fcbc07fbc8f12d3746d4f6b
+    # via
+    #   is-it-bin-day (pyproject.toml)
+    #   crispy-bulma
 django-environ==0.11.2 \
     --hash=sha256:0ff95ab4344bfeff693836aa978e6840abef2e2f1145adff7735892711590c05 \
     --hash=sha256:f32a87aa0899894c27d4e1776fa6b477e8164ed7f6b3e410a62a6d72caaf64be
@@ -416,6 +430,10 @@ minestrone==0.7.0 \
     --hash=sha256:026ac918a9c2116479ba002abde5cadfe7a3c7add608b63087ed8882cbf13b24 \
     --hash=sha256:61849996f8f6bce421f072c5bf354ab47cb394cc9f1d063f5949b67b376d8964
     # via is-it-bin-day (pyproject.toml)
+oauthlib==3.2.2 \
+    --hash=sha256:8139f29aac13e25d502680e9e19963e83f16838d48a0d71c287fe40e7067fbca \
+    --hash=sha256:9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918
+    # via requests-oauthlib
 openfoodfacts==0.3.0 \
     --hash=sha256:2c46160090ade26eec51661dbb065645b6be8ea12ca61e3969c08ba2cfc5144c \
     --hash=sha256:b51932c8f9dae86f2932a8456e64834ec87e103e1ca69d7a9cb76a3748d50a50
@@ -653,7 +671,9 @@ pydantic-core==2.18.2 \
 pyjwt==2.8.0 \
     --hash=sha256:57e28d156e3d5c10088e0c68abb90bfac3df82b40a71bd0daa20c65ccd5c23de \
     --hash=sha256:59127c392cc44c2da5bb3192169a91f429924e17aff6534d70fdc02ab3e04320
-    # via djangorestframework-simplejwt
+    # via
+    #   django-allauth
+    #   djangorestframework-simplejwt
 python-dateutil==2.9.0.post0 \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
     --hash=sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
@@ -719,9 +739,15 @@ requests==2.32.2 \
     --hash=sha256:fc06670dd0ed212426dfeb94fc1b983d917c4f9847c863f313c9dfaaffb7c23c
     # via
     #   is-it-bin-day (pyproject.toml)
+    #   django-allauth
     #   djangorestframework-stubs
     #   openfoodfacts
+    #   requests-oauthlib
     #   rollbar
+requests-oauthlib==2.0.0 \
+    --hash=sha256:7dd8a5c40426b779b0868c404bdef9768deccf22749cde15852df527e6269b36 \
+    --hash=sha256:b3dffaebd884d8cd778494369603a9e7b58d29111bf6b41bdc2dcd87203af4e9
+    # via django-allauth
 rfc3986==1.5.0 \
     --hash=sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835 \
     --hash=sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97

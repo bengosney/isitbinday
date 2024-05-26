@@ -19,7 +19,10 @@ TESTING = os.environ.get("CI") == "true"
 
 ALLOWED_HOSTS: list[str] = []
 
-
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -31,6 +34,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "allauth",
+    "allauth.account",
+    "crispy_forms",
+    "crispy_bulma",
     "rest_framework",
     "corsheaders",
     "adminsortable2",
@@ -57,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "rollbar.contrib.django.middleware.RollbarNotifierMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "isitbinday.urls"
@@ -197,3 +205,10 @@ if TESTING:
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CSRF_TRUSTED_ORIGINS = ["https://api.isitbinday.com"]
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
+CRISPY_TEMPLATE_PACK = "bulma"
