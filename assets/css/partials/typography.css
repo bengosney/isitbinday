@@ -1,4 +1,3 @@
 :root {
-  --size: 1rem;
-  --font: system-ui, sans-serif;
+  --bulma-family-primary: system-ui, sans-serif;
 }
