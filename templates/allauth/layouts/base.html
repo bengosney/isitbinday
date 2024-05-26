@@ -1,0 +1,19 @@
+{% extends request.htmx|yesno:"base_htmx.html,base_html.html" %}
+
+{% load i18n %}
+
+{% block body %}
+    {% if messages %}
+        <div>
+            <strong>{% trans "Messages:" %}</strong>
+            <ul>
+                {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <main>
+        <div class="container narrow">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+{% endblock %}

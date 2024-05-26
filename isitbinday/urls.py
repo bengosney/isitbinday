@@ -40,6 +40,7 @@ urlpatterns = [
     path("swagger/", TemplateView.as_view(template_name="swagger-ui.html", extra_context=context), name="swagger-ui"),
     path("redoc/", TemplateView.as_view(template_name="redoc.html", extra_context=context), name="redoc"),
     path("", include(user_urls.url_patterns)),
+    path("accounts/", include("allauth.urls")),
 ]
 
 if settings.DEBUG:
