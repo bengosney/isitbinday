@@ -2,13 +2,11 @@
 from django.urls import path
 
 # Locals
-from . import api, views
+from .. import api
 
-api_patterns = [
+app_name = "accounts"
+
+urlpatterns = [
     path("create/", api.UserCreate.as_view(), name="create"),
     path("activate/", api.UserActivate.as_view(), name="activate"),
 ]
-
-url_patterns = [path("", views.dashboard, name="accounts/dashboard")]
-
-app_name = "accounts"
