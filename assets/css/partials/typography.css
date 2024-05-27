@@ -1,3 +1,34 @@
 :root {
   --bulma-family-primary: system-ui, sans-serif;
 }
+
+/*[[[cog
+import cog
+for i, size in enumerate([3.815, 3.052, 2.441, 1.953, 1.563, 1.25], 1):
+    cog.outl(f'h{i}, .title.is-{i} {{ font-size: {size}em; }}')
+]]]*/
+h1,
+.title.is-1 {
+  font-size: 3.815em;
+}
+h2,
+.title.is-2 {
+  font-size: 3.052em;
+}
+h3,
+.title.is-3 {
+  font-size: 2.441em;
+}
+h4,
+.title.is-4 {
+  font-size: 1.953em;
+}
+h5,
+.title.is-5 {
+  font-size: 1.563em;
+}
+h6,
+.title.is-6 {
+  font-size: 1.25em;
+}
+/*[[[end]]] (checksum: 69fa853ff5a14533a86b78dc948ac0c4)*/
