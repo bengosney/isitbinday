@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.schemas.openapi import AutoSchema
 
 # First Party
 from tasks.permissions import IsOwner
@@ -30,6 +31,15 @@ class IngredientViewSet(BaseViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
+class RecipeSchema(AutoSchema):
+    def get_operation_id(self, path: str, method: str):
+        postfix = ""
+        if path.strip("/").split("/")[-1] == "from_url":
+            postfix = method.capitalize()
+
+        return f"{super().get_operation_id(path, method)}{postfix}"
+
+
 class RecipeViewSet(BaseViewSet):
     """ViewSet for the recipe class."""
 
@@ -37,6 +47,7 @@ class RecipeViewSet(BaseViewSet):
     serializer_class = serializers.RecipeSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     lookup_field = "slug"
+    schema = RecipeSchema()
 
     @action(detail=False, methods=["put", "post"])
     def from_url(self, request):

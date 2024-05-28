@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.schemas.openapi import AutoSchema
 
 # Locals
 from .models import Sprint, Task
@@ -13,11 +14,18 @@ from .permissions import IsOwner
 from .serializers import SprintSerializer, TaskSerializer
 
 
+class ArchiveTaskListSchema(AutoSchema):
+    def get_operation_id_base(self, path, method, action):
+        base = super().get_operation_id_base(path, method, action)
+        return f"Archived{base}"
+
+
 class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """API endpoint that shows a list of archived tasks."""
 
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    schema = ArchiveTaskListSchema()
 
     def get_queryset(self):
         """This view should return a list of archived tasks for the currently
