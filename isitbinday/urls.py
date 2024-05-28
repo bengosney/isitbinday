@@ -8,12 +8,6 @@ from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-# First Party
-from books.urls import router as book_router
-from food.urls import router as food_router
-from recipes.urls import router as recipes_router
-from tasks.urls import router as task_router
-
 API_TITLE = "Is it bin day"
 API_DESCRIPTION = "Help organize what you need to do"
 API_VERSION = "1.0.0"
@@ -24,10 +18,10 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path("api/tasks/", include(task_router.urls)),
-    path("api/food/", include(food_router.urls)),
-    path("api/books/", include(book_router.urls)),
-    path("api/recipes/", include(recipes_router.urls)),
+    path("api/tasks/", include("tasks.urls")),
+    path("api/food/", include("food.urls")),
+    path("api/books/", include("books.urls")),
+    path("api/recipes/", include("recipes.urls")),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/accounts/", include("accounts.urls.api", namespace="accounts-api")),
     path("admin/", admin.site.urls),

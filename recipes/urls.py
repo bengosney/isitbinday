@@ -11,3 +11,6 @@ router.register("ingredient", api.IngredientViewSet)
 router.register("recipe", api.RecipeViewSet)
 router.register("unit", api.UnitViewSet)
 router.register("step", api.StepViewSet)
+
+urlpatterns = router.urls
+app_name = "recipes"

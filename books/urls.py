@@ -7,3 +7,6 @@ from . import api
 router = routers.DefaultRouter()
 router.register("author", api.AuthorViewSet, basename="author")
 router.register("book", api.BookViewSet, basename="book")
+
+urlpatterns = router.urls
+app_name = "books"
