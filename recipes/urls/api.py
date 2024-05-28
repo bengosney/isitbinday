@@ -4,7 +4,7 @@
 from rest_framework import routers
 
 # Locals
-from . import api
+from .. import api
 
 router = routers.DefaultRouter()
 router.register("ingredient", api.IngredientViewSet)

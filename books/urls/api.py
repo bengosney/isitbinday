@@ -2,7 +2,7 @@
 from rest_framework import routers
 
 # Locals
-from . import api
+from .. import api
 
 router = routers.DefaultRouter()
 router.register("author", api.AuthorViewSet, basename="author")
