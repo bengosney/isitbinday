@@ -40,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class AcctivateSerializer(serializers.Serializer):
+class ActivateSerializer(serializers.Serializer):
     uid = serializers.CharField(write_only=True)
     token = serializers.CharField(write_only=True)
     email = serializers.EmailField(read_only=True)
