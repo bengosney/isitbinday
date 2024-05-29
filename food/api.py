@@ -4,11 +4,25 @@
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.schemas.openapi import AutoSchema
+
+# First Party
+from isitbinday.viewsets import OwnedModelViewSet
 
 # Locals
 from . import models, serializers
 from .models import Location, Product
 from .serializers import LookupSerializer, StockSerializer
+
+
+class FoodBaseSchema(AutoSchema):
+    def __init__(self, tags: list[str] | None = None, operation_id_base=None, component_name=None):
+        tags = (tags or []) + ["Food"]
+        super().__init__(tags, operation_id_base, component_name)
+
+
+class FoodBaseViewSet(OwnedModelViewSet):
+    schema = FoodBaseSchema()
 
 
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):
@@ -17,22 +31,15 @@ class UnitOfMeasureViewSet(viewsets.ModelViewSet):
     queryset = models.UnitOfMeasure.objects.all()
     serializer_class = serializers.UnitOfMeasureSerializer
     permission_classes = [permissions.IsAuthenticated]
+    schema = FoodBaseSchema()
 
 
-class StockViewSet(viewsets.ModelViewSet):
+class StockViewSet(FoodBaseViewSet):
     """ViewSet for the Stock class."""
 
+    queryset = models.Stock.objects.all()
     serializer_class = serializers.StockSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-    def get_queryset(self):
-        """This view should return a list of all stocks for the currently
-        authenticated user."""
-
-        return models.Stock.objects.authorize(self.request, action="retrieve")
 
     @action(detail=True)
     def consume(self, request, pk: int):
@@ -46,7 +53,7 @@ class StockViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(FoodBaseViewSet):
     """ViewSet for the Category class."""
 
     queryset = models.Category.objects.all()
@@ -54,7 +61,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(FoodBaseViewSet):
     """ViewSet for the Product class."""
 
     queryset = models.Product.objects.all()
@@ -88,7 +95,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class BrandViewSet(viewsets.ModelViewSet):
+class BrandViewSet(FoodBaseViewSet):
     """ViewSet for the Brand class."""
 
     queryset = models.Brand.objects.all()
@@ -96,7 +103,7 @@ class BrandViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class LocationViewSet(viewsets.ModelViewSet):
+class LocationViewSet(FoodBaseViewSet):
     """ViewSet for the Location class."""
 
     queryset = models.Location.objects.all()

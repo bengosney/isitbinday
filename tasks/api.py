@@ -8,10 +8,24 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.schemas.openapi import AutoSchema
 
+# First Party
+from isitbinday.viewsets import OwnedModelViewSet
+
 # Locals
-from .models import Sprint, Task
+from . import models
+from .models import Task
 from .permissions import IsOwner
 from .serializers import SprintSerializer, TaskSerializer
+
+
+class TaskBaseSchema(AutoSchema):
+    def __init__(self, tags: list[str] | None = None, operation_id_base=None, component_name=None):
+        tags = (tags or []) + ["Tasks"]
+        super().__init__(tags, operation_id_base, component_name)
+
+
+class TaskBaseViewSet(OwnedModelViewSet):
+    schema = TaskBaseSchema()
 
 
 class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -19,7 +33,7 @@ class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
-    schema = AutoSchema(operation_id_base="ArchivedTaskList")
+    schema = TaskBaseSchema(operation_id_base="ArchivedTaskList")
 
     def get_queryset(self):
         """This view should return a list of archived tasks for the currently
@@ -28,24 +42,18 @@ class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Task.objects.authorize(self.request, action="retrieve")
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class TaskViewSet(TaskBaseViewSet):
     """API endpoint that allows tasks to be views or edited."""
 
+    queryset = models.Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
     def get_queryset(self):
         """This view should return a list of all tasks for the currently
         authenticated user."""
 
-        return (
-            Task.objects.authorize(self.request, action="retrieve")
-            .exclude(state=Task.STATE_ARCHIVE)
-            .filter(show_after__lte=datetime.today().date())
-        )
+        return super().get_queryset().exclude(state=Task.STATE_ARCHIVE).filter(show_after__lte=datetime.today().date())
 
     @action(detail=True)
     def todo(self, request, pk=None):
@@ -165,17 +173,9 @@ class TaskViewSet(viewsets.ModelViewSet):
         return Response({"ok": True, "count": count, "before": before})
 
 
-class SprintViewSet(viewsets.ModelViewSet):
+class SprintViewSet(TaskBaseViewSet):
     """API endpoint that allows Sprints to be views or edited."""
 
+    queryset = models.Sprint.objects.all()
     serializer_class = SprintSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-    def get_queryset(self):
-        """This view should return a list of all tasks for the currently
-        authenticated user."""
-
-        return Sprint.objects.authorize(self.request, action="retrieve").order_by("-created")
