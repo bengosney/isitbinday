@@ -2,11 +2,13 @@
 from django.core.exceptions import PermissionDenied
 
 # Third Party
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.schemas.openapi import AutoSchema
 
 # First Party
+from isitbinday.viewsets import OwnedModelViewSet
 from tasks.permissions import IsOwner
 
 # Locals
@@ -14,15 +16,17 @@ from . import models, serializers
 from .extractors import SchemaOrg
 
 
-class BaseViewSet(viewsets.ModelViewSet):
-    def get_queryset(self):
-        return super().get_queryset().authorize(self.request, action="retrieve")
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+class RecipeBaseSchema(AutoSchema):
+    def __init__(self, tags: list[str] | None = None, operation_id_base=None, component_name=None):
+        tags = (tags or []) + ["Recipes"]
+        super().__init__(tags, operation_id_base, component_name)
 
 
-class IngredientViewSet(BaseViewSet):
+class RecipeBaseViewSet(OwnedModelViewSet):
+    schema = RecipeBaseSchema()
+
+
+class IngredientViewSet(RecipeBaseViewSet):
     """ViewSet for the ingredient class."""
 
     queryset = models.Ingredient.objects.all()
@@ -30,7 +34,7 @@ class IngredientViewSet(BaseViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class RecipeViewSet(BaseViewSet):
+class RecipeViewSet(RecipeBaseViewSet):
     """ViewSet for the recipe class."""
 
     queryset = models.Recipe.objects.all()
@@ -53,7 +57,7 @@ class RecipeViewSet(BaseViewSet):
         return Response({"found": found})
 
 
-class UnitViewSet(BaseViewSet):
+class UnitViewSet(RecipeBaseViewSet):
     """ViewSet for the unit class."""
 
     queryset = models.Unit.objects.all()
@@ -61,7 +65,7 @@ class UnitViewSet(BaseViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 
-class StepViewSet(BaseViewSet):
+class StepViewSet(RecipeBaseViewSet):
     """ViewSet for the step class."""
 
     queryset = models.Step.objects.all()
