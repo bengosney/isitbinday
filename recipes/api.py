@@ -11,7 +11,7 @@ from tasks.permissions import IsOwner
 
 # Locals
 from . import models, serializers
-from .extrators import SchemaOrg
+from .extractors import SchemaOrg
 
 
 class BaseViewSet(viewsets.ModelViewSet):
