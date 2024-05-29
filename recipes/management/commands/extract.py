@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
 # Locals
-from ...extrators import SchemaOrg
+from ...extractors import SchemaOrg
 
 
 class Command(BaseCommand):
