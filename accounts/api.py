@@ -16,13 +16,8 @@ class UserCreate(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class UserActivateSchema(AutoSchema):
-    def get_operation_id(self, path, method):
-        return "ActivateUser"
-
-
 class UserActivate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = ActivateSerializer
     permission_classes = (AllowAny,)
-    schema = UserActivateSchema()
+    schema = AutoSchema(operation_id_base="ActivateUser")
