@@ -14,18 +14,12 @@ from .permissions import IsOwner
 from .serializers import SprintSerializer, TaskSerializer
 
 
-class ArchiveTaskListSchema(AutoSchema):
-    def get_operation_id_base(self, path, method, action):
-        base = super().get_operation_id_base(path, method, action)
-        return f"Archived{base}"
-
-
 class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """API endpoint that shows a list of archived tasks."""
 
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
-    schema = ArchiveTaskListSchema()
+    schema = AutoSchema(operation_id_base="ArchivedTaskList")
 
     def get_queryset(self):
         """This view should return a list of archived tasks for the currently
