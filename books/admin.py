@@ -2,6 +2,9 @@
 from django import forms
 from django.contrib import admin
 
+# First Party
+from isitbinday.admin_utils import SetOwnerMixin
+
 # Locals
 from . import models
 
@@ -12,18 +15,10 @@ class AuthorAdminForm(forms.ModelForm):
         fields = ["name"]
 
 
-class AuthorAdmin(admin.ModelAdmin):
+class AuthorAdmin(SetOwnerMixin, admin.ModelAdmin):
     form = AuthorAdminForm
-    list_display = [
-        "name",
-        "created",
-        "last_updated",
-    ]
-    readonly_fields = [
-        "name",
-        "created",
-        "last_updated",
-    ]
+    list_display = ["name", "created", "last_updated", "owner"]
+    readonly_fields = ["created", "last_updated", "owner"]
 
 
 @admin.action(description="Mark as requiring data refetch")
@@ -37,7 +32,7 @@ class BookAdminForm(forms.ModelForm):
         fields = ["authors", "publish_date", "title", "isbn", "cover", "requires_refetch"]
 
 
-class BookAdmin(admin.ModelAdmin):
+class BookAdmin(SetOwnerMixin, admin.ModelAdmin):
     form = BookAdminForm
     list_display = [
         "title",
@@ -45,11 +40,7 @@ class BookAdmin(admin.ModelAdmin):
         "isbn",
         "requires_refetch",
     ]
-    readonly_fields = [
-        "created",
-        "last_updated",
-        "isbn",
-    ]
+    readonly_fields = ["created", "last_updated", "isbn", "owner"]
     search_fields = [
         "title",
     ]
