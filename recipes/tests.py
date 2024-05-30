@@ -35,7 +35,7 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         self.client.login(username=self.user.username, password=self.password)
 
     def create_recipes(self, count):
-        url = reverse("recipe-list")
+        url = reverse("recipes:recipe-list")
 
         for i in range(count):
             data = {
@@ -50,7 +50,7 @@ class RecipeViewsTestCase(APITestCaseWithUser):
             )
 
     def test_create(self, data={}):
-        url = reverse("recipe-list")
+        url = reverse("recipes:recipe-list")
         print(url)
         name = "Test Recipe"
         default_data = {
@@ -66,7 +66,7 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         self.assertEqual(name, Recipe.objects.get(name=name).name)
 
     def test_list(self):
-        url = reverse("recipe-list")
+        url = reverse("recipes:recipe-list")
         count = 5
 
         self.create_recipes(count)
@@ -80,7 +80,7 @@ class RecipeViewsTestCase(APITestCaseWithUser):
         password = get_insecure_password(12)
         second_user = User.objects.create_user(username="keith", email="keith@example.com", password=password)
 
-        url = reverse("recipe-list")
+        url = reverse("recipes:recipe-list")
         count = 5
 
         self.create_recipes(count)

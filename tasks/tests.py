@@ -31,7 +31,7 @@ class APITestCaseWithUser(ABC, APITestCase):
 
 class TaskAuthTestCase(APITestCaseWithUser):
     def test_requires_auth(self):
-        url = reverse("task-list")
+        url = reverse("tasks:task-list")
         response = self.client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -42,7 +42,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         self.client.login(username=self.user.username, password=self.password)
 
     def create_tasks(self, count):
-        url = reverse("task-list")
+        url = reverse("tasks:task-list")
         for i in range(count):
             data = {
                 "title": f"{inspect.stack()[1].function} - {i}",
@@ -50,7 +50,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
             self.client.post(url, data, format="json")
 
     def test_create(self, data={}):
-        url = reverse("task-list")
+        url = reverse("tasks:task-list")
         default_data = {
             "title": "test task",
         }
@@ -60,7 +60,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         self.assertEqual(Task.objects.count(), 1)
 
     def test_list(self):
-        url = reverse("task-list")
+        url = reverse("tasks:task-list")
         count = 5
 
         self.create_tasks(count)
@@ -73,7 +73,7 @@ class TaskViewsTestCase(APITestCaseWithUser):
         password = get_insecure_password(12)
         second_user = User.objects.create_user(username="keith", email="keith@example.com", password=password)
 
-        url = reverse("task-list")
+        url = reverse("tasks:task-list")
         count = 5
 
         self.create_tasks(count)
