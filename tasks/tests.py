@@ -3,125 +3,133 @@ import datetime
 import inspect
 import random
 import string
-from abc import ABC
 
 # Django
 from django.contrib.auth.models import User
-from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 # Third Party
+import pytest
 from rest_framework import status
-from rest_framework.test import APITestCase
 
 # Locals
 from .models import Task
 
 
-def get_insecure_password(length):
-    return "".join(random.choice(string.ascii_lowercase) for _ in range(length))
+@pytest.fixture
+def insecure_password():
+    return "".join(random.choice(string.ascii_lowercase) for _ in range(12))
 
 
-class APITestCaseWithUser(ABC, APITestCase):
-    def setUp(self):
-        self.password = get_insecure_password(12)
-        self.user = User.objects.create_user(username="jacob", email="jacob@example.com", password=self.password)
+@pytest.fixture
+def user_password(insecure_password):
+    user = User.objects.create_user(username="jacob", email="jacob@example.com", password=insecure_password)
+    return user, insecure_password
 
 
-class TaskAuthTestCase(APITestCaseWithUser):
-    def test_requires_auth(self):
-        url = reverse("tasks:task-list")
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+@pytest.fixture
+def user(user_password):
+    return user_password[0]
 
 
-class TaskViewsTestCase(APITestCaseWithUser):
-    def setUp(self):
-        super().setUp()
-        self.client.login(username=self.user.username, password=self.password)
+@pytest.fixture
+def authenticated_client(client, user_password):
+    user, password = user_password
+    client.login(username=user.username, password=password)
+    return client
 
-    def create_tasks(self, count):
+
+@pytest.fixture
+def create_tasks(authenticated_client):
+    def _create_tasks(count, client=None):
+        _client = client or authenticated_client
         url = reverse("tasks:task-list")
         for i in range(count):
-            data = {
-                "title": f"{inspect.stack()[1].function} - {i}",
-            }
-            self.client.post(url, data, format="json")
+            _client.post(url, {"title": f"{inspect.stack()[1].function} - {i}"}, format="json")
 
-    def test_create(self, data={}):
-        url = reverse("tasks:task-list")
-        default_data = {
-            "title": "test task",
-        }
-
-        response = self.client.post(url, {**default_data, **data}, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Task.objects.count(), 1)
-
-    def test_list(self):
-        url = reverse("tasks:task-list")
-        count = 5
-
-        self.create_tasks(count)
-
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Task.objects.count(), int(response.json()["count"]))
-
-    def test_list_only_mine(self):
-        password = get_insecure_password(12)
-        second_user = User.objects.create_user(username="keith", email="keith@example.com", password=password)
-
-        url = reverse("tasks:task-list")
-        count = 5
-
-        self.create_tasks(count)
-        self.client.logout()
-
-        self.client.login(username=second_user.username, password=password)
-        self.create_tasks(count)
-
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Task.objects.count() - count, int(response.json()["count"]))
+    return _create_tasks
 
 
-class TaskModelTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username="jacob", email="jacob@example.com")
+def test_requires_auth(client):
+    url = reverse("tasks:task-list")
+    response = client.get(url, format="json")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_str(self):
-        title = "Test Task"
-        task = Task(title=title, owner=self.user)
 
-        self.assertEqual(title, f"{task.title}")
+@pytest.mark.django_db
+def test_create(authenticated_client):
+    url = reverse("tasks:task-list")
 
-    def test_completed_date(self):
-        task = Task.objects.create(title="title", owner=self.user)
+    response = authenticated_client.post(url, {"title": "test task"}, format="json")
+    assert response.status_code == status.HTTP_201_CREATED
+    assert Task.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_list(create_tasks, authenticated_client):
+    url = reverse("tasks:task-list")
+    create_tasks(5)
+
+    response = authenticated_client.get(url, format="json")
+    assert response.status_code == status.HTTP_200_OK
+    assert Task.objects.count() == int(response.json()["count"])
+
+
+@pytest.mark.django_db
+def test_list_only_mine(authenticated_client, create_tasks, insecure_password):
+    url = reverse("tasks:task-list")
+    count = 5
+
+    second_user = User.objects.create_user(username="keith", email="keith@example.com", password=insecure_password)
+    for i in range(count):
+        Task.objects.create(title=f"Other Task {i}", owner=second_user)
+
+    create_tasks(count)
+
+    response = authenticated_client.get(url, format="json")
+    assert response.status_code == status.HTTP_200_OK
+    assert Task.objects.count() - count == int(response.json()["count"])
+
+
+@pytest.mark.django_db
+def test_str(user):
+    title = "Test Task"
+    task = Task(title=title, owner=user)
+
+    assert title == f"{task.title}"
+
+
+@pytest.mark.django_db
+def test_completed_date(user):
+    task = Task.objects.create(title="title", owner=user)
+    task.done()
+
+    assert task.completed is not None
+
+
+@pytest.mark.django_db
+def test_previous_state(user):
+    task = Task.objects.create(title="title", owner=user)
+    task.do()
+    task.done()
+    task.archive()
+    task.save()
+
+    assert task.previous_state == Task.STATE_DONE
+
+
+@pytest.mark.django_db
+def test_auto_archive(user):
+    count = 5
+    for i in range(count):
+        task = Task.objects.create(title=f"Task {i}", owner=user)
         task.done()
-
-        self.assertIsNotNone(task.completed)
-
-    def test_previous_state(self):
-        task = Task.objects.create(title="title", owner=self.user)
-        task.do()
-        task.done()
-        task.archive()
         task.save()
 
-        self.assertEqual(task.previous_state, Task.STATE_DONE)
+    tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
 
-    def test_auto_archive(self):
-        count = 5
-        for i in range(count):
-            task = Task.objects.create(title=f"Task {i}", owner=self.user)
-            task.done()
-            task.save()
+    Task.auto_archive(tomorrow)
+    archived_tasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
 
-        tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
-
-        Task.auto_archive(tomorrow)
-        archived_tasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
-
-        self.assertEqual(count, len(archived_tasks))
+    assert count == len(archived_tasks)
