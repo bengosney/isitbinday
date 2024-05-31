@@ -69,6 +69,7 @@ optional-dependencies.dev = [
   "faker",
   "freezegun",
   "icecream",
+  "kolo[test-generation]",
   "model-bakery",
   "mypy",
   "packaging",
