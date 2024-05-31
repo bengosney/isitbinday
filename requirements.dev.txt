@@ -528,6 +528,10 @@ django-stubs-ext==5.0.2 \
     --hash=sha256:409c62585d7f996cef5c760e6e27ea3ff29f961c943747e67519c837422cad32 \
     --hash=sha256:8d8efec5a86241266bec94a528fe21258ad90d78c67307f3ae5f36e81de97f12
     # via django-stubs
+django-vanilla-views==3.0.0 \
+    --hash=sha256:ab49c4e410f00e04a89eff0403aa14f098c0ba251657deff7a2d5c3ebe23602f \
+    --hash=sha256:b65f27b8d5de53f695a397438337be882a6c7b5d8d30333a4cf98c9239fe0b86
+    # via is-it-bin-day (pyproject.toml)
 djangorestframework==3.15.1 \
     --hash=sha256:3ccc0475bce968608cf30d07fb17d8e52d1d7fc8bfe779c905463200750cbca6 \
     --hash=sha256:f88fad74183dfc7144b2756d0d2ac716ea5b4c7c9840995ac3bfd8ec034333c1
