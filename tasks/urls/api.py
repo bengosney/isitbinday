@@ -10,4 +10,4 @@ router.register(r"archived-tasks", api.ArchiveTaskListView, basename="archived-t
 router.register(r"sprints", api.SprintViewSet, basename="sprint")
 
 urlpatterns = router.urls
-app_name = "tasks"
+app_name = "tasks-api"
