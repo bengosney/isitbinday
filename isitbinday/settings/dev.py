@@ -22,6 +22,7 @@ INSTALLED_APPS += [
 MIDDLEWARE += [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "kolo.middleware.KoloMiddleware",
 ]
 
 INTERNAL_IPS = [
