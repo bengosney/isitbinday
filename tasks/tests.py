@@ -13,6 +13,7 @@ from rest_framework import status
 
 # Locals
 from .models import Task
+from .serializers import TaskSerializer
 
 
 @pytest.fixture
@@ -24,6 +25,11 @@ def create_tasks(authenticated_client):
             _client.post(url, {"title": f"{inspect.stack()[1].function} - {i}"}, format="json")
 
     return _create_tasks
+
+
+@pytest.fixture
+def task(user):
+    return Task.objects.create(title="Test Task", owner=user)
 
 
 def test_requires_auth(client):
@@ -108,3 +114,18 @@ def test_auto_archive(user):
     archived_tasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
 
     assert count == len(archived_tasks)
+
+
+@pytest.mark.django_db
+def test_task_serializer(task, snapshot):
+    serializer = TaskSerializer(instance=task)
+
+    data = serializer.data
+
+    assert "created" in data.keys()
+    del data["created"]
+
+    assert "last_updated" in data.keys()
+    del data["last_updated"]
+
+    assert data == snapshot
