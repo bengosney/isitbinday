@@ -40,6 +40,7 @@ dependencies = [
   "django-model-utils",
   "django-oso",
   "django-storages",
+  "django-vanilla-views",
   "djangorestframework",
   "djangorestframework-simplejwt",
   "djangorestframework-stubs",
