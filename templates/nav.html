@@ -2,6 +2,7 @@
   <div class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+      <a class="navbar-item" href="{% url 'tasks:list' %}">Tasks</a>
     </div>
     <div class="navbar-end">
       <p class="navbar-item">Welcome, {{ user.username }}!</p>

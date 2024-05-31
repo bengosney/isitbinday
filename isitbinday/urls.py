@@ -24,6 +24,7 @@ urlpatterns = [
     path("api/recipes/", include("recipes.urls.api")),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/accounts/", include("accounts.urls.api", namespace="accounts-api")),
+    path("tasks/", include("tasks.urls.urls")),
     path("admin/", admin.site.urls),
     path(
         "openapi/",
