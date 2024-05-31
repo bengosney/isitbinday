@@ -1,0 +1,21 @@
+# serializer version: 1
+# name: test_task_serializer
+  ReturnDict({
+    'available_state_transitions': list([
+      'cancel',
+      'do',
+      'done',
+    ]),
+    'blocked_by': None,
+    'completed': None,
+    'due_date': None,
+    'effort': 0,
+    'id': 1,
+    'owner': 'jacob',
+    'position': 0,
+    'previous_state': None,
+    'repeats': '',
+    'state': 'todo',
+    'title': 'Test Task',
+  })
+# ---
