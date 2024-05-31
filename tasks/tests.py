@@ -19,7 +19,7 @@ from .models import Task
 def create_tasks(authenticated_client):
     def _create_tasks(count, client=None):
         _client = client or authenticated_client
-        url = reverse("tasks:task-list")
+        url = reverse("tasks-api:task-list")
         for i in range(count):
             _client.post(url, {"title": f"{inspect.stack()[1].function} - {i}"}, format="json")
 
@@ -27,14 +27,14 @@ def create_tasks(authenticated_client):
 
 
 def test_requires_auth(client):
-    url = reverse("tasks:task-list")
+    url = reverse("tasks-api:task-list")
     response = client.get(url, format="json")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.django_db
 def test_create(authenticated_client):
-    url = reverse("tasks:task-list")
+    url = reverse("tasks-api:task-list")
 
     response = authenticated_client.post(url, {"title": "test task"}, format="json")
     assert response.status_code == status.HTTP_201_CREATED
@@ -43,7 +43,7 @@ def test_create(authenticated_client):
 
 @pytest.mark.django_db
 def test_list(create_tasks, authenticated_client):
-    url = reverse("tasks:task-list")
+    url = reverse("tasks-api:task-list")
     create_tasks(5)
 
     response = authenticated_client.get(url, format="json")
@@ -53,7 +53,7 @@ def test_list(create_tasks, authenticated_client):
 
 @pytest.mark.django_db
 def test_list_only_mine(authenticated_client, create_tasks, insecure_password):
-    url = reverse("tasks:task-list")
+    url = reverse("tasks-api:task-list")
     count = 5
 
     second_user = User.objects.create_user(username="keith", email="keith@example.com", password=insecure_password)
