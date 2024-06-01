@@ -21,7 +21,7 @@ class StateMixin:
         return [i.name for i in self.get_available_state_transitions()]
 
 
-class Task(StateMixin, AuthorizedModel):
+class Task(AuthorizedModel):
     class Meta:
         ordering = ["position"]
 
@@ -79,6 +79,10 @@ class Task(StateMixin, AuthorizedModel):
         return len(tasks)
 
     @property
+    def available_state_transitions(self):
+        return [i.name for i in self.get_available_state_transitions()]
+
+    @property
     def previous_state(self):
         type_id = ContentType.objects.get_for_model(self)
         state_log = StateLog.objects.all().filter(object_id=self.pk, content_type_id=type_id).order_by("-timestamp")
@@ -128,7 +132,7 @@ class Task(StateMixin, AuthorizedModel):
         return f"{self.title}"
 
 
-class Sprint(StateMixin, AuthorizedModel):
+class Sprint(AuthorizedModel):
     STATE_PLANNING = "planning"
     STATE_IN_PROGRESS = "in progress"
     STATE_FINISHED = "finished"
@@ -158,6 +162,10 @@ class Sprint(StateMixin, AuthorizedModel):
 
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
+
+    @property
+    def available_state_transitions(self):
+        return [i.name for i in self.get_available_state_transitions()]
 
     @transition(field=state, source=STATE_PLANNING, target=STATE_IN_PROGRESS)
     def start(self):
