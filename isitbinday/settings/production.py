@@ -7,7 +7,7 @@ import dj_database_url
 
 # Locals
 from .base import *  # noqa
-from .base import BASE_DIR, DATABASES, MIDDLEWARE
+from .base import DATABASES, MIDDLEWARE
 
 DEBUG = False
 
@@ -66,18 +66,6 @@ with contextlib.suppress(KeyError):
     EMAIL_PORT = env["SMTP_PORT"]
     EMAIL_USE_TLS = (env["SMTP_TLS"] or "True") != "False"
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-
-if "ROLLBAR_ACCESS_TOKEN" in os.environ:
-    ROLLBAR = {
-        "access_token": os.environ.get("ROLLBAR_ACCESS_TOKEN"),
-        "environment": "production",
-        "code_version": "1.0",
-        "root": BASE_DIR,
-    }
-
-    MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]
-    print("Initialized Rollbar")
 
 
 CACHES = {
