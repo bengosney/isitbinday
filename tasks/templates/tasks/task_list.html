@@ -2,15 +2,27 @@
 
 {% block content %}
     <h1>Tasks</h1>
-    <div class="grid">
+    <div class="grid task-list">
         {% for state, tasks in state_tasks.items %}
-            <div class="cell">
+            <div class="cell box task-group task-group-{{ state }}">
                 <h2>{{ state|capfirst }}</h2>
-                <ul>
+                <ol>
                     {% for task in tasks %}
-                        <li>{{ task.title }}</li>
+                        <li class="task">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title">{{ task.title }}</p>
+                                </header>
+                                <footer class="card-footer">
+                                    <a href="#edit" class="card-footer-item">Edit</a>
+                                    {% for action in task.get_available_state_transitions %}
+                                        <a href="#{{ action.method }}" class="card-footer-item">{{ action.name|capfirst }}</a>
+                                    {% endfor %}
+                                </footer>
+                            </div>
+                        </li>
                     {% endfor %}
-                </ul>
+                </ol>
             </div>
         {% endfor %}
     </div>
