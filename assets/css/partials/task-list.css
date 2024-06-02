@@ -1,0 +1,22 @@
+.task-list {
+  min-height: 70vh;
+
+  .cell.box {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 2rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .task-group {
+    & > ol {
+      list-style: none;
+    }
+
+    .task {
+    }
+  }
+}
