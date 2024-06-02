@@ -73,8 +73,8 @@ class SchemaOrg:
                 continue
 
             found += 1
-            cook_time = parse_isoduration(data["cookTime"])
-            prep_time = parse_isoduration(data["prepTime"])
+            cook_time = parse_isoduration(data.get("cookTime", 0))
+            prep_time = parse_isoduration(data.get("prepTime", 0))
 
             recipe, _ = Recipe.objects.update_or_create(
                 owner=self.owner,
