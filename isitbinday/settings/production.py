@@ -69,15 +69,15 @@ with contextlib.suppress(KeyError):
 
 
 if "ROLLBAR_ACCESS_TOKEN" in os.environ:
-    # Third Party
-    import rollbar
-
     ROLLBAR = {
         "access_token": os.environ.get("ROLLBAR_ACCESS_TOKEN"),
         "environment": "production",
+        "code_version": "1.0",
         "root": BASE_DIR,
     }
-    rollbar.init(**ROLLBAR)
+
+    MIDDLEWARE += ["rollbar.contrib.django.middleware.RollbarNotifierMiddleware"]
+    print("Initialized Rollbar")
 
 
 CACHES = {
