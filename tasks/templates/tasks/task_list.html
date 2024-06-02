@@ -2,9 +2,16 @@
 
 {% block content %}
     <h1>Tasks</h1>
-    <ul>
-        {% for task in tasks %}
-            <li>{{ task.title }}</li>
+    <div class="grid">
+        {% for state, tasks in state_tasks.items %}
+            <div class="cell">
+                <h2>{{ state|capfirst }}</h2>
+                <ul>
+                    {% for task in tasks %}
+                        <li>{{ task.title }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
