@@ -5,7 +5,10 @@
 /*[[[cog
 import cog
 for i, size in enumerate([3.815, 3.052, 2.441, 1.953, 1.563, 1.25], 1):
-    cog.outl(f'h{i}, .title.is-{i} {{ font-size: {size}em; }}')
+    cog.outl(f"""h{i},
+.title.is-{i} {{
+  font-size: {size}em;
+}}""")
 ]]]*/
 h1,
 .title.is-1 {
@@ -31,4 +34,4 @@ h6,
 .title.is-6 {
   font-size: 1.25em;
 }
-/*[[[end]]] (checksum: 69fa853ff5a14533a86b78dc948ac0c4)*/
+/*[[[end]]] (checksum: c4427147626185076c2f58b2c9ba4a00)*/
