@@ -1,5 +1,5 @@
 .task-list {
-  min-height: 70vh;
+  min-height: max(70vh, 20rem);
 
   .cell.box {
     margin-bottom: 0;
@@ -16,7 +16,14 @@
       list-style: none;
     }
 
-    .task {
+    transition: background-color 0.2s;
+
+    &.droppable {
+      background-color: var(--positive);
+
+      &.drag-over {
+        background-color: var(--positive-hover);
+      }
     }
   }
 }
