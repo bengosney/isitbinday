@@ -1,3 +1,6 @@
+# Django
+from django.http import HttpResponse
+
 # Third Party
 from vanilla import ListView
 
@@ -15,6 +18,10 @@ class TaskListView(ListView):
         for task in context["object_list"]:
             tasks[task.state].append(task)
 
-        context["state_tasks"] = tasks
+        context["tasks_by_state"] = tasks
 
         return context
+
+
+def action_view(request, id, action):
+    return HttpResponse(f"Performed {action} on {id}")

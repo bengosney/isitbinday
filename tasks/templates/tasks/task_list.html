@@ -2,13 +2,49 @@
 
 {% block content %}
     <h1>Tasks</h1>
-    <div class="grid task-list">
-        {% for state, tasks in state_tasks.items %}
-            <div class="cell box task-group task-group-{{ state }}">
+    <div
+        class="grid task-list"
+        x-data="{ dragging: false, droppable: [] }"
+        :class="{ 'dragging': dragging }">
+        {% for state, tasks in tasks_by_state.items %}
+            <div
+                class="cell box task-group task-group-{{ state }}"
+                x-data="{ dragover: false }"
+                :class="{ 'drag-over': dragover, droppable: droppable.includes('{{ state }}') }"
+                x-on:dragover.prevent="{# fmt:off #}
+                    if (dragging && droppable.includes('{{ state }}')) {
+                        event.dataTransfer.dropEffect = 'move';
+                        dragover = true;
+                    }
+                {# fmt:on #}"
+                x-on:drop.prevent="{# fmt:off #}
+                    if (dragging && droppable.includes('{{ state }}')) {
+                        const taskId = event.dataTransfer.getData('text/plain');
+                        const task = document.getElementById(taskId);
+                        task.parentNode.removeChild(task);
+                        event.target.querySelector('ol').appendChild(task);
+                    }
+                {# fmt:on #}"
+                x-on:dragleave.prevent="dragover = false;"
+            >
                 <h2>{{ state|capfirst }}</h2>
                 <ol>
                     {% for task in tasks %}
-                        <li class="task">
+                        <li
+                            id="task-{{ task.id }}"
+                            class="task"
+                            draggable="true"
+                            x-on:dragend="{# fmt:off #}
+                                dragging = false;
+                                droppable = [];
+                            {# fmt:on #}"
+                            x-on:dragstart.self="{# fmt:off #}
+                                dragging = true;
+                                event.dataTransfer.effectAllowed = 'move';
+                                event.dataTransfer.setData('text/plain', event.target.id);
+                                droppable = {{ task.get_available_state_states|safe }};
+                            {# fmt:on #}"
+                        >
                             <div class="card">
                                 <header class="card-header">
                                     <p class="card-header-title">{{ task.title }}</p>
@@ -16,7 +52,7 @@
                                 <footer class="card-footer">
                                     <a href="#edit" class="card-footer-item">Edit</a>
                                     {% for action in task.get_available_state_transitions %}
-                                        <a href="#{{ action.method }}" class="card-footer-item">{{ action.name|capfirst }}</a>
+                                        <a href="{% url 'tasks:action' task.id action.name %}" class="card-footer-item">{{ action.name|capfirst }}</a>
                                     {% endfor %}
                                 </footer>
                             </div>
