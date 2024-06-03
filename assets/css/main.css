@@ -1,6 +1,7 @@
 @import "external/bulma.css";
-@import "partials/typography.css";
 
+@import "partials/variables.css";
+@import "partials/typography.css";
 @import "partials/container.css";
 
 @import "partials/task-list.css";
