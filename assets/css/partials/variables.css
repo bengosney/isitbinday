@@ -1,0 +1,8 @@
+:root {
+  --positive: #1f5322;
+  --positive-hover: #25972b;
+  --negative: #b71c1c;
+  --negative-hover: #bd2420;
+  --warning: #f57c00;
+  --warning-hover: #ff9800;
+}
