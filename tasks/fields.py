@@ -5,7 +5,7 @@ from functools import partialmethod
 
 # Third Party
 from django_fsm import FSMField as BaseFSMField
-from django_fsm import get_all_FIELD_transitions
+from django_fsm import get_all_FIELD_transitions, get_available_FIELD_transitions
 
 
 @dataclass(slots=True)
@@ -33,8 +33,18 @@ def get_all_field_states(instance, field):
     return states
 
 
+def get_available_states(instance, field):
+    states: set[str] = set()
+
+    for t in get_available_FIELD_transitions(instance, field):
+        states.add(t.target)
+
+    return list(states)
+
+
 class FSMField(BaseFSMField):
     def contribute_to_class(self, cls, name, **kwargs):
         super().contribute_to_class(cls, name, **kwargs)
 
         setattr(cls, f"get_all_{self.name}_states", partialmethod(get_all_field_states, field=self))
+        setattr(cls, f"get_available_{self.name}_states", partialmethod(get_available_states, field=self))
