@@ -16,7 +16,8 @@ class TaskListView(ListView):
         tasks: dict[str, list[Task]] = {state: [] for state in Task.STATES if state != "archive"}
 
         for task in context["object_list"]:
-            tasks[task.state].append(task)
+            if task.state in tasks.keys():
+                tasks[task.state].append(task)
 
         context["tasks_by_state"] = tasks
 
