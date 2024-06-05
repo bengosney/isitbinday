@@ -8,6 +8,7 @@ REQS=$(shell python -c 'import tomllib;[print(f"requirements.{k}.txt") for k in 
 
 COG_FILE:=.cogfiles
 
+ALL_TS_FILES:=$(shell find assets/typescript/ -mindepth 2 -name *.ts)
 TS_FILES:=$(wildcard assets/typescript/*.ts)
 JS_FILES:=$(patsubst assets/typescript/%.ts,static/js/%.min.js,$(TS_FILES))
 
@@ -122,7 +123,7 @@ _upgrade: $(UV_PATH) requirements.txt
 upgrade: _upgrade $(PRE_COMMIT_PATH) .direnv  ## Upgrade the project requirements
 	python -m pre_commit autoupdate
 
-static/js/%.min.js: assets/typescript/%.ts $(TS_FILES)
+static/js/%.min.js: assets/typescript/%.ts $(ALL_TS_FILES)
 	npx esbuild $< --bundle --minify --sourcemap --outfile=$@
 	@touch $@
 
