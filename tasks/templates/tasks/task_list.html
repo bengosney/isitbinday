@@ -47,7 +47,7 @@
                             x-on:dragstart.self="{# fmt:off #}
                                 dragStart(event);
 
-                                draggingItem = true;
+                                setTimeout(() => draggingItem = true, 10);
                                 dragging = true;
 
                                 droppable = {{ task.get_available_state_states|safe }};
