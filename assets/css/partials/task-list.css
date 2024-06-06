@@ -30,10 +30,10 @@
     }
 
     .task {
-      transition: 0.2s opacity ease-in-out;
+      transition: 0.2s all ease-in-out;
       &.dragging {
         opacity: 0;
-        max-height: 0;
+        height: 0 !important;
       }
     }
   }

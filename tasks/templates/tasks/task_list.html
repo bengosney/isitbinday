@@ -34,20 +34,14 @@
                             id="task-{{ task.id }}"
                             class="task"
                             x-data="{ draggingItem: false }"
-                            :class="{ 'dragging': draggingItem }"
                             draggable="true"
                             x-on:dragend="{# fmt:off #}
                                 dragEnd(event);
-
-                                draggingItem = false;
                                 dragging = false;
-
                                 droppable = [];
                             {# fmt:on #}"
                             x-on:dragstart.self="{# fmt:off #}
                                 dragStart(event);
-
-                                setTimeout(() => draggingItem = true, 10);
                                 dragging = true;
 
                                 droppable = {{ task.get_available_state_states|safe }};
