@@ -8,5 +8,16 @@
     "@alpinejs/focus": "^3.14.0",
     "alpinejs": "^3.14.0",
     "htmx.org": "^1.9.12"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "overrides": [
+      {
+        "files": "*.ts",
+        "options": {
+          "tabWidth": 4
+        }
+      }
+    ]
   }
 }
