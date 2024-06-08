@@ -1,5 +1,3 @@
-import { takeClass } from "htmx.org";
-
 const dragClass = "dragging";
 
 const clearDragOver = () => {
@@ -7,6 +5,11 @@ const clearDragOver = () => {
     document.querySelectorAll(`.${selector}`).forEach((element) => element.classList.remove(selector));
   });
 };
+
+interface DataTransferObject {
+  id: string;
+  position?: "before" | "after";
+}
 
 export const dragStart = (event: DragEvent) => {
   clearDragOver();
@@ -43,10 +46,9 @@ export const dragStart = (event: DragEvent) => {
 
 export const dragEnd = (event: DragEvent) => {
   document.querySelectorAll(".drag-ghost").forEach((ghost) => ghost.remove());
+  const { target, dataTransfer } = event;
 
-  if (event.target !== null && event.target instanceof HTMLElement !== false) {
-    const { target } = event;
-
+  if (dataTransfer && target !== null && target instanceof HTMLElement !== false) {
     target.classList.remove(dragClass);
     target.addEventListener(
       "transitionend",
@@ -59,18 +61,23 @@ export const dragEnd = (event: DragEvent) => {
   }
 };
 
-export const dragOver = (event: DragEvent) => {
+export const dragOver = (event: DragEvent): DataTransferObject | undefined => {
   clearDragOver();
-  if (event.target !== null && event.target instanceof HTMLElement !== false) {
+  if (event.dataTransfer && event.target !== null && event.target instanceof HTMLElement !== false) {
     const target = event.target.closest(".task") as HTMLElement;
     const { height, top } = target.getBoundingClientRect();
     const { clientY } = event;
 
+    const data: DataTransferObject = { id: target.id };
     if (clientY < top + height / 2) {
       target.classList.add("move-down");
+      data.position = "before";
     } else {
       target.classList.add("move-up");
+      data.position = "after";
     }
+
+    return data;
   }
 };
 
