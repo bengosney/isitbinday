@@ -1,5 +1,7 @@
 .task-list {
+  --move-height: 0;
   min-height: max(70vh, 20rem);
+  min-width: 1040px !important;
 
   .cell.box {
     margin-bottom: 0;
@@ -35,13 +37,38 @@
         opacity: 0;
         height: 0 !important;
       }
+
+      & > * {
+        &:before {
+          content: "";
+          height: 0;
+          display: block;
+          transition: height 0.2s ease-in-out;
+        }
+      }
+
+      &.move-down {
+        & > * {
+          &:before {
+            content: "";
+            height: var(--move-height);
+          }
+        }
+      }
+      &.move-up {
+        & + .task {
+          & > * {
+            &:before {
+              content: "";
+              height: var(--move-height);
+            }
+          }
+        }
+      }
     }
   }
 }
 
 .task {
   list-style: none;
-}
-
-.drag-ghost {
 }
