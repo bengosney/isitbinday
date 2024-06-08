@@ -43,7 +43,7 @@
           content: "";
           height: 0;
           display: block;
-          transition: height 0.2s ease-in-out;
+          transition: height 0.1s ease-in-out;
         }
       }
 
