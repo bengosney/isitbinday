@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div x-data="{ dragging: false, droppable: [], lastDraggedOver: null, lastOverPosition: null }">
+    <div x-data="{ dragging: false, state: '', droppable: [], lastDraggedOver: null, lastOverPosition: null }">
         <h1>Tasks</h1>
         <div
             class="grid task-list"
@@ -11,7 +11,7 @@
                 <div
                     class="cell box task-group task-group-{{ state }}"
                     x-data="{ dragover: false }"
-                    :class="{ 'drag-over': dragover, droppable: droppable.includes('{{ state }}') }"
+                    :class="{ 'drag-over': dragover, droppable: droppable.includes('{{ state }}'), orderable: droppable.includes('{{ state }}') || state == '{{ state }}' }"
                     x-on:dragover.prevent="{# fmt:off #}
                         if (dragging && droppable.includes('{{ state }}')) {
                             event.dataTransfer.dropEffect = 'move';
@@ -19,7 +19,7 @@
                         }
                     {# fmt:on #}"
                     x-on:drop.prevent="{# fmt:off #}
-                        if (dragging && droppable.includes('{{ state }}')) {
+                        if (dragging && (droppable.includes('{{ state }}') || '{{ state }}' === state)) {
                             const taskId = event.dataTransfer.getData('text/plain');
                             const task = document.getElementById(taskId);
                             task.parentNode.removeChild(task);
@@ -48,11 +48,12 @@
                                     dragEnd(event);
                                     dragging = false;
                                     droppable = [];
+                                    state = '';
                                 {# fmt:on #}"
                                 x-on:dragstart="{# fmt:off #}
                                     dragStart(event);
                                     dragging = true;
-
+                                    state = '{{ task.state }}';
                                     droppable = {{ task.get_available_state_states|safe }};
                                 {# fmt:on #}"
                                 x-on:dragover="{# fmt:off #}
