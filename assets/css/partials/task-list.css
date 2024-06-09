@@ -30,37 +30,38 @@
         background-color: var(--positive-hover);
       }
     }
-
-    .task {
-      transition: 0.2s all ease-in-out;
-      &.dragging {
-        opacity: 0;
-        height: 0 !important;
-      }
-
-      & > * {
-        &:before {
-          content: "";
-          height: 0;
-          display: block;
-          transition: height 0.1s ease-in-out;
+    &.orderable {
+      .task {
+        transition: 0.2s all ease-in-out;
+        &.dragging {
+          opacity: 0;
+          height: 0 !important;
         }
-      }
 
-      &.move-down {
         & > * {
           &:before {
             content: "";
-            height: var(--move-height);
+            height: 0;
+            display: block;
+            transition: height 0.1s ease-in-out;
           }
         }
-      }
-      &.move-up {
-        & + .task {
+
+        &.move-down {
           & > * {
             &:before {
               content: "";
               height: var(--move-height);
+            }
+          }
+        }
+        &.move-up {
+          & + .task {
+            & > * {
+              &:before {
+                content: "";
+                height: var(--move-height);
+              }
             }
           }
         }
