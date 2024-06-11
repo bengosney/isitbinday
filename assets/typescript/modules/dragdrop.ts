@@ -34,6 +34,8 @@ export const dragStart = (event: DragEvent) => {
 
     const clone = target.cloneNode(true) as HTMLElement;
 
+    clone.removeAttribute("x-data");
+    clone.removeAttribute("x-bind");
     clone.classList.add("drag-ghost");
     clone.style.position = "absolute";
     clone.style.top = `-${height * 10}px`;
