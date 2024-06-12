@@ -11,7 +11,7 @@ interface DataTransferObject {
   position?: "before" | "after";
 }
 
-export const dragStart = (event: DragEvent) => {
+const dragStart = (event: DragEvent) => {
   clearDragOver();
   if (event.dataTransfer !== null && event.target instanceof HTMLElement !== false) {
     const { target, dataTransfer } = event;
@@ -46,7 +46,7 @@ export const dragStart = (event: DragEvent) => {
   }
 };
 
-export const dragEnd = (event: DragEvent) => {
+const dragEnd = (event: DragEvent) => {
   document.querySelectorAll(".drag-ghost").forEach((ghost) => ghost.remove());
   const { target, dataTransfer } = event;
 
@@ -63,7 +63,7 @@ export const dragEnd = (event: DragEvent) => {
   }
 };
 
-export const dragOver = (event: DragEvent): DataTransferObject | undefined => {
+const dragOver = (event: DragEvent): DataTransferObject | undefined => {
   clearDragOver();
   if (event.dataTransfer && event.target !== null && event.target instanceof HTMLElement !== false) {
     const target = event.target.closest(".task") as HTMLElement;
@@ -83,6 +83,85 @@ export const dragOver = (event: DragEvent): DataTransferObject | undefined => {
   }
 };
 
-export const dragLeave = (event: DragEvent) => {
-  clearDragOver();
+export default {
+  dragging: false,
+  state: "",
+  droppable: [],
+  lastDraggedOver: null,
+  lastOverPosition: null,
+  container: {
+    [":class"]() {
+      return { dragging: this.dragging };
+    },
+  },
+  taskGroup: {
+    ["x-data"]() {
+      return { dragover: false };
+    },
+    [":class"]() {
+      return {
+        "drag-over": this.dragover,
+        droppable: this.droppable.includes(this.$el.dataset.state),
+        orderable: this.droppable.includes(this.$el.dataset.state) || this.state == this.$el.dataset.state,
+      };
+    },
+    ["x-on:dragleave"](event: DragEvent) {
+      this.dragover = false;
+    },
+    ["x-on:dragover.prevent"](event: DragEvent) {
+      if (event.dataTransfer && this.dragging && this.droppable.includes(this.$el.dataset.state)) {
+        event.dataTransfer.dropEffect = "move";
+        this.dragover = true;
+      }
+    },
+    ["x-on:drop.prevent"](event: DragEvent) {
+      if (
+        event.dataTransfer &&
+        this.dragging &&
+        (this.droppable.includes(this.$el.dataset.state) || this.$el.dataset.state === this.state)
+      ) {
+        const taskId = event.dataTransfer.getData("text/plain");
+        const task = document.getElementById(taskId);
+        if (task) {
+          task.parentNode?.removeChild(task);
+          const target = document.querySelector(`#${this.lastDraggedOver}`);
+          switch (this.lastOverPosition) {
+            case "before":
+              target?.before(task);
+              break;
+            case "after":
+              target?.after(task);
+              break;
+          }
+        }
+      }
+    },
+  },
+  task: {
+    ["x-data"]() {
+      return { draggingItem: false };
+    },
+    ["x-on:dragend"](event: DragEvent) {
+      dragEnd(event);
+      this.dragging = false;
+      this.droppable = [];
+      this.state = "";
+    },
+    ["x-on:dragstart"](event: DragEvent) {
+      dragStart(event);
+      this.dragging = true;
+      this.state = this.$el.dataset.state;
+      this.droppable = this.$el.dataset.availableStates.split(",");
+    },
+    ["x-on:dragover"](event: DragEvent) {
+      const draggedOver = dragOver(event);
+      if (draggedOver) {
+        this.lastDraggedOver = draggedOver.id;
+        this.lastOverPosition = draggedOver.position || "";
+      }
+    },
+    ["x-on:dragleave.self"]() {
+      clearDragOver();
+    },
+  },
 };
