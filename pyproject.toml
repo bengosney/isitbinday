@@ -84,6 +84,7 @@ optional-dependencies.dev = [
   "pytest-freezegun",
   "pytest-picked",
   "ruff",
+  "setuptools",
   "syrupy",
   "uv",
   "validate-pyproject[all]",
