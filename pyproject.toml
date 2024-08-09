@@ -1,11 +1,3 @@
-[project]
-name = "is-it-bin-day"
-version = "0.1.3"
-description = "More useful task list"
-authors = [
-  {email = "bengosney@googlemail.com", name = "Ben Gosney"}
-]
-
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
@@ -13,19 +5,111 @@ requires = [
   "wheel",
 ]
 
-[tool.black]
-line-length = 128
-target-version = ['py310']
-
-[tool.ruff]
-line-length = 120
-target-version = "py312"
-exclude = [
-    "migrations",
+[project]
+name = "is-it-bin-day"
+version = "0.1.4"
+description = "More useful task list"
+authors = [
+  { email = "bengosney@googlemail.com", name = "Ben Gosney" },
 ]
 
-[tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "UP", "C90", "DJ", "N" ] # Add DJ and N back in when I have time to fix them
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "boto3",
+  "dj-database-url",
+  "django",
+  "django-admin-sortable2",
+  "django-appconf",
+  "django-cors-headers",
+  "django-environ",
+  "django-extensions",
+  "django-fsm-2",
+  "django-fsm-admin2",
+  "django-fsm-log",
+  "django-model-utils",
+  "django-oso",
+  "django-storages",
+  "djangorestframework",
+  "djangorestframework-simplejwt",
+  "djangorestframework-stubs",
+  "googletrans",
+  "gunicorn",
+  "minestrone",
+  "openfoodfacts",
+  "pillow",
+  "pint",
+  "psycopg2",
+  "pyyaml",
+  "recurrent",
+  "requests",
+  "rollbar",
+  "uritemplate",
+  "whitenoise[brotli]",
+]
+
+optional-dependencies.dev = [
+  "cogapp",
+  "commitizen",
+  "django-browser-reload",
+  "django-debug-toolbar",
+  "django-stubs",
+  "djangorestframework-stubs",
+  "faker",
+  "freezegun",
+  "icecream",
+  "model-bakery",
+  "mypy",
+  "packaging",
+  "pre-commit",
+  "pytest",
+  "pytest-clarity",
+  "pytest-cov",
+  "pytest-django",
+  "pytest-django-queries",
+  "pytest-freezegun",
+  "pytest-picked",
+  "ruff",
+  "uv",
+  "validate-pyproject[all]",
+]
+
+[tool.black]
+line-length = 128
+target-version = [
+  'py310',
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+exclude = [
+  "migrations",
+]
+
+lint.select = [
+  "C90",
+  "DJ",
+  "E4",
+  "E7",
+  "E9",
+  "F",
+  "N",
+  "UP",
+]
 
 [tool.pycln]
 all = true
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+update_changelog_on_bump = true
