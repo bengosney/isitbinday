@@ -573,9 +573,9 @@ httpcore==0.9.1 \
     --hash=sha256:9850fe97a166a794d7e920590d5ec49a05488884c9fc8b5dba8561effab0c2a0 \
     --hash=sha256:ecc5949310d9dae4de64648a4ce529f86df1f232ce23dcfefe737c24d21dfbe9
     # via httpx
-httpx==0.13.3 \
-    --hash=sha256:32d930858eab677bc29a742aaa4f096de259f1c78c68a90ad11f5c3c04f08335 \
-    --hash=sha256:3642bd13e90b80ba8a243a730275eb10a4c26ec96f5fc16b87e458d4ab21efae
+httpx==0.23.0 \
+    --hash=sha256:42974f577483e1e932c3cdc3cd2303e883cbfba17fe228b0f63589764d7b9c4b \
+    --hash=sha256:f28eac771ec9eb4866d3fb4ab65abd42d38c424739e80c08d8d20570de60b0ef
     # via googletrans
 hyperframe==5.2.0 \
     --hash=sha256:5187962cb16dcc078f23cb5a4b110098d546c3f41ff2d4038a9896893bbd0b40 \
