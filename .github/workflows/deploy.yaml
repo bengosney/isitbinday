@@ -16,5 +16,5 @@ jobs:
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
-          git_remote_url: ${{ secrets.DOKKU_GIT_URL }}
-          ssh_private_key: ${{ secrets.DOKKU_GIT_SSH_KEY }}
+          git_remote_url: ${{ secrets.SSH_HOST_URL }}
+          ssh_private_key: ${{ secrets.SSH_HOST_KEY }}
