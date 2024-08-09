@@ -11,7 +11,7 @@ COG_FILE:=.cogfiles
 TS_FILES:=$(wildcard assets/typescript/*.ts)
 JS_FILES:=$(patsubst assets/typescript/%.ts,static/js/%.min.js,$(TS_FILES))
 
-ALL_CSS_FILES:=$(shell find assets/css/ -mindepth 2 -name *.css)
+ALL_CSS_FILES:=$(shell find assets/css/ -mindepth 2 -name *.css 2>/dev/null)
 CSS_FILES:=$(wildcard assets/css/*.css)
 CSS_MIN_FILES:=$(patsubst assets/css/%.css,static/css/%.min.css,$(CSS_FILES))
 
@@ -21,7 +21,7 @@ WHEEL_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/wheel
 PRE_COMMIT_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/pre-commit
 UV_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/uv
 COG_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/cog
-COGABLE_FILES:=$(shell find assets -maxdepth 4 -type f -exec grep -l "\[\[\[cog" {} \;)
+COGABLE_FILES:=$(shell find assets -maxdepth 4 -type f -exec grep -l "\[\[\[cog" {} \; 2>/dev/null)
 MIGRATION_FILES:=$(shell ls -d -- **/migrations/*.py)
 
 help: ## Display this help
@@ -143,7 +143,7 @@ db.sqlite3: .direnv $(MIGRATION_FILES)
 	python manage.py migrate
 	@touch $@
 
-dev: .direnv db.sqlite3 cog css js ## Setup the project read for development
+dev: .direnv db.sqlite3 css js ## Setup the project read for development
 
 node_modules: package.json package-lock.json
 	npm install
