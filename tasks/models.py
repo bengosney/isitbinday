@@ -28,19 +28,24 @@ class Task(StateMixin, AuthorizedModel):
     class Meta:
         ordering = ["position"]
 
+    ARCHIVE_STATE_ACTIVE = "active"
+    ARCHIVE_STATE_ARCHIVED = "archived"
+    ARCHIVE_STATES = [
+        ARCHIVE_STATE_ACTIVE,
+        ARCHIVE_STATE_ARCHIVED,
+    ]
+
     STATE_DRAFT = "draft"
     STATE_TODO = "todo"
     STATE_DOING = "doing"
     STATE_DONE = "done"
     STATE_CANCELED = "canceled"
-    STATE_ARCHIVE = "archive"
 
     STATES = [
         STATE_TODO,
         STATE_DOING,
         STATE_DONE,
         STATE_CANCELED,
-        STATE_ARCHIVE,
     ]
 
     STATES_DUE_DATE_MATTERS = [
@@ -48,7 +53,7 @@ class Task(StateMixin, AuthorizedModel):
         STATE_DOING,
     ]
 
-    HIDDEN_STATES = [STATE_ARCHIVE]
+    HIDDEN_STATES = []
 
     title = models.CharField(_("Title"), max_length=255)
     due_date = models.DateField(_("Due Date"), blank=True, null=True, default=None)
@@ -57,6 +62,13 @@ class Task(StateMixin, AuthorizedModel):
     blocked_by = models.ForeignKey("Task", related_name="blocks", on_delete=models.SET_NULL, null=True, blank=True)
     completed = models.DateTimeField(_("Completed on"), blank=True, null=True)
     repeats = models.CharField(_("Repeats"), max_length=255, blank=True, default="")
+
+    archived = FSMField(
+        _("Archived"),
+        default=ARCHIVE_STATE_ACTIVE,
+        choices=list(zip(ARCHIVE_STATES, ARCHIVE_STATES)),
+        protected=True,
+    )  # type: ignore
 
     owner = models.ForeignKey("auth.User", related_name="tasks", on_delete=models.CASCADE)
 
@@ -123,7 +135,12 @@ class Task(StateMixin, AuthorizedModel):
     def cancel(self):
         pass
 
-    @transition(field=state, source=[STATE_DONE, STATE_CANCELED], target=STATE_ARCHIVE)  # type: ignore
+    @transition(
+        field=archived,
+        source=ARCHIVE_STATE_ACTIVE,
+        target=ARCHIVE_STATE_ARCHIVED,
+        conditions=[lambda self: self.state in [self.STATE_DONE, self.STATE_CANCELED]],
+    )  # type: ignore
     def archive(self):
         pass
 

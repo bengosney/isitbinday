@@ -107,10 +107,9 @@ class TaskModelTestCase(TestCase):
         task = Task.objects.create(title="title", owner=self.user)
         task.do()
         task.done()
-        task.archive()
         task.save()
 
-        self.assertEqual(task.previous_state, Task.STATE_DONE)
+        self.assertEqual(task.previous_state, Task.STATE_DOING)
 
     def test_auto_archive(self):
         count = 5
@@ -122,6 +121,6 @@ class TaskModelTestCase(TestCase):
         tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
 
         Task.auto_archive(tomorrow)
-        archived_tasks = Task.objects.filter(state=Task.STATE_ARCHIVE)
+        archived_tasks = Task.objects.filter(archived=Task.ARCHIVE_STATE_ARCHIVED)
 
         self.assertEqual(count, len(archived_tasks))

@@ -41,7 +41,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return (
             Task.objects.authorize(self.request, action="retrieve")
-            .exclude(state=Task.STATE_ARCHIVE)
+            .exclude(archived=Task.ARCHIVE_STATE_ARCHIVED)
             .filter(show_after__lte=datetime.today().date())
         )
 
