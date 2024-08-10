@@ -16,6 +16,9 @@ from recurrent.event_parser import RecurringEvent
 
 
 class StateMixin:
+    def get_available_state_transitions(self):
+        raise NotImplementedError("Subclasses must implement get_available_state_transitions()")
+
     @property
     def available_state_transitions(self):
         return [i.name for i in self.get_available_state_transitions()]
@@ -62,7 +65,7 @@ class Task(StateMixin, AuthorizedModel):
         default=STATE_TODO,
         choices=list(zip(STATES, STATES)),
         protected=True,
-    )
+    )  # type: ignore
 
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
@@ -88,7 +91,7 @@ class Task(StateMixin, AuthorizedModel):
         except IndexError:
             return None
 
-    @transition(field=state, source=[STATE_DRAFT, STATE_DOING], target=STATE_TODO)
+    @transition(field=state, source=[STATE_DRAFT, STATE_DOING], target=STATE_TODO)  # type: ignore
     def todo(self):
         pass
 
@@ -96,7 +99,7 @@ class Task(StateMixin, AuthorizedModel):
     def do(self):
         pass
 
-    @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
+    @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)  # type: ignore
     def done(self):
         self.completed = timezone.make_aware(datetime.now())
 
@@ -114,13 +117,13 @@ class Task(StateMixin, AuthorizedModel):
 
     @transition(
         field=state,
-        source=[STATE_DRAFT, STATE_TODO, STATE_DOING],
+        source=[STATE_DRAFT, STATE_TODO, STATE_DOING],  # type: ignore
         target=STATE_CANCELED,
     )
     def cancel(self):
         pass
 
-    @transition(field=state, source=[STATE_DONE, STATE_CANCELED], target=STATE_ARCHIVE)
+    @transition(field=state, source=[STATE_DONE, STATE_CANCELED], target=STATE_ARCHIVE)  # type: ignore
     def archive(self):
         pass
 
@@ -148,7 +151,7 @@ class Sprint(StateMixin, AuthorizedModel):
         default=STATE_PLANNING,
         choices=list(zip(STATES, STATES)),
         protected=True,
-    )
+    )  # type: ignore
     started = models.DateTimeField(_("Started"), editable=False, null=True, blank=True)
     finished = models.DateTimeField(_("Finished"), editable=False, null=True, blank=True)
 
