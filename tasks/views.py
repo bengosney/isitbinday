@@ -142,6 +142,10 @@ class TaskViewSet(viewsets.ModelViewSet):
         return [states[s] for s in states if states[s]["name"] != ""]
 
     @action(detail=False)
+    def actions(self, request):
+        return Response(["archive"])
+
+    @action(detail=False)
     def states(self, request):
         return Response({"states": [s for s in self._all_states() if s["name"] not in Task.HIDDEN_STATES]})
 
