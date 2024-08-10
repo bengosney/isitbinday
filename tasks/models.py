@@ -16,6 +16,9 @@ from recurrent.event_parser import RecurringEvent
 
 
 class StateMixin:
+    def get_available_state_transitions(self):
+        raise NotImplementedError("Subclasses must implement get_available_state_transitions()")
+
     @property
     def available_state_transitions(self):
         return [i.name for i in self.get_available_state_transitions()]
@@ -25,19 +28,24 @@ class Task(StateMixin, AuthorizedModel):
     class Meta:
         ordering = ["position"]
 
+    ARCHIVE_STATE_ACTIVE = "active"
+    ARCHIVE_STATE_ARCHIVED = "archived"
+    ARCHIVE_STATES = [
+        ARCHIVE_STATE_ACTIVE,
+        ARCHIVE_STATE_ARCHIVED,
+    ]
+
     STATE_DRAFT = "draft"
     STATE_TODO = "todo"
     STATE_DOING = "doing"
     STATE_DONE = "done"
     STATE_CANCELED = "canceled"
-    STATE_ARCHIVE = "archive"
 
     STATES = [
         STATE_TODO,
         STATE_DOING,
         STATE_DONE,
         STATE_CANCELED,
-        STATE_ARCHIVE,
     ]
 
     STATES_DUE_DATE_MATTERS = [
@@ -45,7 +53,7 @@ class Task(StateMixin, AuthorizedModel):
         STATE_DOING,
     ]
 
-    HIDDEN_STATES = [STATE_ARCHIVE]
+    HIDDEN_STATES = []
 
     title = models.CharField(_("Title"), max_length=255)
     due_date = models.DateField(_("Due Date"), blank=True, null=True, default=None)
@@ -55,6 +63,13 @@ class Task(StateMixin, AuthorizedModel):
     completed = models.DateTimeField(_("Completed on"), blank=True, null=True)
     repeats = models.CharField(_("Repeats"), max_length=255, blank=True, default="")
 
+    archived = FSMField(
+        _("Archived"),
+        default=ARCHIVE_STATE_ACTIVE,
+        choices=list(zip(ARCHIVE_STATES, ARCHIVE_STATES)),
+        protected=True,
+    )  # type: ignore
+
     owner = models.ForeignKey("auth.User", related_name="tasks", on_delete=models.CASCADE)
 
     state = FSMField(
@@ -62,7 +77,7 @@ class Task(StateMixin, AuthorizedModel):
         default=STATE_TODO,
         choices=list(zip(STATES, STATES)),
         protected=True,
-    )
+    )  # type: ignore
 
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
@@ -88,7 +103,7 @@ class Task(StateMixin, AuthorizedModel):
         except IndexError:
             return None
 
-    @transition(field=state, source=[STATE_DRAFT, STATE_DOING], target=STATE_TODO)
+    @transition(field=state, source=[STATE_DRAFT, STATE_DOING], target=STATE_TODO)  # type: ignore
     def todo(self):
         pass
 
@@ -96,7 +111,7 @@ class Task(StateMixin, AuthorizedModel):
     def do(self):
         pass
 
-    @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)
+    @transition(field=state, source=[STATE_TODO, STATE_DOING], target=STATE_DONE)  # type: ignore
     def done(self):
         self.completed = timezone.make_aware(datetime.now())
 
@@ -114,13 +129,18 @@ class Task(StateMixin, AuthorizedModel):
 
     @transition(
         field=state,
-        source=[STATE_DRAFT, STATE_TODO, STATE_DOING],
+        source=[STATE_DRAFT, STATE_TODO, STATE_DOING],  # type: ignore
         target=STATE_CANCELED,
     )
     def cancel(self):
         pass
 
-    @transition(field=state, source=[STATE_DONE, STATE_CANCELED], target=STATE_ARCHIVE)
+    @transition(
+        field=archived,
+        source=ARCHIVE_STATE_ACTIVE,
+        target=ARCHIVE_STATE_ARCHIVED,
+        conditions=[lambda self: self.state in [self.STATE_DONE, self.STATE_CANCELED]],
+    )  # type: ignore
     def archive(self):
         pass
 
@@ -148,7 +168,7 @@ class Sprint(StateMixin, AuthorizedModel):
         default=STATE_PLANNING,
         choices=list(zip(STATES, STATES)),
         protected=True,
-    )
+    )  # type: ignore
     started = models.DateTimeField(_("Started"), editable=False, null=True, blank=True)
     finished = models.DateTimeField(_("Finished"), editable=False, null=True, blank=True)
 

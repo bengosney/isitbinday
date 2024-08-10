@@ -41,7 +41,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return (
             Task.objects.authorize(self.request, action="retrieve")
-            .exclude(state=Task.STATE_ARCHIVE)
+            .exclude(archived=Task.ARCHIVE_STATE_ARCHIVED)
             .filter(show_after__lte=datetime.today().date())
         )
 
@@ -140,6 +140,10 @@ class TaskViewSet(viewsets.ModelViewSet):
             states[t.target]["transitions"].add(t.name)
 
         return [states[s] for s in states if states[s]["name"] != ""]
+
+    @action(detail=False)
+    def actions(self, request):
+        return Response(["archive"])
 
     @action(detail=False)
     def states(self, request):
