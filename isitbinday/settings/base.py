@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "food",
     "books",
     "recipes",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -156,6 +157,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
@@ -195,3 +197,10 @@ if TESTING:
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CSRF_TRUSTED_ORIGINS = ["https://api.isitbinday.com"]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "isitbinday API",
+    "DESCRIPTION": "isitbinday API",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
