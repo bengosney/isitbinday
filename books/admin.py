@@ -60,6 +60,16 @@ class FailedAdmin(admin.ModelAdmin):
     pass
 
 
+class SyncSettingsAdmin(admin.ModelAdmin):
+    pass
+
+
+class SyncMetadataAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(models.Author, AuthorAdmin)
 admin.site.register(models.Book, BookAdmin)
 admin.site.register(models.FailedScan, FailedAdmin)
+admin.site.register(models.SyncSetting, SyncSettingsAdmin)
+admin.site.register(models.SyncMetadata, SyncMetadataAdmin)

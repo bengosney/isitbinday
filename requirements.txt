@@ -19,13 +19,13 @@ beautifulsoup4==4.12.3 \
     --hash=sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051 \
     --hash=sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed
     # via minestrone
-boto3==1.34.157 \
-    --hash=sha256:3cc357156df5482154a016f138d1953061a181b4c594f8b6302c9d6c024bd950 \
-    --hash=sha256:7ef19ed38cba9863b58430fb4a66a72a5c250304f234bd1c16b860f9bf25677b
+boto3==1.34.161 \
+    --hash=sha256:4ef285334a0edc3047e27a04caf00f7742e32c0f03a361101e768014ac5709dd \
+    --hash=sha256:a872d8fdb3203c1eb0b12fa9e9d879e6f7fd02983a485f02189e6d5914ccd834
     # via is-it-bin-day (pyproject.toml)
-botocore==1.34.157 \
-    --hash=sha256:5628a36cec123cdc8c1158d05a7b06aa5e53649ad73796c50ef3fb51199785fb \
-    --hash=sha256:c6cba6de8eb86ca4d2f934e009b37adbe1e7fdcfa52fbab74783f4c30676e07d
+botocore==1.34.161 \
+    --hash=sha256:16381bfb786142099abf170ce734b95a402a3a7f8e4016358712ac333c5568b2 \
+    --hash=sha256:6c606d2da6f62fde06880aff1190566af208875c29938b6b68741e607817975a
     # via
     #   boto3
     #   s3transfer
@@ -285,6 +285,10 @@ charset-normalizer==3.3.2 \
     --hash=sha256:fd1abc0d89e30cc4e02e4064dc67fcc51bd941eb395c502aac3ec19fab46b519 \
     --hash=sha256:ff8fa367d09b717b2a17a052544193ad76cd49979c805768879cb63d9ca50561
     # via requests
+couchdb==1.2 \
+    --hash=sha256:1386a1a43f25bed3667e3b805222054940d674fa1967fa48e9d2012a18630ab7 \
+    --hash=sha256:13a28a1159c49f8346732e8724b9a4d65cba54bec017c4a7eeb1499fe88151d1
+    # via is-it-bin-day (pyproject.toml)
 dj-database-url==2.2.0 \
     --hash=sha256:3e792567b0aa9a4884860af05fe2aa4968071ad351e033b6db632f97ac6db9de \
     --hash=sha256:9f9b05058ddf888f1e6f840048b8d705ff9395e3b52a07165daa3d8b9360551b
@@ -393,9 +397,9 @@ flexparser==0.3.1 \
 googletrans==3.0.0 \
     --hash=sha256:44caeea42d91ff6ead5c2d49db2b88de66c45c2fe874c8ec03eb9b4ceb3a533d
     # via is-it-bin-day (pyproject.toml)
-gunicorn==22.0.0 \
-    --hash=sha256:350679f91b24062c86e386e198a15438d53a7a8207235a78ba1b53df4c4378d9 \
-    --hash=sha256:4a0b436239ff76fb33f11c07a16482c521a7e09c1ce3cc293c2330afe01bec63
+gunicorn==23.0.0 \
+    --hash=sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d \
+    --hash=sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec
     # via is-it-bin-day (pyproject.toml)
 h11==0.9.0 \
     --hash=sha256:33d4bca7be0fa039f4e84d50ab00531047e53d6ee8ffbc83501ea602c169cae1 \
@@ -792,9 +796,9 @@ sniffio==1.3.1 \
     # via
     #   httpcore
     #   httpx
-soupsieve==2.5 \
-    --hash=sha256:5663d5a7b3bfaeee0bc4372e7fc48f9cff4940b3eec54a6451cc5299f1097690 \
-    --hash=sha256:eaa337ff55a1579b6549dc679565eac1e3d000563bcb1c8ab0d0fefbc0c2cdc7
+soupsieve==2.6 \
+    --hash=sha256:e2e68417777af359ec65daac1057404a3c8a5455bb8abc36f1a9866ab1a51abb \
+    --hash=sha256:e72c4ff06e4fb6e4b5a9f0f55fe6e81514581fca1515028625d0f299c602ccc9
     # via beautifulsoup4
 sqlparse==0.5.1 \
     --hash=sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4 \
