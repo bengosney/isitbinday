@@ -41,7 +41,7 @@ class BookAdmin(admin.ModelAdmin):
     form = BookAdminForm
     list_display = [
         "title",
-        "publish_date",
+        "cover",
         "isbn",
         "requires_refetch",
     ]

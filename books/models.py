@@ -66,7 +66,7 @@ class Book(AuthorizedModel):
     owner = models.ForeignKey("auth.User", related_name="books", on_delete=models.CASCADE)
 
     # Fields
-    publish_date = models.CharField(max_length=30)
+    publish_date = models.CharField(max_length=30, blank=True, default="")
     created = models.DateTimeField(auto_now_add=True, editable=False)
     title = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
