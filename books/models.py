@@ -84,17 +84,17 @@ class Book(AuthorizedModel):
         return reverse("books_book_update", args=(self.pk,))
 
     def set_cover_from_tmp(self):
-        if self.tmp_cover is None:
+        if self.tmp_cover == "" or self.tmp_cover is None:
             return False
 
         try:
             request = requests.get(self.tmp_cover, stream=True)
         except requests.exceptions.RequestException:
-            self.tmp_cover = None
+            self.tmp_cover = ""
             return True
 
         if request.status_code != requests.codes.ok:
-            self.tmp_cover = None
+            self.tmp_cover = ""
             return True
 
         try:
@@ -113,7 +113,7 @@ class Book(AuthorizedModel):
 
         f.flush()
         self.cover = files.File(f, name=f"{slugify(self.title)}-cover{ext}")
-        self.tmp_cover = None
+        self.tmp_cover = ""
         return True
 
     @classmethod
