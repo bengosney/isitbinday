@@ -9,5 +9,11 @@
               "attempts": 3
           }
       ]
+    },
+    "cron": [
+    {
+      "command": "python manage.py couchsync",
+      "schedule": "@hourly"
     }
+  ]
   }
