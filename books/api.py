@@ -46,3 +46,14 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response({"title": book.title})
         # serializer = LookupSerializer(product)
         # return Response(serializer.data)
+
+
+class SyncSettingsViewSet(viewsets.ModelViewSet):
+    """ViewSet for the sync settings class."""
+
+    queryset = models.SyncSetting.objects.all()
+    serializer_class = serializers.SyncSettingSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return models.SyncSetting.objects.authorize(self.request, action="retrieve")

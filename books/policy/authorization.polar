@@ -6,3 +6,6 @@ allow(actor, "retrieve", book: books::Book) if
 
 allow(actor, "retrieve", author: books::Author) if
     author.owner = actor;
+
+allow(actor, "retrieve", author: books::SyncSetting) if
+    author.owner = actor;
