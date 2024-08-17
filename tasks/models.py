@@ -1,4 +1,5 @@
 # Standard Library
+from contextlib import suppress
 from datetime import datetime
 
 # Django
@@ -9,7 +10,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 # Third Party
-from django_fsm import FSMField, transition
+from django_fsm import FSMField, TransitionNotAllowed, transition
 from django_fsm_log.models import StateLog
 from django_oso.models import AuthorizedModel
 from recurrent.event_parser import RecurringEvent
@@ -88,8 +89,9 @@ class Task(StateMixin, AuthorizedModel):
         tasks = cls.objects.filter((Q(state=cls.STATE_DONE) | Q(state=cls.STATE_CANCELED)) & Q(completed__lte=before))
 
         for task in tasks:
-            task.archive()
-            task.save()
+            with suppress(TransitionNotAllowed):
+                task.archive()
+                task.save()
 
         return len(tasks)
 
