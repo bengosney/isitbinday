@@ -5,6 +5,20 @@ from rest_framework import serializers
 from . import models
 
 
+class SyncSettingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.SyncSetting
+        fields = [
+            "id",
+            "server",
+            "database",
+            "username",
+            "password",
+            "last_sync",
+        ]
+        extra_kwargs = {"password": {"write_only": True}}
+
+
 class SimpleAuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Author

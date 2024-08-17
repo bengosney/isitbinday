@@ -23,11 +23,13 @@ classifiers = [
 ]
 dependencies = [
   "boto3",
+  "couchdb",
   "dj-database-url",
   "django",
   "django-admin-sortable2",
   "django-appconf",
   "django-cors-headers",
+  "django-cryptography-django5",
   "django-environ",
   "django-extensions",
   "django-fsm-2",

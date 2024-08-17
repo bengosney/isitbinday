@@ -1,6 +1,7 @@
 # Standard Library
 import json
 import mimetypes
+from typing import Self
 
 # Django
 from django.core import files
@@ -12,6 +13,7 @@ from django.utils.text import slugify
 
 # Third Party
 import requests
+from django_cryptography.fields import encrypt
 from django_oso.models import AuthorizedModel
 from requests import get
 
@@ -65,7 +67,7 @@ class Book(AuthorizedModel):
     owner = models.ForeignKey("auth.User", related_name="books", on_delete=models.CASCADE)
 
     # Fields
-    publish_date = models.CharField(max_length=30)
+    publish_date = models.CharField(max_length=30, blank=True, default="")
     created = models.DateTimeField(auto_now_add=True, editable=False)
     title = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
@@ -83,17 +85,17 @@ class Book(AuthorizedModel):
         return reverse("books_book_update", args=(self.pk,))
 
     def set_cover_from_tmp(self):
-        if self.tmp_cover is None:
+        if self.tmp_cover == "" or self.tmp_cover is None:
             return False
 
         try:
             request = requests.get(self.tmp_cover, stream=True)
         except requests.exceptions.RequestException:
-            self.tmp_cover = None
+            self.tmp_cover = ""
             return True
 
         if request.status_code != requests.codes.ok:
-            self.tmp_cover = None
+            self.tmp_cover = ""
             return True
 
         try:
@@ -112,7 +114,7 @@ class Book(AuthorizedModel):
 
         f.flush()
         self.cover = files.File(f, name=f"{slugify(self.title)}-cover{ext}")
-        self.tmp_cover = None
+        self.tmp_cover = ""
         return True
 
     @classmethod
@@ -220,3 +222,39 @@ class Book(AuthorizedModel):
 
     def __str__(self):
         return f"{self.title}"
+
+
+class SyncSetting(AuthorizedModel):
+    class Meta:
+        unique_together = ["owner", "server", "database"]
+
+    owner = models.ForeignKey("auth.User", related_name="sync_settings", on_delete=models.CASCADE)
+    server = models.CharField(max_length=255)
+    database = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
+    password = encrypt(models.CharField(max_length=255))
+    last_sync = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return f"{self.server}/{self.database}"
+
+    def connection_string(self) -> str:
+        return f"https://{self.username}:{self.password}@{self.server}"
+
+
+class SyncMetadata(AuthorizedModel):
+    owner = models.ForeignKey("auth.User", related_name="sync_metadata", on_delete=models.CASCADE)
+    server = models.ForeignKey(SyncSetting, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="sync_metadata", null=True, default=None)
+    _id = models.CharField(max_length=255)
+    _rev = models.CharField(max_length=255, default="")
+
+    def __str__(self):
+        return f"{self._id} - {self._rev}"
+
+    @classmethod
+    def ensure(cls, id: str, rev: str, server: SyncSetting) -> Self | None:
+        obj, _ = cls.objects.update_or_create(_id=id, defaults={"server": server, "owner": server.owner})
+
+        if obj._rev != rev:
+            return obj
