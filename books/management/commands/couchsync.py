@@ -23,4 +23,4 @@ class Command(BaseCommand):
                 sync_with_couchdb(settings, lambda line: self.stdout.write(self.style.SUCCESS(line)))
                 self.stdout.write(self.style.SUCCESS(f"Successfully synced with CouchDB for ID {id}"))
             except Exception as e:
-                raise CommandError(f"Error syncing with CouchDB: {e}")
+                raise CommandError(f"Error syncing with CouchDB: {e}") from e
