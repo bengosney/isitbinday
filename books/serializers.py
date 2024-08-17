@@ -15,8 +15,8 @@ class SyncSettingSerializer(serializers.HyperlinkedModelSerializer):
             "username",
             "password",
             "last_sync",
-            "database",
         ]
+        extra_kwargs = {"password": {"write_only": True}}
 
 
 class SimpleAuthorSerializer(serializers.HyperlinkedModelSerializer):
