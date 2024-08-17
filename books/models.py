@@ -13,6 +13,7 @@ from django.utils.text import slugify
 
 # Third Party
 import requests
+from django_cryptography.fields import encrypt
 from django_oso.models import AuthorizedModel
 from requests import get
 
@@ -231,7 +232,7 @@ class SyncSetting(AuthorizedModel):
     server = models.CharField(max_length=255)
     database = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+    password = encrypt(models.CharField(max_length=255))
     last_sync = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
