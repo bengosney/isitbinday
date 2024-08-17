@@ -55,5 +55,8 @@ class SyncSettingsViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SyncSettingSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     def get_queryset(self):
         return models.SyncSetting.objects.authorize(self.request, action="retrieve")
