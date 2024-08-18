@@ -18,10 +18,28 @@ from ..models import Author, Book, SyncMetadata, SyncSetting
 
 @lru_cache
 def get_author(name: str, owner: User) -> Author:
+    """Get or create an Author object.
+
+    Args:
+        name (str): The name of the author.
+        owner (User): The owner of the author.
+
+    Returns:
+        Author: The Author object.
+    """
     return Author.objects.get_or_create(name=name, owner=owner)[0]
 
 
 def process_doc(doc: dict[str, Any], owner: User) -> Book:
+    """Process a document and create/update a book object.
+
+    Args:
+        doc (dict[str, Any]): The document containing book information.
+        owner (User): The owner of the book.
+
+    Returns:
+        Book: The created/updated book object.
+    """
     authors = [get_author(author, owner=owner) for author in doc["authors"]]
     book, _ = Book.objects.update_or_create(
         isbn=doc["isbn"],
@@ -41,6 +59,15 @@ def process_doc(doc: dict[str, Any], owner: User) -> Book:
 @sleep_and_retry
 @limits(calls=1, period=1)
 def fetch_doc(doc_id: str, db: Database) -> dict[str, Any] | None:
+    """Fetches a document from the database.
+
+    Args:
+        doc_id (str): The ID of the document to fetch.
+        db (Database): The database object.
+
+    Returns:
+        dict[str, Any] | None: The fetched document if found, None otherwise.
+    """
     try:
         return db[doc_id]
     except ResourceNotFound:
@@ -48,6 +75,12 @@ def fetch_doc(doc_id: str, db: Database) -> dict[str, Any] | None:
 
 
 def sync_with_couchdb(setting: SyncSetting, logger: Callable[[str], None] = lambda _: None) -> None:
+    """Synchronizes data with CouchDB.
+
+    Args:
+        setting (SyncSetting): The synchronization setting.
+        logger (Callable[[str], None], optional): The logger function. Defaults to lambda _: None.
+    """
     server = Server(setting.connection_string())
     db = server[setting.database]
 
