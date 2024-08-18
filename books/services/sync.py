@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 from django.db import transaction
 
 # Third Party
-from couchdb import Server
+from couchdb import Database, Server
+from ratelimit import limits, sleep_and_retry
 
 # Locals
 from ..models import Author, Book, SyncMetadata, SyncSetting
@@ -36,6 +37,12 @@ def process_doc(doc: dict[str, Any], owner: User) -> Book:
     return book
 
 
+@sleep_and_retry
+@limits(calls=1, period=1)
+def fetch_doc(doc_id: str, db: Database) -> dict[str, Any]:
+    return db[doc_id]
+
+
 def sync_with_couchdb(setting: SyncSetting, logger: Callable[[str], None] = lambda _: None) -> None:
     server = Server(setting.connection_string())
     db = server[setting.database]
@@ -44,8 +51,8 @@ def sync_with_couchdb(setting: SyncSetting, logger: Callable[[str], None] = lamb
         _id = doc.id
         _rev = doc.value["rev"]
         if meta := SyncMetadata.ensure(_id, _rev, setting):
-            doc = db[_id]
-            if doc["type"] != "book":
+            doc = fetch_doc(_id, db)
+            if doc is None or doc["type"] != "book":
                 continue
 
             logger(f"Processing {doc['title']}")

@@ -800,6 +800,9 @@ pyyaml==6.0.2 \
     --hash=sha256:f753120cb8181e736c57ef7636e83f31b9c0d1722c516f7e86cf15b7aa57ff12 \
     --hash=sha256:ff3824dc5261f50c9b0dfb3be22b4567a6f938ccce4587b38952d85fd9e9afe4
     # via is-it-bin-day (pyproject.toml)
+ratelimit==2.2.1 \
+    --hash=sha256:af8a9b64b821529aca09ebaf6d8d279100d766f19e90b5059ac6a718ca6dee42
+    # via is-it-bin-day (pyproject.toml)
 recurrent==0.4.1 \
     --hash=sha256:5452089d2cf1294dbaa51463798284bd8abd9a852ff0785dbb317851c5b596a6
     # via is-it-bin-day (pyproject.toml)

@@ -726,9 +726,9 @@ minestrone==0.7.0 \
     --hash=sha256:026ac918a9c2116479ba002abde5cadfe7a3c7add608b63087ed8882cbf13b24 \
     --hash=sha256:61849996f8f6bce421f072c5bf354ab47cb394cc9f1d063f5949b67b376d8964
     # via is-it-bin-day (pyproject.toml)
-model-bakery==1.19.2 \
-    --hash=sha256:30bd89514bdca2eebd93f0596cacc7ac5c4f95a54a03befac6a90a70acfa8df3 \
-    --hash=sha256:a55c0c286da302748c4483db7b2f58fa32c79ccc530b68a7498a4d6675abd62b
+model-bakery==1.19.3 \
+    --hash=sha256:9311469d70ff6188e4995ed2abc88c3b1ce3c6ebaedac8ff578495d35c37d99e \
+    --hash=sha256:f157f170bace06b7b67bc2154b493b43bb8f67786fc413cf7fa13e57fc15d21d
     # via is-it-bin-day (pyproject.toml)
 mypy==1.11.1 \
     --hash=sha256:0624bdb940255d2dd24e829d99a13cfeb72e4e9031f9492148f410ed30bcab54 \
@@ -1159,6 +1159,9 @@ questionary==2.0.1 \
     --hash=sha256:8ab9a01d0b91b68444dff7f6652c1e754105533f083cbe27597c8110ecc230a2 \
     --hash=sha256:bcce898bf3dbb446ff62830c86c5c6fb9a22a54146f0f5597d3da43b10d8fc8b
     # via commitizen
+ratelimit==2.2.1 \
+    --hash=sha256:af8a9b64b821529aca09ebaf6d8d279100d766f19e90b5059ac6a718ca6dee42
+    # via is-it-bin-day (pyproject.toml)
 recurrent==0.4.1 \
     --hash=sha256:5452089d2cf1294dbaa51463798284bd8abd9a852ff0785dbb317851c5b596a6
     # via is-it-bin-day (pyproject.toml)
