@@ -49,6 +49,7 @@ dependencies = [
   "pint",
   "psycopg2",
   "pyyaml",
+  "ratelimit",
   "recurrent",
   "requests",
   "rollbar",
