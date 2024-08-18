@@ -9,6 +9,7 @@ from django.db import transaction
 
 # Third Party
 from couchdb import Database, Server
+from couchdb.http import ResourceNotFound
 from ratelimit import limits, sleep_and_retry
 
 # Locals
@@ -39,8 +40,11 @@ def process_doc(doc: dict[str, Any], owner: User) -> Book:
 
 @sleep_and_retry
 @limits(calls=1, period=1)
-def fetch_doc(doc_id: str, db: Database) -> dict[str, Any]:
-    return db[doc_id]
+def fetch_doc(doc_id: str, db: Database) -> dict[str, Any] | None:
+    try:
+        return db[doc_id]
+    except ResourceNotFound:
+        return None
 
 
 def sync_with_couchdb(setting: SyncSetting, logger: Callable[[str], None] = lambda _: None) -> None:
