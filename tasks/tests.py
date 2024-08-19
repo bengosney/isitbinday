@@ -3,7 +3,6 @@ import datetime
 import inspect
 import random
 import string
-from abc import ABC
 
 # Django
 from django.contrib.auth.models import User
@@ -12,79 +11,90 @@ from django.urls import reverse
 from django.utils import timezone
 
 # Third Party
+import pytest
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
 
 # Locals
 from .models import Task
 
 
-def get_insecure_password(length):
-    return "".join(random.choice(string.ascii_lowercase) for _ in range(length))
+def create_insecure_password():
+    return "".join(random.choice(string.ascii_lowercase) for _ in range(12))
 
 
-class APITestCaseWithUser(ABC, APITestCase):
-    def setUp(self):
-        self.password = get_insecure_password(12)
-        self.user = User.objects.create_user(username="jacob", email="jacob@example.com", password=self.password)
+@pytest.fixture
+def insecure_password():
+    return create_insecure_password()
 
 
-class TaskAuthTestCase(APITestCaseWithUser):
-    def test_requires_auth(self):
-        url = reverse("task-list")
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+@pytest.fixture
+def user(insecure_password):
+    return User.objects.create_user(username="jacob", password=insecure_password)
 
 
-class TaskViewsTestCase(APITestCaseWithUser):
-    def setUp(self):
-        super().setUp()
-        self.client.login(username=self.user.username, password=self.password)
+@pytest.fixture
+def api_client(user, insecure_password):
+    client = APIClient()
+    client.login(username=user.username, password=insecure_password)
+    return client
 
-    def create_tasks(self, count):
+
+@pytest.fixture
+def create_tasks(api_client):
+    def _create_tasks(count):
         url = reverse("task-list")
         for i in range(count):
-            data = {
-                "title": f"{inspect.stack()[1].function} - {i}",
-            }
-            self.client.post(url, data, format="json")
+            data = {"title": f"{inspect.stack()[1].function} - {i}"}
+            api_client.post(url, data, format="json")
 
-    def test_create(self, data={}):
-        url = reverse("task-list")
-        default_data = {
-            "title": "test task",
-        }
+    return _create_tasks
 
-        response = self.client.post(url, {**default_data, **data}, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Task.objects.count(), 1)
 
-    def test_list(self):
-        url = reverse("task-list")
-        count = 5
+@pytest.mark.django_db
+def test_requires_auth():
+    url = reverse("task-list")
+    api_client = APIClient()
+    response = api_client.get(url, format="json")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-        self.create_tasks(count)
 
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Task.objects.count(), int(response.json()["count"]))
+@pytest.mark.django_db
+def test_create_task(api_client):
+    url = reverse("task-list")
+    default_data = {
+        "title": "test task",
+    }
 
-    def test_list_only_mine(self):
-        password = get_insecure_password(12)
-        second_user = User.objects.create_user(username="keith", email="keith@example.com", password=password)
+    response = api_client.post(url, default_data, format="json")
+    assert response.status_code == status.HTTP_201_CREATED
+    assert Task.objects.count() == 1
 
-        url = reverse("task-list")
-        count = 5
 
-        self.create_tasks(count)
-        self.client.logout()
+@pytest.mark.django_db
+def test_list(api_client, create_tasks):
+    url = reverse("task-list")
+    count = 5
+    create_tasks(count)
 
-        self.client.login(username=second_user.username, password=password)
-        self.create_tasks(count)
+    response = api_client.get(url, format="json")
+    assert response.status_code == status.HTTP_200_OK
+    assert Task.objects.count() == int(response.json()["count"])
 
-        response = self.client.get(url, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Task.objects.count() - count, int(response.json()["count"]))
+
+@pytest.mark.django_db
+def test_list_only_mine(create_tasks):
+    second_client = APIClient()
+    password = create_insecure_password()
+    second_user = User.objects.create_user(username="keith", password=password)
+    second_client.login(username=second_user.username, password=password)
+
+    create_tasks(5)
+
+    url = reverse("task-list")
+    response = second_client.get(url, format="json")
+    assert response.status_code == status.HTTP_200_OK
+    assert int(response.json()["count"]) == 0
 
 
 class TaskModelTestCase(TestCase):
