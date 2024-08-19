@@ -45,6 +45,34 @@ def clear_cache():
     get_author.cache_clear()
 
 
+@pytest.fixture
+def sample_doc():
+    return {
+        "id": "doc1",
+        "key": "doc1",
+        "value": {"rev": "1-abc"},
+        "doc": {
+            "type": "book",
+            "isbn": "1234567890",
+            "title": "Sample Book",
+            "authors": ["John Doe"],
+            "cover": "sample_cover.jpg",
+        },
+    }
+
+
+@pytest.fixture
+def mock_server(sample_doc):
+    mock_doc = MagicMock()
+    mock_doc.id.return_value = sample_doc["id"]
+    mock_doc.value = sample_doc["value"]
+    mock_db = MagicMock(spec=Database)
+    mock_db.view.return_value = [mock_doc]
+    mock_server = MagicMock(spec=Server)
+    mock_server.__getitem__.return_value = mock_db
+    return mock_server
+
+
 def test_process_doc_new(user, book_doc):
     # Call the process_doc function for a new book
     returned_book = process_doc(book_doc, user)
@@ -100,28 +128,7 @@ def test_get_author_new(user, author_name):
     assert isinstance(returned_author, Author)
 
 
-def test_sync_with_couchdb(sync_setting):
-    sample_doc = {
-        "id": "doc1",
-        "rev": "1-abc",
-        "value": {"rev": "1-abc"},
-        "doc": {
-            "type": "book",
-            "isbn": "1234567890",
-            "title": "Sample Book",
-            "authors": ["John Doe"],
-            "cover": "sample_cover.jpg",
-        },
-    }
-
-    mock_doc = MagicMock()
-    mock_doc.id.return_value = sample_doc["id"]
-    mock_doc.value = sample_doc["value"]
-    mock_db = MagicMock(spec=Database)
-    mock_db.view.return_value = [mock_doc]
-    mock_server = MagicMock(spec=Server)
-    mock_server.__getitem__.return_value = mock_db
-
+def test_sync_with_couchdb(sync_setting, sample_doc, mock_server):
     wrapped_process_doc = MagicMock(wraps=process_doc)
 
     with (
