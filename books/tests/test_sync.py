@@ -84,7 +84,9 @@ def test_process_doc_new(user, book_doc):
     assert not returned_book.requires_refetch
     assert returned_book.owner == user
     assert returned_book.authors.count() == 1
-    assert returned_book.authors.first().name == book_doc["authors"][0]
+    author = returned_book.authors.first()
+    assert isinstance(author, Author)
+    assert author.name == book_doc["authors"][0]
 
 
 def test_process_doc_existing(user, book_doc):
@@ -105,7 +107,9 @@ def test_process_doc_existing(user, book_doc):
     assert not returned_book.requires_refetch
     assert returned_book.owner == user
     assert returned_book.authors.count() == 1
-    assert returned_book.authors.first().name == book_doc["authors"][0]
+    author = returned_book.authors.first()
+    assert isinstance(author, Author)
+    assert author.name == book_doc["authors"][0]
 
 
 def test_get_author_existing(user, author_name):
