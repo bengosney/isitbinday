@@ -41,7 +41,6 @@ def sync_setting(user):
 
 @pytest.fixture(autouse=True)
 def clear_cache():
-    print("clearing cache")
     get_author.cache_clear()
 
 
