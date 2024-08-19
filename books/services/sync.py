@@ -18,7 +18,8 @@ from ..models import Author, Book, SyncMetadata, SyncSetting
 
 @lru_cache
 def get_author(name: str, owner: User) -> Author:
-    return Author.objects.get_or_create(name=name, owner=owner)[0]
+    author, _ = Author.objects.get_or_create(name=name, owner=owner)
+    return author
 
 
 def process_doc(doc: dict[str, Any], owner: User) -> Book:
@@ -48,6 +49,12 @@ def fetch_doc(doc_id: str, db: Database) -> dict[str, Any] | None:
 
 
 def sync_with_couchdb(setting: SyncSetting, logger: Callable[[str], None] = lambda _: None) -> None:
+    """Synchronizes data with CouchDB.
+
+    Args:
+        setting (SyncSetting): The synchronization setting.
+        logger (Callable[[str], None], optional): The logger function. Defaults to lambda _: None.
+    """
     server = Server(setting.connection_string())
     db = server[setting.database]
 
@@ -58,7 +65,6 @@ def sync_with_couchdb(setting: SyncSetting, logger: Callable[[str], None] = lamb
             doc = fetch_doc(_id, db)
             if doc is None or doc["type"] != "book":
                 continue
-
             logger(f"Processing {doc['title']}")
 
             with transaction.atomic():
