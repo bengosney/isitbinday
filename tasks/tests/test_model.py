@@ -1,8 +1,5 @@
 # Standard Library
 import datetime
-import inspect
-import random
-import string
 
 # Django
 from django.contrib.auth.models import User
@@ -15,47 +12,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 # Locals
-from .models import Task
-
-
-def create_insecure_password():
-    return "".join(random.choice(string.ascii_lowercase) for _ in range(12))
-
-
-@pytest.fixture
-def insecure_password():
-    return create_insecure_password()
-
-
-@pytest.fixture
-def user(insecure_password):
-    return User.objects.create_user(username="jacob", password=insecure_password)
-
-
-@pytest.fixture
-def api_client(user, insecure_password):
-    client = APIClient()
-    client.login(username=user.username, password=insecure_password)
-    return client
-
-
-@pytest.fixture
-def create_tasks(api_client):
-    def _create_tasks(count):
-        url = reverse("task-list")
-        for i in range(count):
-            data = {"title": f"{inspect.stack()[1].function} - {i}"}
-            api_client.post(url, data, format="json")
-
-    return _create_tasks
-
-
-@pytest.mark.django_db
-def test_requires_auth():
-    url = reverse("task-list")
-    api_client = APIClient()
-    response = api_client.get(url, format="json")
-    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+from ..models import Task
 
 
 @pytest.mark.django_db
@@ -82,7 +39,7 @@ def test_list(api_client, create_tasks):
 
 
 @pytest.mark.django_db
-def test_list_only_mine(create_tasks):
+def test_list_only_mine(create_tasks, create_insecure_password):
     second_client = APIClient()
     password = create_insecure_password()
     second_user = User.objects.create_user(username="keith", password=password)
