@@ -6,7 +6,6 @@ import string
 
 # Django
 from django.contrib.auth.models import User
-from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
@@ -97,40 +96,43 @@ def test_list_only_mine(create_tasks):
     assert int(response.json()["count"]) == 0
 
 
-class TaskModelTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username="jacob", email="jacob@example.com")
+@pytest.mark.django_db
+def test_str(user):
+    title = "Test Task"
+    task = Task(title=title, owner=user)
 
-    def test_str(self):
-        title = "Test Task"
-        task = Task(title=title, owner=self.user)
+    assert title == f"{task.title}"
 
-        self.assertEqual(title, f"{task.title}")
 
-    def test_completed_date(self):
-        task = Task.objects.create(title="title", owner=self.user)
-        task.done()
+@pytest.mark.django_db
+def test_completed_date(user):
+    task = Task.objects.create(title="title", owner=user)
+    task.done()
 
-        self.assertIsNotNone(task.completed)
+    assert task.completed is not None
 
-    def test_previous_state(self):
-        task = Task.objects.create(title="title", owner=self.user)
-        task.do()
+
+@pytest.mark.django_db
+def test_previous_state(user):
+    task = Task.objects.create(title="title", owner=user)
+    task.do()
+    task.done()
+    task.save()
+
+    assert task.previous_state == Task.STATE_DOING
+
+
+@pytest.mark.django_db
+def test_auto_archive(user):
+    count = 5
+    for i in range(count):
+        task = Task.objects.create(title=f"Task {i}", owner=user)
         task.done()
         task.save()
 
-        self.assertEqual(task.previous_state, Task.STATE_DOING)
+    tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
 
-    def test_auto_archive(self):
-        count = 5
-        for i in range(count):
-            task = Task.objects.create(title=f"Task {i}", owner=self.user)
-            task.done()
-            task.save()
+    Task.auto_archive(tomorrow)
+    archived_tasks = Task.objects.filter(archived=Task.ARCHIVE_STATE_ARCHIVED)
 
-        tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
-
-        Task.auto_archive(tomorrow)
-        archived_tasks = Task.objects.filter(archived=Task.ARCHIVE_STATE_ARCHIVED)
-
-        self.assertEqual(count, len(archived_tasks))
+    assert count == len(archived_tasks)
