@@ -34,12 +34,6 @@ class Author(AuthorizedModel):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
-    def get_absolute_url(self):
-        return reverse("books_author_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("books_author_update", args=(self.pk,))
-
     def __str__(self):
         return str(self.name)
 
@@ -254,7 +248,14 @@ class SyncMetadata(AuthorizedModel):
 
     @classmethod
     def ensure(cls, id: str, rev: str, server: SyncSetting) -> Self | None:
-        obj, _ = cls.objects.update_or_create(_id=id, defaults={"server": server, "owner": server.owner})
+        obj, created = cls.objects.update_or_create(
+            _id=id,
+            defaults={"server": server, "owner": server.owner},
+            create_defaults={"server": server, "owner": server.owner, "_rev": rev},
+        )
 
-        if obj._rev != rev:
+        if created or obj._rev != rev:
+            if not created:
+                obj._rev = rev
+                obj.save()
             return obj

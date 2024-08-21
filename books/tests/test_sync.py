@@ -1,21 +1,13 @@
 # Standard Library
 from unittest.mock import MagicMock, patch
 
-# Django
-from django.contrib.auth.models import User
-
 # Third Party
 import pytest
 from couchdb import Database, Server
 
 # Locals
-from ..models import Author, Book, SyncSetting
+from ..models import Author, Book
 from ..services.sync import get_author, process_doc, sync_with_couchdb
-
-
-@pytest.fixture
-def user(db):
-    return User.objects.create(username="testuser")
 
 
 @pytest.fixture
@@ -26,17 +18,6 @@ def author_name():
 @pytest.fixture
 def book_doc(author_name):
     return {"isbn": "1234567890", "title": "Sample Book", "authors": [author_name], "cover": "sample_cover.jpg"}
-
-
-@pytest.fixture
-def sync_setting(user):
-    return SyncSetting.objects.create(
-        owner=user,
-        database="test_db",
-        username="test_user",
-        password="test_password",
-        server="couch.example.com",
-    )
 
 
 @pytest.fixture(autouse=True)
@@ -72,6 +53,7 @@ def mock_server(sample_doc):
     return mock_server
 
 
+@pytest.mark.django_db
 def test_process_doc_new(user, book_doc):
     # Call the process_doc function for a new book
     returned_book = process_doc(book_doc, user)
@@ -89,6 +71,7 @@ def test_process_doc_new(user, book_doc):
     assert author.name == book_doc["authors"][0]
 
 
+@pytest.mark.django_db
 def test_process_doc_existing(user, book_doc):
     # Create an existing book
     existing_book = Book.objects.create(
@@ -112,6 +95,7 @@ def test_process_doc_existing(user, book_doc):
     assert author.name == book_doc["authors"][0]
 
 
+@pytest.mark.django_db
 def test_get_author_existing(user, author_name):
     # Create an existing author
     author = Author.objects.create(name=author_name, owner=user)
@@ -123,6 +107,7 @@ def test_get_author_existing(user, author_name):
     assert returned_author == author
 
 
+@pytest.mark.django_db
 def test_get_author_new(user, author_name):
     # Call the get_author function for a new author
     returned_author = get_author(author_name, user)
@@ -131,6 +116,7 @@ def test_get_author_new(user, author_name):
     assert isinstance(returned_author, Author)
 
 
+@pytest.mark.django_db
 def test_sync_with_couchdb(sync_setting, sample_doc, mock_server):
     wrapped_process_doc = MagicMock(wraps=process_doc)
 
