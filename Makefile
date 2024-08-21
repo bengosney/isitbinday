@@ -148,3 +148,8 @@ dev: .direnv db.sqlite3 css js ## Setup the project read for development
 node_modules: package.json package-lock.json
 	npm install
 	@touch $@
+
+lcov.info: .direnv
+	python -m pytest --cov=. --cov-report=lcov:lcov.info --cov-report=term-missing
+
+coverage: lcov.info ## Run the test suite and generate a coverage report
