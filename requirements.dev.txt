@@ -1064,6 +1064,7 @@ pytest==8.3.2 \
     #   is-it-bin-day (pyproject.toml)
     #   pytest-clarity
     #   pytest-cov
+    #   pytest-deadfixtures
     #   pytest-django
     #   pytest-django-queries
     #   pytest-freezegun
@@ -1075,6 +1076,10 @@ pytest-clarity==1.0.1 \
 pytest-cov==5.0.0 \
     --hash=sha256:4f0764a1219df53214206bf1feea4633c3b558a2925c8b59f144f682861ce652 \
     --hash=sha256:5837b58e9f6ebd335b0f8060eecce69b662415b16dc503883a02f45dfeb14857
+    # via is-it-bin-day (pyproject.toml)
+pytest-deadfixtures==2.2.1 \
+    --hash=sha256:ca15938a4e8330993ccec9c6c847383d88b3cd574729530647dc6b492daa9c1e \
+    --hash=sha256:db71533f2d9456227084e00a1231e732973e299ccb7c37ab92e95032ab6c083e
     # via is-it-bin-day (pyproject.toml)
 pytest-django==4.8.0 \
     --hash=sha256:5d054fe011c56f3b10f978f41a8efb2e5adfc7e680ef36fb571ada1f24779d90 \

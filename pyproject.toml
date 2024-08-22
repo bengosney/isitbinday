@@ -74,6 +74,7 @@ optional-dependencies.dev = [
   "pytest",
   "pytest-clarity",
   "pytest-cov",
+  "pytest-deadfixtures",
   "pytest-django",
   "pytest-django-queries",
   "pytest-freezegun",
