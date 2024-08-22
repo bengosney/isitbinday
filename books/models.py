@@ -15,7 +15,6 @@ from django.utils.text import slugify
 import requests
 from django_cryptography.fields import encrypt
 from django_oso.models import AuthorizedModel
-from requests import get
 
 
 class NotFoundError(Exception):
@@ -115,7 +114,7 @@ class Book(AuthorizedModel):
     @transaction.atomic
     def _lookup_google(cls, code, owner=None):
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{code}"
-        response = get(url)
+        response = requests.get(url)
 
         try:
             data = json.loads(response.text)["items"][0]["volumeInfo"]
@@ -130,7 +129,7 @@ class Book(AuthorizedModel):
 
         try:
             defaults["tmp_cover"] = data["imageLinks"]["thumbnail"]
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
 
         book, _ = Book.objects.update_or_create(isbn=code, owner=owner, defaults=defaults)
@@ -145,7 +144,7 @@ class Book(AuthorizedModel):
     @transaction.atomic
     def _lookup_open_books(cls, code, owner=None):
         url = f"https://openlibrary.org/api/books?bibkeys={code}&jscmd=data&format=json"
-        response = get(url)
+        response = requests.get(url)
 
         try:
             data = json.loads(response.text)[code]
@@ -165,7 +164,7 @@ class Book(AuthorizedModel):
 
         try:
             defaults["tmp_cover"] = data["covers"]["large"]
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
 
         book, _ = Book.objects.update_or_create(

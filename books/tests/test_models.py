@@ -1,3 +1,6 @@
+# Standard Library
+import json
+
 # Django
 from django.db.utils import IntegrityError
 
@@ -5,7 +8,7 @@ from django.db.utils import IntegrityError
 import pytest
 
 # Locals
-from ..models import Author, FailedScan, SyncMetadata, SyncSetting
+from ..models import Author, Book, FailedScan, NotFoundError, SyncMetadata, SyncSetting
 
 
 @pytest.mark.django_db
@@ -108,3 +111,99 @@ def test_sync_metadata_ensure(user, sync_setting):
     assert sync_metadata._rev == "new_rev"
     assert sync_metadata.server == sync_setting
     assert sync_metadata.owner == sync_setting.owner
+
+
+@pytest.mark.django_db
+def test_book_unique_constraints(user, another_user):
+    Book.objects.create(title="Unique Book", isbn="1234567890", owner=user)
+    Book.objects.create(title="Unique Book", isbn="1234567890", owner=another_user)
+
+    with pytest.raises(IntegrityError):
+        Book.objects.create(title="Unique Book", isbn="1234567890", owner=user)
+
+
+@pytest.mark.django_db
+def test_book_str(book):
+    assert str(book) == book.title
+
+
+@pytest.mark.django_db
+def test_book_lookup_google(mocker, user):
+    mock_response = mocker.Mock()
+    mock_response.text = json.dumps(
+        {
+            "items": [
+                {
+                    "volumeInfo": {
+                        "title": "Google Book",
+                        "publishedDate": "2020",
+                        "imageLinks": {"thumbnail": "http://example.com/cover.jpg"},
+                        "authors": ["Author 1"],
+                    }
+                }
+            ]
+        }
+    )
+    mocker.patch("requests.get", return_value=mock_response)
+
+    book = Book._lookup_google("1234567890", owner=user)
+    assert book.title == "Google Book"
+    assert book.publish_date == "2020"
+    assert book.tmp_cover == "http://example.com/cover.jpg"
+    assert book.authors.count() == 1
+
+
+@pytest.mark.django_db
+def test_book_lookup_open_books(mocker, user):
+    mock_response = mocker.Mock()
+    mock_response.text = json.dumps(
+        {
+            "ISBN:1234567890": {
+                "title": "Open Book",
+                "publish_date": "2021",
+                "covers": {"large": "http://example.com/cover.jpg"},
+                "authors": [{"name": "Author 2"}],
+                "identifiers": {"isbn_10": ["1234567890"]},
+            }
+        }
+    )
+    mocker.patch("requests.get", return_value=mock_response)
+
+    book = Book._lookup_open_books("ISBN:1234567890", owner=user)
+    assert book.title == "Open Book"
+    assert book.publish_date == "2021"
+    assert book.tmp_cover == "http://example.com/cover.jpg"
+    assert book.authors.count() == 1
+
+
+@pytest.mark.django_db
+def test_book_lookup_fallback(mocker, user):
+    mocker.patch("books.models.Book._lookup_google", side_effect=NotFoundError)
+    mocker.patch(
+        "books.models.Book._lookup_open_books", return_value=Book(title="Fallback Book", isbn="1234567890", owner=user)
+    )
+
+    book = Book._lookup("1234567890", owner=user)
+    assert book.title == "Fallback Book"
+
+
+@pytest.mark.django_db
+def test_book_refetch_remote_data(mocker, book):
+    mocker.patch("books.models.Book._lookup", return_value=book)
+
+    book.refetch_remote_data()
+    assert book.requires_refetch is False
+
+
+@pytest.mark.django_db
+def test_book_get_or_lookup_get(user, book):
+    looked_up_book = Book.get_or_lookup(book.isbn, owner=user)
+    assert looked_up_book.title == book.title
+
+
+@pytest.mark.django_db
+def test_book_get_or_lookup_lookup(mocker, user):
+    mocker.patch("books.models.Book._lookup", return_value=Book(title="Lookup Book", isbn="1234567890", owner=user))
+
+    book = Book.get_or_lookup("1234567890", owner=user)
+    assert book.title == "Lookup Book"
