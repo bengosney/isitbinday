@@ -4,6 +4,7 @@ pull_request_rules:
   - and:
     - author~=^bengosney$
     - check-success=workflow
+    - label=automerge
   actions:
     merge:
       method: merge
