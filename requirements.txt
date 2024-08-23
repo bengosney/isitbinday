@@ -19,13 +19,13 @@ beautifulsoup4==4.12.3 \
     --hash=sha256:74e3d1928edc070d21748185c46e3fb33490f22f52a3addee9aee0f4f7781051 \
     --hash=sha256:b80878c9f40111313e55da8ba20bdba06d8fa3969fc68304167741bbf9e082ed
     # via minestrone
-boto3==1.35.3 \
-    --hash=sha256:9c2799cfeba2c68d91f840b6d018ffe76f5f27514dcbb166b20d9e3a704cbcea \
-    --hash=sha256:e24f9b8a4dc85bfcf4d3e9183589dba6ed2964dfa1233ca578fc7c04db1c68b4
+boto3==1.35.4 \
+    --hash=sha256:96c39593afb7b55ebb74d08c8e3201041d105b557c8c8536c9054c9f13da5f2a \
+    --hash=sha256:d997b82c468bd5c2d5cd29810d47079b66b178d2b5ae021aebe262c4d78d4c94
     # via is-it-bin-day (pyproject.toml)
-botocore==1.35.3 \
-    --hash=sha256:3ff54075e125304a8978e5d3f27ab96485f2deedb561d458b0567a0a921dc243 \
-    --hash=sha256:ff0c3189c0aa588c3aeda3f3e5e37925d64deaac6748310124307f978933e768
+botocore==1.35.4 \
+    --hash=sha256:10195e5ca764745f02b9a51df048b996ddbdc1899a44a2caf35dfb225dfea489 \
+    --hash=sha256:4cc51a6a486915aedc140f9d027b7e156646b7a0f7b33b1000762c81aff9a12f
     # via
     #   boto3
     #   s3transfer

@@ -155,4 +155,4 @@ lcov.info: .FORCE .direnv
 coverage: lcov.info ## Run the test suite and generate a coverage report
 
 test: .direnv ## Run the test suite
-	python -m pytest -x --ff --picked
+	python -m pytest --ff --picked
