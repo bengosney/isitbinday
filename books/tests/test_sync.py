@@ -1,6 +1,3 @@
-# Standard Library
-from unittest.mock import MagicMock, patch
-
 # Third Party
 import pytest
 from couchdb import Database, Server
@@ -42,14 +39,13 @@ def sample_doc():
 
 
 @pytest.fixture
-def mock_server(sample_doc):
-    mock_doc = MagicMock()
-    mock_doc.id.return_value = sample_doc["id"]
-    mock_doc.value = sample_doc["value"]
-    mock_db = MagicMock(spec=Database)
+def mock_server(mocker, sample_doc):
+    mock_doc = mocker.MagicMock(id=sample_doc["id"], value=sample_doc["value"])
+    mock_db = mocker.MagicMock(spec=Database)
     mock_db.view.return_value = [mock_doc]
-    mock_server = MagicMock(spec=Server)
+    mock_server = mocker.MagicMock(spec=Server)
     mock_server.__getitem__.return_value = mock_db
+
     return mock_server
 
 
@@ -119,16 +115,15 @@ def test_get_author_new(user, author_name):
 
 
 @pytest.mark.django_db
-def test_sync_with_couchdb(sync_setting, sample_doc, mock_server, check):
-    wrapped_process_doc = MagicMock(wraps=process_doc)
+def test_sync_with_couchdb(sync_setting, sample_doc, mock_server, check, mocker):
+    wrapped_process_doc = mocker.MagicMock(wraps=process_doc)
 
-    with (
-        patch("books.services.sync.Server", return_value=mock_server),
-        patch("books.services.sync.process_doc", wrapped_process_doc),
-        patch("books.services.sync.fetch_doc", return_value=sample_doc["doc"]),
-    ):
-        sync_with_couchdb(sync_setting)
-        wrapped_process_doc.assert_called_once_with(sample_doc["doc"], sync_setting.owner)
+    mocker.patch("books.services.sync.Server", return_value=mock_server)
+    mocker.patch("books.services.sync.process_doc", wrapped_process_doc)
+    mocker.patch("books.services.sync.fetch_doc", return_value=sample_doc["doc"])
+
+    sync_with_couchdb(sync_setting)
+    wrapped_process_doc.assert_called_once_with(sample_doc["doc"], sync_setting.owner)
 
     books = Book.objects.all()
     check.equal(books.count(), 1)
