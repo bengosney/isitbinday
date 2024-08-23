@@ -247,14 +247,15 @@ class SyncMetadata(AuthorizedModel):
 
     @classmethod
     def ensure(cls, id: str, rev: str, server: SyncSetting) -> Self | None:
+        defaults = {"server": server, "owner": server.owner}
         obj, created = cls.objects.update_or_create(
             _id=id,
-            defaults={"server": server, "owner": server.owner},
-            create_defaults={"server": server, "owner": server.owner, "_rev": rev},
+            defaults=defaults,
+            create_defaults=defaults | {"_rev": rev},
         )
 
         if created or obj._rev != rev:
-            if not created:
-                obj._rev = rev
-                obj.save()
+            obj._rev = rev
+            obj.save()
             return obj
+        return None
