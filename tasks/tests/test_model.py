@@ -15,6 +15,11 @@ from rest_framework.test import APIClient
 from ..models import Task
 
 
+@pytest.fixture
+def tomorrow():
+    return timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
+
+
 @pytest.mark.django_db
 def test_create_task(api_client):
     url = reverse("task-list")
@@ -80,16 +85,28 @@ def test_previous_state(user):
 
 
 @pytest.mark.django_db
-def test_auto_archive(user):
+def test_auto_archive(user, tomorrow):
     count = 5
     for i in range(count):
         task = Task.objects.create(title=f"Task {i}", owner=user)
         task.done()
         task.save()
 
-    tomorrow = timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
-
     Task.auto_archive(tomorrow)
     archived_tasks = Task.objects.filter(archived=Task.ARCHIVE_STATE_ARCHIVED)
 
     assert count == len(archived_tasks)
+
+
+@pytest.mark.django_db
+def test_auto_archive_not_done(user, tomorrow):
+    task = Task.objects.create(title="Test Task", owner=user, state=Task.STATE_TODO)
+    Task.auto_archive(tomorrow)
+    refreshed_task = Task.objects.get(pk=task.pk)
+    assert refreshed_task.state == Task.STATE_TODO
+
+
+@pytest.mark.django_db
+def test_auto_archive_no_tasks(tomorrow):
+    Task.auto_archive(tomorrow)
+    assert Task.objects.count() == 0
