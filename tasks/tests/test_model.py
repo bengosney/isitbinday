@@ -26,8 +26,7 @@ def test_create_task(api_client):
 @pytest.mark.django_db
 def test_list(api_client, create_tasks):
     url = reverse("task-list")
-    count = 5
-    create_tasks(count)
+    create_tasks(5)
 
     response = api_client.get(url, format="json")
     assert response.status_code == status.HTTP_200_OK
@@ -58,16 +57,16 @@ def test_str(user):
 
 
 @pytest.mark.django_db
-def test_completed_date(user):
-    task = Task.objects.create(title="title", owner=user)
+def test_completed_date(create_task):
+    task = create_task()
     task.done()
 
     assert task.completed is not None
 
 
 @pytest.mark.django_db
-def test_previous_state(user):
-    task = Task.objects.create(title="title", owner=user)
+def test_previous_state(create_task):
+    task = create_task()
     task.do()
     task.done()
     task.save()
@@ -89,8 +88,8 @@ def test_auto_archive(create_done_task, create_task, tomorrow):
 
 
 @pytest.mark.django_db
-def test_auto_archive_not_done(user, tomorrow):
-    task = Task.objects.create(title="Test Task", owner=user, state=Task.STATE_TODO)
+def test_auto_archive_not_done(create_task, tomorrow):
+    task = create_task()
     Task.auto_archive(tomorrow)
     refreshed_task = Task.objects.get(pk=task.pk)
     assert refreshed_task.state == Task.STATE_TODO
