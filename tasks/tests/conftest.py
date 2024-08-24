@@ -65,10 +65,10 @@ def create_task(user):
 @pytest.fixture
 def create_done_task(create_task):
     def _create_done_task():
-        task = create_task()
-        task.done()
-        task.save()
-        return task
+        with create_task() as task:
+            task.done()
+            task.save()
+            return task
 
     return _create_done_task
 

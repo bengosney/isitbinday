@@ -15,6 +15,9 @@ from django_fsm_log.models import StateLog
 from django_oso.models import AuthorizedModel
 from recurrent.event_parser import RecurringEvent
 
+# First Party
+from save_context_manager import SaveContextManagerMixin
+
 
 class StateMixin:
     def get_available_state_transitions(self):
@@ -25,7 +28,7 @@ class StateMixin:
         return [i.name for i in self.get_available_state_transitions()]
 
 
-class Task(StateMixin, AuthorizedModel):
+class Task(StateMixin, AuthorizedModel, SaveContextManagerMixin):
     class Meta:
         ordering = ["position"]
 
