@@ -16,6 +16,4 @@ class SaveContextManagerMixin:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> bool:
-        if exc_type is None:
-            return self.save()
-        return False
+        return self.save() if exc_type is None else False
