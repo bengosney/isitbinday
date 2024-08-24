@@ -8,11 +8,31 @@ from django.utils import timezone
 
 # Third Party
 import pytest
+from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APIClient
 
 # Locals
 from ..models import Task
+
+
+@pytest.fixture
+def create_task(user):
+    def _create_task():
+        return baker.make(Task, owner=user)
+
+    return _create_task
+
+
+@pytest.fixture
+def create_done_task(create_task):
+    def _create_done_task():
+        task = create_task()
+        task.done()
+        task.save()
+        return task
+
+    return _create_done_task
 
 
 @pytest.fixture
@@ -85,17 +105,16 @@ def test_previous_state(user):
 
 
 @pytest.mark.django_db
-def test_auto_archive(user, tomorrow):
-    count = 5
-    for i in range(count):
-        task = Task.objects.create(title=f"Task {i}", owner=user)
-        task.done()
-        task.save()
+def test_auto_archive(create_done_task, create_task, tomorrow):
+    create_done_task()
+    create_done_task()
+    create_done_task()
+    create_task()
 
     Task.auto_archive(tomorrow)
     archived_tasks = Task.objects.filter(archived=Task.ARCHIVE_STATE_ARCHIVED)
 
-    assert count == len(archived_tasks)
+    assert len(archived_tasks) == 3
 
 
 @pytest.mark.django_db
