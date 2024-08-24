@@ -1,4 +1,5 @@
 # Standard Library
+import datetime
 import inspect
 import random
 import string
@@ -6,10 +7,15 @@ import string
 # Django
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 
 # Third Party
 import pytest
+from model_bakery import baker
 from rest_framework.test import APIClient
+
+# Locals
+from ..models import Task
 
 
 @pytest.fixture
@@ -46,3 +52,27 @@ def create_tasks(api_client):
             api_client.post(url, data, format="json")
 
     return _create_tasks
+
+
+@pytest.fixture
+def create_task(user):
+    def _create_task():
+        return baker.make(Task, owner=user)
+
+    return _create_task
+
+
+@pytest.fixture
+def create_done_task(create_task):
+    def _create_done_task():
+        task = create_task()
+        task.done()
+        task.save()
+        return task
+
+    return _create_done_task
+
+
+@pytest.fixture
+def tomorrow():
+    return timezone.make_aware(datetime.datetime.now() + datetime.timedelta(days=1))
