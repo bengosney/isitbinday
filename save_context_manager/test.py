@@ -5,6 +5,10 @@ import pytest
 from . import SaveContextManagerMixin
 
 
+class SpecificTestError(Exception):
+    pass
+
+
 class MockSaveContextManager(SaveContextManagerMixin):
     def save(self):
         return True
@@ -22,9 +26,9 @@ def test_calls_save(mocker):
 def test_calls_save_with_exception(mocker):
     save = mocker.spy(MockSaveContextManager, "save")
 
-    with pytest.raises(Exception):
+    with pytest.raises(SpecificTestError):
         with MockSaveContextManager():
-            raise Exception
+            raise SpecificTestError
 
     save.assert_not_called()
 
