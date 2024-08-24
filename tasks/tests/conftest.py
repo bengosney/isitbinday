@@ -1,12 +1,10 @@
 # Standard Library
 import datetime
-import inspect
 import random
 import string
 
 # Django
 from django.contrib.auth.models import User
-from django.urls import reverse
 from django.utils import timezone
 
 # Third Party
@@ -43,13 +41,10 @@ def api_client(user, insecure_password):
 
 
 @pytest.fixture
-@pytest.mark.django_db
-def create_tasks(api_client):
+def create_tasks(create_task):
     def _create_tasks(count):
-        url = reverse("task-list")
-        for i in range(count):
-            data = {"title": f"{inspect.stack()[1].function} - {i}"}
-            api_client.post(url, data, format="json")
+        for _ in range(count):
+            create_task()
 
     return _create_tasks
 
@@ -65,10 +60,10 @@ def create_task(user):
 @pytest.fixture
 def create_done_task(create_task):
     def _create_done_task():
-        task = create_task()
-        task.done()
-        task.save()
-        return task
+        with create_task() as task:
+            task.done()
+            task.save()
+            return task
 
     return _create_done_task
 

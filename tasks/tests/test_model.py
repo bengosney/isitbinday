@@ -58,18 +58,17 @@ def test_str(user):
 
 @pytest.mark.django_db
 def test_completed_date(create_task):
-    task = create_task()
-    task.done()
+    with create_task() as task:
+        task.done()
 
     assert task.completed is not None
 
 
 @pytest.mark.django_db
 def test_previous_state(create_task):
-    task = create_task()
-    task.do()
-    task.done()
-    task.save()
+    with create_task() as task:
+        task.do()
+        task.done()
 
     assert task.previous_state == Task.STATE_DOING
 
