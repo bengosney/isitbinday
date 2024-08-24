@@ -1,21 +1,10 @@
-# Standard Library
-from unittest.mock import MagicMock, patch
-
-# Django
-from django.contrib.auth.models import User
-
 # Third Party
 import pytest
 from couchdb import Database, Server
 
 # Locals
-from ..models import Author, Book, SyncSetting
+from ..models import Author, Book
 from ..services.sync import get_author, process_doc, sync_with_couchdb
-
-
-@pytest.fixture
-def user(db):
-    return User.objects.create(username="testuser")
 
 
 @pytest.fixture
@@ -26,17 +15,6 @@ def author_name():
 @pytest.fixture
 def book_doc(author_name):
     return {"isbn": "1234567890", "title": "Sample Book", "authors": [author_name], "cover": "sample_cover.jpg"}
-
-
-@pytest.fixture
-def sync_setting(user):
-    return SyncSetting.objects.create(
-        owner=user,
-        database="test_db",
-        username="test_user",
-        password="test_password",
-        server="couch.example.com",
-    )
 
 
 @pytest.fixture(autouse=True)
@@ -61,35 +39,37 @@ def sample_doc():
 
 
 @pytest.fixture
-def mock_server(sample_doc):
-    mock_doc = MagicMock()
-    mock_doc.id.return_value = sample_doc["id"]
-    mock_doc.value = sample_doc["value"]
-    mock_db = MagicMock(spec=Database)
+def mock_server(mocker, sample_doc):
+    mock_doc = mocker.MagicMock(id=sample_doc["id"], value=sample_doc["value"])
+    mock_db = mocker.MagicMock(spec=Database)
     mock_db.view.return_value = [mock_doc]
-    mock_server = MagicMock(spec=Server)
+    mock_server = mocker.MagicMock(spec=Server)
     mock_server.__getitem__.return_value = mock_db
+
     return mock_server
 
 
-def test_process_doc_new(user, book_doc):
+@pytest.mark.django_db
+def test_process_doc_new(user, book_doc, check):
     # Call the process_doc function for a new book
     returned_book = process_doc(book_doc, user)
 
     # Check if a new book is created
     assert isinstance(returned_book, Book)
-    assert returned_book.title == book_doc["title"]
-    assert returned_book.isbn == book_doc["isbn"]
-    assert returned_book.tmp_cover == book_doc["cover"]
-    assert not returned_book.requires_refetch
-    assert returned_book.owner == user
-    assert returned_book.authors.count() == 1
+    check.equal(returned_book.title, book_doc["title"])
+    check.equal(returned_book.isbn, book_doc["isbn"])
+    check.equal(returned_book.tmp_cover, book_doc["cover"])
+    check.is_false(returned_book.requires_refetch)
+    check.equal(returned_book.owner, user)
+    check.equal(returned_book.authors.count(), 1)
+
     author = returned_book.authors.first()
     assert isinstance(author, Author)
-    assert author.name == book_doc["authors"][0]
+    check.equal(author.name, book_doc["authors"][0])
 
 
-def test_process_doc_existing(user, book_doc):
+@pytest.mark.django_db
+def test_process_doc_existing(user, book_doc, check):
     # Create an existing book
     existing_book = Book.objects.create(
         isbn=book_doc["isbn"], title="Old Title", tmp_cover="old_cover.jpg", requires_refetch=True, owner=user
@@ -101,17 +81,19 @@ def test_process_doc_existing(user, book_doc):
     returned_book = process_doc(book_doc, user)
 
     # Check if the existing book is updated
-    assert returned_book == existing_book
-    assert returned_book.title == book_doc["title"]
-    assert returned_book.tmp_cover == book_doc["cover"]
-    assert not returned_book.requires_refetch
-    assert returned_book.owner == user
-    assert returned_book.authors.count() == 1
+    check.equal(returned_book, existing_book)
+    check.equal(returned_book.title, book_doc["title"])
+    check.equal(returned_book.tmp_cover, book_doc["cover"])
+    check.is_false(returned_book.requires_refetch)
+    check.equal(returned_book.owner, user)
+    check.equal(returned_book.authors.count(), 1)
+
     author = returned_book.authors.first()
     assert isinstance(author, Author)
-    assert author.name == book_doc["authors"][0]
+    check.equal(author.name, book_doc["authors"][0])
 
 
+@pytest.mark.django_db
 def test_get_author_existing(user, author_name):
     # Create an existing author
     author = Author.objects.create(name=author_name, owner=user)
@@ -123,6 +105,7 @@ def test_get_author_existing(user, author_name):
     assert returned_author == author
 
 
+@pytest.mark.django_db
 def test_get_author_new(user, author_name):
     # Call the get_author function for a new author
     returned_author = get_author(author_name, user)
@@ -131,19 +114,19 @@ def test_get_author_new(user, author_name):
     assert isinstance(returned_author, Author)
 
 
-def test_sync_with_couchdb(sync_setting, sample_doc, mock_server):
-    wrapped_process_doc = MagicMock(wraps=process_doc)
+@pytest.mark.django_db
+def test_sync_with_couchdb(sync_setting, sample_doc, mock_server, check, mocker):
+    wrapped_process_doc = mocker.MagicMock(wraps=process_doc)
 
-    with (
-        patch("books.services.sync.Server", return_value=mock_server),
-        patch("books.services.sync.process_doc", wrapped_process_doc),
-        patch("books.services.sync.fetch_doc", return_value=sample_doc["doc"]),
-    ):
-        sync_with_couchdb(sync_setting)
-        wrapped_process_doc.assert_called_once_with(sample_doc["doc"], sync_setting.owner)
+    mocker.patch("books.services.sync.Server", return_value=mock_server)
+    mocker.patch("books.services.sync.process_doc", wrapped_process_doc)
+    mocker.patch("books.services.sync.fetch_doc", return_value=sample_doc["doc"])
+
+    sync_with_couchdb(sync_setting)
+    wrapped_process_doc.assert_called_once_with(sample_doc["doc"], sync_setting.owner)
 
     books = Book.objects.all()
-    assert books.count() == 1
+    check.equal(books.count(), 1)
     book = books.first()
     assert book is not None
-    assert book.isbn == sample_doc["doc"]["isbn"]
+    check.equal(book.isbn, sample_doc["doc"]["isbn"])

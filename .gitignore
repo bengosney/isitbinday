@@ -266,3 +266,4 @@ flycheck_*.el
 
 .direnv
 .envrc
+lcov.info

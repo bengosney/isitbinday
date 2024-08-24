@@ -1,4 +1,4 @@
-.PHONY: help clean test install all init dev css js cog coverage git-hooks watch-assets upgrade
+.PHONY: help clean test install all init dev css js cog coverage git-hooks watch-assets upgrade test
 .DEFAULT_GOAL := dev
 .PRECIOUS: requirements.%.in
 .FORCE:
@@ -148,3 +148,11 @@ dev: .direnv db.sqlite3 css js ## Setup the project read for development
 node_modules: package.json package-lock.json
 	npm install
 	@touch $@
+
+lcov.info: .FORCE .direnv
+	python -m pytest --cov=. --cov-report=lcov:lcov.info --cov-report=term-missing
+
+coverage: lcov.info ## Run the test suite and generate a coverage report
+
+test: .direnv ## Run the test suite
+	python -m pytest --ff --picked

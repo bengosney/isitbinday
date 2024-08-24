@@ -15,7 +15,6 @@ from django.utils.text import slugify
 import requests
 from django_cryptography.fields import encrypt
 from django_oso.models import AuthorizedModel
-from requests import get
 
 
 class NotFoundError(Exception):
@@ -33,12 +32,6 @@ class Author(AuthorizedModel):
     name = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-
-    def get_absolute_url(self):
-        return reverse("books_author_detail", args=(self.pk,))
-
-    def get_update_url(self):
-        return reverse("books_author_update", args=(self.pk,))
 
     def __str__(self):
         return str(self.name)
@@ -121,7 +114,7 @@ class Book(AuthorizedModel):
     @transaction.atomic
     def _lookup_google(cls, code, owner=None):
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{code}"
-        response = get(url)
+        response = requests.get(url)
 
         try:
             data = json.loads(response.text)["items"][0]["volumeInfo"]
@@ -136,7 +129,7 @@ class Book(AuthorizedModel):
 
         try:
             defaults["tmp_cover"] = data["imageLinks"]["thumbnail"]
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
 
         book, _ = Book.objects.update_or_create(isbn=code, owner=owner, defaults=defaults)
@@ -151,7 +144,7 @@ class Book(AuthorizedModel):
     @transaction.atomic
     def _lookup_open_books(cls, code, owner=None):
         url = f"https://openlibrary.org/api/books?bibkeys={code}&jscmd=data&format=json"
-        response = get(url)
+        response = requests.get(url)
 
         try:
             data = json.loads(response.text)[code]
@@ -171,7 +164,7 @@ class Book(AuthorizedModel):
 
         try:
             defaults["tmp_cover"] = data["covers"]["large"]
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
 
         book, _ = Book.objects.update_or_create(
@@ -254,7 +247,15 @@ class SyncMetadata(AuthorizedModel):
 
     @classmethod
     def ensure(cls, id: str, rev: str, server: SyncSetting) -> Self | None:
-        obj, _ = cls.objects.update_or_create(_id=id, defaults={"server": server, "owner": server.owner})
+        defaults = {"server": server, "owner": server.owner}
+        obj, created = cls.objects.update_or_create(
+            _id=id,
+            defaults=defaults,
+            create_defaults=defaults | {"_rev": rev},
+        )
 
-        if obj._rev != rev:
+        if created or obj._rev != rev:
+            obj._rev = rev
+            obj.save()
             return obj
+        return None
