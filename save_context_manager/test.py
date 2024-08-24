@@ -27,3 +27,13 @@ def test_calls_save_with_exception(mocker):
             raise Exception
 
     save.assert_not_called()
+
+
+def test_save_raises_exception(mocker):
+    save = mocker.spy(SaveContextManagerMixin, "save")
+
+    with pytest.raises(Exception):
+        with SaveContextManagerMixin():
+            pass
+
+    save.assert_called_once()
