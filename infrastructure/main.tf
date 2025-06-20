@@ -43,6 +43,10 @@ variable "hosting_domain" {
   description = "Hosting domain"
 }
 
+variable "hosting_user" {
+  description = "SSH user for hosting"
+}
+
 variable "secret_key" {
   description = "Django secret key"
 }
