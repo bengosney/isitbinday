@@ -10,7 +10,7 @@ terraform {
     }
     dokku = {
       source  = "aliksend/dokku"
-      version = "~> 1.0.14"
+      version = "~> 1.0.24"
     }
   }
 
