@@ -52,7 +52,6 @@ dependencies = [
   "ratelimit",
   "recurrent",
   "requests",
-  "rollbar",
   "uritemplate",
   "whitenoise[brotli]",
 ]
