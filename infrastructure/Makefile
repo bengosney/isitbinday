@@ -35,7 +35,7 @@ imports.tf:
 terraform.tfvars:
 	@aws s3 cp s3://${TERAFORM_BUCKET}/${TERAFORM_BUCKET_PATH}/$@ . || touch $@
 
-upload: imports.tf terraform.tfvars
+upload: imports.tf terraform.tfvars ## Upload the imports and vars to S3
 	@for f in $^; do aws s3 cp $$f s3://${TERAFORM_BUCKET}/${TERAFORM_BUCKET_PATH}/$$f; done
 
 check: ## Check the env vars are set
