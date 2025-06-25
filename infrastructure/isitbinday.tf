@@ -26,14 +26,28 @@ resource "dokku_app" "api" {
   }
 }
 
+resource "dokku_plugin" "postgres" {
+  name = "postgres"
+  url  = "https://github.com/dokku/dokku-postgres.git"
+}
+
 resource "dokku_postgres" "main_db" {
   service_name = "api"
+  image = "dokku/postgres:17.5"
+
+  depends_on = [
+    dokku_plugin.postgres
+  ]
 }
 
 resource "dokku_postgres_link" "api_db_link" {
   app_name     = dokku_app.api.app_name
   service_name = dokku_postgres.main_db.service_name
   alias        = "DATABASE"
+
+  depends_on = [
+    dokku_plugin.postgres
+  ]
 }
 
 output "git-remote" {
