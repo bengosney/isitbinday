@@ -2,7 +2,7 @@
 build-backend = "setuptools.build_meta"
 requires = [
   "setuptools",
-  "wheel",
+  "wheel"
 ]
 
 [project]
@@ -12,14 +12,24 @@ description = "More useful task list"
 authors = [
   { email = "bengosney@googlemail.com", name = "Ben Gosney" },
 ]
+# [[[cog
+# import cog
+# with open(".python-version") as f:
+#   version = f.read().strip()
+# cog.outl(f"requires-python = \">={version}\"")
+# ]]]
+requires-python = ">=3.12"
+# [[[end]]] (sum: ChWHeFtwKI)
+
 
 classifiers = [
+  # [[[cog
+  # cog.outl(f"\"Programming Language :: Python :: {version.split('.')[0]} :: Only\",")
+  # cog.outl(f"\"Programming Language :: Python :: {version}\",")
+  # ]]]
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  # [[[end]]] (sum: yhtPaRlYFD)
 ]
 dependencies = [
   "boto3",
@@ -89,12 +99,19 @@ optional-dependencies.dev = [
 
 [tool.black]
 line-length = 128
-target-version = [
-  'py310',
-]
+# [[[cog
+# cog.outl(f"target-version = [ 'py{version.replace('.','')}' ]")
+# ]]]
+target-version = [ 'py312' ]
+# [[[end]]] (sum: DVAsLwqtuF)
+
 
 [tool.ruff]
+# [[[cog
+# cog.outl(f"target-version = \"py{version.replace('.','')}\"")
+# ]]]
 target-version = "py312"
+# [[[end]]] (sum: 6J60Wrv/IC)
 line-length = 120
 exclude = [
   "migrations",

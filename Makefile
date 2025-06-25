@@ -16,12 +16,13 @@ CSS_FILES:=$(wildcard assets/css/*.css)
 CSS_MIN_FILES:=$(patsubst assets/css/%.css,static/css/%.min.css,$(CSS_FILES))
 
 PYTHON_VERSION:=$(shell python --version | cut -d " " -f 2)
-PIP_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/pip
-WHEEL_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/wheel
-PRE_COMMIT_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/pre-commit
-UV_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/uv
-COG_PATH:=.direnv/python-$(PYTHON_VERSION)/bin/cog
-COGABLE_FILES:=$(shell find assets -maxdepth 4 -type f -exec grep -l "\[\[\[cog" {} \; 2>/dev/null)
+BINPATH=$(shell which python | xargs dirname | xargs realpath --relative-to=".")
+PIP_PATH:=$(BINPATH)/pip
+WHEEL_PATH:=$(BINPATH)/wheel
+PRE_COMMIT_PATH:=$(BINPATH)/pre-commit
+UV_PATH:=$(BINPATH)/uv
+COG_PATH:=$(BINPATH)/cog
+COGABLE:=$(shell git ls-files | xargs grep -l "\[\[\[cog")
 MIGRATION_FILES:=$(shell ls -d -- **/migrations/*.py)
 
 help: ## Display this help
@@ -77,12 +78,15 @@ requirements.txt: $(UV_PATH) pyproject.toml
 $(PIP_PATH): .envrc
 	@python -m ensurepip
 	@python -m pip install --upgrade pip
+	@touch $@
 
 $(WHEEL_PATH): $(PIP_PATH)
 	@python -m pip install wheel
+	@touch $@
 
 $(UV_PATH): $(PIP_PATH) $(WHEEL_PATH)
 	@python -m pip install uv
+	@touch $@
 
 $(PRE_COMMIT_PATH): $(PIP_PATH) $(WHEEL_PATH)
 	@python -m pip install pre-commit
@@ -128,16 +132,8 @@ static/js/%.min.js: assets/typescript/%.ts $(TS_FILES)
 
 js: $(JS_FILES) ## Fetch and build the js
 
-$(COG_PATH): $(UV_PATH) $(WHEEL_PATH)
-	python -m uv pip install cogapp
-
-$(COG_FILE): $(COGABLE_FILES)
-	@find assets -maxdepth 4 -type f -exec grep -l "\[\[\[cog" {} \; > $@
-
-$(COGABLE_FILES): .FORCE
-	@cog -rc $@
-
-cog: $(COG_PATH) $(COG_FILE) $(COGABLE_FILES) ## Run cog
+cog: $(UV_PATH) $(COGABLE) ## Run cog
+	@uvx --from cogapp cog -rc $(filter-out $<,$^)
 
 db.sqlite3: .direnv $(MIGRATION_FILES)
 	python manage.py migrate
