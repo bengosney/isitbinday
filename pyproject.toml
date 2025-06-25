@@ -18,7 +18,8 @@ authors = [
 #   version = f.read().strip()
 # cog.outl(f"requires-python = \">={version}\"")
 # ]]]
-# [[[end]]]
+requires-python = ">=3.13"
+# [[[end]]] (sum: zX38HHIAaw)
 
 
 classifiers = [
@@ -26,7 +27,9 @@ classifiers = [
   # cog.outl(f"\"Programming Language :: Python :: {version.split('.')[0]} :: Only\",")
   # cog.outl(f"\"Programming Language :: Python :: {version}\",")
   # ]]]
-  # [[[end]]]
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+  # [[[end]]] (sum: +TEs55lieZ)
 ]
 dependencies = [
   "boto3",
@@ -99,14 +102,16 @@ line-length = 128
 # [[[cog
 # cog.outl(f"target-version = [ 'py{version.replace('.','')}' ]")
 # ]]]
-# [[[end]]]
+target-version = [ 'py313' ]
+# [[[end]]] (sum: DHp514q0e+)
 
 
 [tool.ruff]
 # [[[cog
 # cog.outl(f"target-version = \"py{version.replace('.','')}\"")
 # ]]]
-# [[[end]]]
+target-version = "py313"
+# [[[end]]] (sum: fumyurh2XM)
 line-length = 120
 exclude = [
   "migrations",
