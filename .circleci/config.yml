@@ -1,42 +1,37 @@
 version: 2.1
 orbs:
-  python: circleci/python@1.5.0
-  heroku: circleci/heroku@1.2.6
-jobs:
-  build:
-    docker:
-    - image: cimg/python:3.11.4
-      environment:
-        DATABASE_URL: postgresql://postgres:password@localhost:5432/circle_test?sslmode=disable
-        ENV: testing
-    - image: cimg/postgres:12.9
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_DB: circle_test
-        POSTGRES_PASSWORD: password
+  python: circleci/python@3.0.0
 
+jobs:
+  test:
+    docker:
+    # [[[cog
+    # import cog
+    # with open(".python-version") as f:
+    #   cog.out(f"- image: cimg/python:{f.read().strip()}")
+    # ]]]
+    - image: cimg/python:3.12
+    # [[[end]]]
     steps:
     - checkout
     - restore_cache:
-        key: v3-deps-{{ checksum "requirements.dev.txt" }}-{{ checksum "requirements.txt" }}
-    - python/install-packages:
-        pip-dependency-file: requirements.txt
-        pkg-manager: pip
+        key: v3-deps-{{ checksum "requirements.dev.txt" }}
     - python/install-packages:
         pip-dependency-file: requirements.dev.txt
         pkg-manager: pip
     - save_cache:
-        key: v3-deps-{{ checksum "requirements.dev.txt" }}-{{ checksum "requirements.txt" }}
+        key: v3-deps-{{ checksum "requirements.dev.txt" }}
         paths:
         - /home/circleci/.local/share/virtualenvs
         - /home/circleci/.cache/pip
     - run:
         name: Run tests
-        command: |
-          mkdir test-results
-          pytest --junitxml=test-results/junit.xml
-    - store_test_results:
-        path: test-results
-    - store_artifacts:
-        path: test-results
-        destination: tr1
+        command: DJANGO_SETTINGS_MODULE=stl.settings.dev python -m pytest
+    - run:
+        name: Django system check
+        command: DJANGO_SETTINGS_MODULE=stl.settings.dev python manage.py check
+
+workflows:
+  tests:
+    jobs:
+    - test
