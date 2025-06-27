@@ -12,6 +12,14 @@ terraform {
       source  = "aliksend/dokku"
       version = "~> 1.0.24"
     }
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.0"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = ">= 4.0"
+    }
   }
 
   backend "s3" {
@@ -21,10 +29,6 @@ terraform {
 
 variable "domain" {
   description = "Domain (no www)"
-}
-
-variable "repo" {
-  description = "Git repository"
 }
 
 variable "email" {
@@ -70,3 +74,7 @@ provider "dokku" {
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
+
+provider "github" {}
+
+provider "tls" {}
