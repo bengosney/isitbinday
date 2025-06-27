@@ -55,6 +55,10 @@ variable "zoneid" {
   description = "Cloudflare zone ID"
 }
 
+variable "git_repository" {
+  description = "Git repository for deployment"
+}
+
 provider "aws" {
   region = var.aws_region
 }
