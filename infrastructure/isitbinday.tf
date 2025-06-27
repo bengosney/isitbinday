@@ -33,7 +33,7 @@ resource "dokku_plugin" "postgres" {
 
 resource "dokku_postgres" "main_db" {
   service_name = "api"
-  image = "dokku/postgres:17.5"
+  image = "postgres:17.5"
 
   depends_on = [
     dokku_plugin.postgres
@@ -54,4 +54,19 @@ output "git-remote" {
   value       = "dokku@${var.hosting_domain}:${dokku_app.api.app_name}"
   description = "Git remote"
   depends_on  = []
+}
+
+resource "dokku_plugin" "letsencrypt" {
+  name = "letsencrypt"
+  url  = "https://github.com/dokku/dokku-letsencrypt.git"
+}
+
+resource "dokku_letsencrypt" "api" {
+  app_name = "isitbinday"
+  email    = "ben@isitbinday.com"
+
+  depends_on = [
+    dokku_app.api,
+    dokku_plugin.letsencrypt
+  ]
 }
