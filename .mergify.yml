@@ -1,18 +1,24 @@
 pull_request_rules:
-- name: Merge Mine
-  conditions:
-  - and:
-    - author~=^bengosney$
-    - check-success=workflow
-    - label=automerge
-  actions:
-    merge:
-      method: merge
-
-- name: Automatic merge dependabot PR
-  conditions:
-  - author~=^dependabot(|-preview)\[bot\]$
-  - check-success=workflow
-  actions:
-    merge:
-      method: merge
+  - name: Merge Updates
+    conditions:
+      - and:
+          - author~=^github-actions
+          - title~=^Update
+    actions:
+      merge:
+        method: merge
+  - name: Merge Mine
+    conditions:
+      - and:
+          - author~=^bengosney$
+          - "#approved-reviews-by > 0"
+          - "#review-threads-unresolved = 0"
+    actions:
+      merge:
+        method: merge
+  - name: Automatic merge dependabot PR
+    conditions:
+      - author~=^dependabot(|-preview)\[bot\]$
+    actions:
+      merge:
+        method: merge
