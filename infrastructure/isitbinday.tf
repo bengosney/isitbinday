@@ -24,6 +24,11 @@ resource "dokku_app" "api" {
       container_port = 8000
     }
   }
+
+  deploy = {
+    type = "git_repository"
+    git_repository = var.git_repository
+  }
 }
 
 resource "dokku_plugin" "postgres" {
@@ -63,7 +68,7 @@ resource "dokku_plugin" "letsencrypt" {
 
 resource "dokku_letsencrypt" "api" {
   app_name = "isitbinday"
-  email    = "ben@isitbinday.com"
+  email    = var.email
 
   depends_on = [
     dokku_app.api,
