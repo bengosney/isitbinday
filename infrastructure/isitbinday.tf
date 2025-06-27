@@ -55,3 +55,18 @@ output "git-remote" {
   description = "Git remote"
   depends_on  = []
 }
+
+resource "dokku_plugin" "letsencrypt" {
+  name = "letsencrypt"
+  url  = "https://github.com/dokku/dokku-letsencrypt.git"
+}
+
+resource "dokku_letsencrypt" "api" {
+  app_name = "isitbinday"
+  email    = "ben@isitbinday.com"
+
+  depends_on = [
+    dokku_app.api,
+    dokku_plugin.letsencrypt
+  ]
+}
