@@ -39,7 +39,7 @@ class Ingredient(OwnedModel):
     @property
     def quantity_class(self) -> pint.Quantity:
         if self.unit.unit_class is None:
-            raise pint.UndefinedUnitError(self.unit.unit_class)
+            raise pint.UndefinedUnitError("unknown unit")
 
         return self.quantity * self.unit.unit_class
 
