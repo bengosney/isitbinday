@@ -33,7 +33,7 @@ resource "dokku_plugin" "postgres" {
 
 resource "dokku_postgres" "main_db" {
   service_name = "api"
-  image = "dokku/postgres:17.5"
+  image = "postgres:17.5"
 
   depends_on = [
     dokku_plugin.postgres
