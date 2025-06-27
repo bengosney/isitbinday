@@ -1,5 +1,5 @@
 # Standard Library
-import contextlib
+import logging
 import os
 
 # Third Party
@@ -8,6 +8,8 @@ import dj_database_url
 # Locals
 from .base import *  # noqa
 from .base import DATABASES, MIDDLEWARE
+
+logger = logging.getLogger(__name__)
 
 DEBUG = False
 
@@ -59,14 +61,15 @@ AWS_S3_OBJECT_PARAMETERS = {
 
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-with contextlib.suppress(KeyError):
+try:
     EMAIL_HOST = env["SMTP_HOST"]
     EMAIL_HOST_USER = env["SMTP_USER"]
     EMAIL_HOST_PASSWORD = env["SMTP_PASS"]
     EMAIL_PORT = env["SMTP_PORT"]
     EMAIL_USE_TLS = (env["SMTP_TLS"] or "True") != "False"
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
+except KeyError as e:
+    logger.warning(f"Missing SMTP environment variable: {e}")
 
 CACHES = {
     "default": {
