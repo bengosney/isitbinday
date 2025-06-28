@@ -21,6 +21,6 @@ jobs:
         uses: dokku/github-action@master
         with:
           branch: 'main'
-          ssh_host_key: ${{ secrets.SSH_HOST_KEY }}
+          # ssh_host_key: ${{ secrets.SSH_HOST_KEY }}
           git_remote_url: ${{ secrets.SSH_HOST_URL }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
