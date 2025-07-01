@@ -18,6 +18,12 @@ from recurrent.event_parser import RecurringEvent
 from save_context_manager import SaveContextManagerMixin
 
 
+class OwnerManager(models.Manager):
+    def for_user(self, user):
+        """Return a queryset filtered by the owner."""
+        return self.filter(owner=user)
+
+
 class StateMixin:
     def get_available_state_transitions(self):
         raise NotImplementedError("Subclasses must implement get_available_state_transitions()")
@@ -82,6 +88,8 @@ class Task(StateMixin, models.Model, SaveContextManagerMixin):
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
+
+    objects = OwnerManager()
 
     class Meta:
         ordering = ["position"]
@@ -182,6 +190,8 @@ class Sprint(StateMixin, models.Model):
 
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
+
+    objects = OwnerManager()
 
     def __str__(self):
         return f"{self.title}"
