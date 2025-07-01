@@ -12,7 +12,6 @@ from django.utils.translation import gettext as _
 # Third Party
 from django_fsm import FSMField, TransitionNotAllowed, transition
 from django_fsm_log.models import StateLog
-from django_oso.models import AuthorizedModel
 from recurrent.event_parser import RecurringEvent
 
 # First Party
@@ -28,10 +27,7 @@ class StateMixin:
         return [i.name for i in self.get_available_state_transitions()]
 
 
-class Task(StateMixin, AuthorizedModel, SaveContextManagerMixin):
-    class Meta:
-        ordering = ["position"]
-
+class Task(StateMixin, models.Model, SaveContextManagerMixin):
     ARCHIVE_STATE_ACTIVE = "active"
     ARCHIVE_STATE_ARCHIVED = "archived"
     ARCHIVE_STATES = [
@@ -86,6 +82,12 @@ class Task(StateMixin, AuthorizedModel, SaveContextManagerMixin):
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
+
+    class Meta:
+        ordering = ["position"]
+
+    def __str__(self):
+        return f"{self.title}"
 
     @classmethod
     def auto_archive(cls, before):
@@ -149,11 +151,8 @@ class Task(StateMixin, AuthorizedModel, SaveContextManagerMixin):
     def archive(self):
         pass
 
-    def __str__(self):
-        return f"{self.title}"
 
-
-class Sprint(StateMixin, AuthorizedModel):
+class Sprint(StateMixin, models.Model):
     STATE_PLANNING = "planning"
     STATE_IN_PROGRESS = "in progress"
     STATE_FINISHED = "finished"
@@ -184,6 +183,9 @@ class Sprint(StateMixin, AuthorizedModel):
     created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
 
+    def __str__(self):
+        return f"{self.title}"
+
     @transition(field=state, source=STATE_PLANNING, target=STATE_IN_PROGRESS)
     def start(self):
         self.started = datetime.now()
@@ -195,6 +197,3 @@ class Sprint(StateMixin, AuthorizedModel):
     @transition(field=state, source=STATE_PLANNING, target=STATE_CANCELED)
     def cancel(self):
         pass
-
-    def __str__(self):
-        return f"{self.title}"

@@ -23,7 +23,7 @@ class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
         """This view should return a list of archived tasks for the currently
         authenticated user."""
 
-        return Task.objects.authorize(self.request, action="retrieve")
+        return Task.objects.filter(owner=self.request.user)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -40,7 +40,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         authenticated user."""
 
         return (
-            Task.objects.authorize(self.request, action="retrieve")
+            Task.objects.filter(owner=self.request.user)
             .exclude(archived=Task.ARCHIVE_STATE_ARCHIVED)
             .filter(show_after__lte=datetime.today().date())
         )
@@ -180,4 +180,4 @@ class SprintViewSet(viewsets.ModelViewSet):
         """This view should return a list of all tasks for the currently
         authenticated user."""
 
-        return Sprint.objects.authorize(self.request, action="retrieve").order_by("-created")
+        return Sprint.objects.filter(owner=self.request.user).order_by("-created")
