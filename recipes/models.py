@@ -7,11 +7,8 @@ from django.utils.translation import gettext as _
 import pint
 from django_extensions.db.fields import AutoSlugField
 
-
-class OwnerManager(models.Manager):
-    def for_user(self, user):
-        """Return a queryset filtered by the owner."""
-        return self.filter(owner=user)
+# First Party
+from utils import OwnerManager
 
 
 class OwnedModel(models.Model):

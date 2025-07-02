@@ -15,13 +15,7 @@ from django_fsm_log.models import StateLog
 from recurrent.event_parser import RecurringEvent
 
 # First Party
-from utils import SaveContextManagerMixin
-
-
-class OwnerManager(models.Manager):
-    def for_user(self, user):
-        """Return a queryset filtered by the owner."""
-        return self.filter(owner=user)
+from utils import OwnerManager, SaveContextManagerMixin
 
 
 class StateMixin:
