@@ -15,9 +15,11 @@ from django.utils.translation import gettext as _
 # Third Party
 import openfoodfacts
 from django_fsm import FSMField, transition
-from django_oso.models import AuthorizedModel
 from googletrans import Translator
 from model_utils.fields import MonitorField
+
+# First Party
+from utils import OwnerManager
 
 
 def save_after(func):
@@ -61,10 +63,7 @@ class UnitOfMeasure(models.Model):
         return reverse("food_UnitOfMeasure_update", args=(self.pk,))
 
 
-class Transfer(AuthorizedModel):
-    class Meta:
-        pass
-
+class Transfer(models.Model):
     origin = models.ForeignKey(
         "food.Stock",
         on_delete=models.CASCADE,
@@ -78,6 +77,11 @@ class Transfer(AuthorizedModel):
 
     owner = models.ForeignKey("auth.User", related_name="transfers", on_delete=models.CASCADE)
 
+    objects = OwnerManager()
+
+    class Meta:
+        pass
+
     def __init__(self, *args, **kwargs) -> None:
         if "owner" not in kwargs:
             if "origin" in kwargs:
@@ -90,10 +94,7 @@ class Transfer(AuthorizedModel):
         return f"{self.origin} to {self.destination}".strip()
 
 
-class Stock(AuthorizedModel):
-    class Meta:
-        pass
-
+class Stock(models.Model):
     STATE_IN_STOCK = "In Stock"
     STATE_CONSUMED = "Consumed"
     STATE_TRANSFERRED = "Transferred"
@@ -137,6 +138,14 @@ class Stock(AuthorizedModel):
     quantity = models.FloatField(blank=True, default=1)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    objects = OwnerManager()
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return f"{self.product} - {self.quantity}"
 
     def get_absolute_url(self):
         return reverse("food_Stock_detail", args=(self.pk,))
@@ -206,9 +215,6 @@ class Stock(AuthorizedModel):
     @property
     def product_code(self):
         return f"{self.product.code}"
-
-    def __str__(self):
-        return f"{self.product} - {self.quantity}"
 
 
 class Category(models.Model):
