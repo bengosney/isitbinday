@@ -16,7 +16,7 @@ from .extrators import SchemaOrg
 
 class BaseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
-        return super().get_queryset().authorize(self.request, action="retrieve")
+        return super().get_queryset().filter(owner=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
