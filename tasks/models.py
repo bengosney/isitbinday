@@ -15,7 +15,7 @@ from django_fsm_log.models import StateLog
 from recurrent.event_parser import RecurringEvent
 
 # First Party
-from save_context_manager import SaveContextManagerMixin
+from utils import SaveContextManagerMixin
 
 
 class OwnerManager(models.Manager):
