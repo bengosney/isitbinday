@@ -8,25 +8,14 @@ import pint
 from django_extensions.db.fields import AutoSlugField
 
 # First Party
-from utils import OwnerManager
+from utils.models import OwnedTimeStampedModel
 
 
-class OwnedModel(models.Model):
-    owner = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
-
-    objects = OwnerManager()
-
-    class Meta:
-        abstract = True
-
-
-class Ingredient(OwnedModel):
+class Ingredient(OwnedTimeStampedModel):
     unit = models.ForeignKey("recipes.unit", related_name="ingredients", on_delete=models.CASCADE)
     recipe = models.ForeignKey("recipes.recipe", related_name="ingredients", on_delete=models.CASCADE)
 
     name = models.CharField(max_length=255)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
@@ -71,14 +60,12 @@ class Ingredient(OwnedModel):
             return self.unit.name
 
 
-class Recipe(OwnedModel):
+class Recipe(OwnedTimeStampedModel):
     name = models.CharField(_("Name"), max_length=255)
     time = models.DurationField(_("Time to cook"), default=0)
     description = models.TextField(_("Description"), max_length=512, default="", blank=True)
     slug = AutoSlugField(_("Slug"), populate_from=("name",))
     link = models.URLField(_("Original URL"), max_length=200, default="", blank=True)
-    last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
-    created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
 
     class Meta:
         unique_together = [["owner", "name"]]
@@ -93,9 +80,7 @@ class Recipe(OwnedModel):
         return reverse("recipes_recipe_update", args=(self.pk,))
 
 
-class Unit(OwnedModel):
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
+class Unit(OwnedTimeStampedModel):
     name = models.CharField(max_length=127)
 
     class Meta:
@@ -156,11 +141,8 @@ class Unit(OwnedModel):
             return False
 
 
-class Step(OwnedModel):
+class Step(OwnedTimeStampedModel):
     recipe = models.ForeignKey("recipes.recipe", related_name="steps", on_delete=models.CASCADE)
-
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
     description = models.TextField(max_length=512)
 
     class Meta:

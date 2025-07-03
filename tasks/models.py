@@ -15,7 +15,8 @@ from django_fsm_log.models import StateLog
 from recurrent.event_parser import RecurringEvent
 
 # First Party
-from utils import OwnerManager, SaveContextManagerMixin
+from utils import SaveContextManagerMixin
+from utils.models import OwnedTimeStampedModel
 
 
 class StateMixin:
@@ -27,7 +28,7 @@ class StateMixin:
         return [i.name for i in self.get_available_state_transitions()]
 
 
-class Task(StateMixin, models.Model, SaveContextManagerMixin):
+class Task(StateMixin, OwnedTimeStampedModel, SaveContextManagerMixin):
     ARCHIVE_STATE_ACTIVE = "active"
     ARCHIVE_STATE_ARCHIVED = "archived"
     ARCHIVE_STATES = [
@@ -70,8 +71,6 @@ class Task(StateMixin, models.Model, SaveContextManagerMixin):
         protected=True,
     )  # type: ignore
 
-    owner = models.ForeignKey("auth.User", related_name="tasks", on_delete=models.CASCADE)
-
     state = FSMField(
         _("State"),
         default=STATE_TODO,
@@ -80,10 +79,6 @@ class Task(StateMixin, models.Model, SaveContextManagerMixin):
     )  # type: ignore
 
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
-    created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
-
-    objects = OwnerManager()
 
     class Meta:
         ordering = ["position"]
@@ -154,7 +149,7 @@ class Task(StateMixin, models.Model, SaveContextManagerMixin):
         pass
 
 
-class Sprint(StateMixin, models.Model):
+class Sprint(StateMixin, OwnedTimeStampedModel):
     STATE_PLANNING = "planning"
     STATE_IN_PROGRESS = "in progress"
     STATE_FINISHED = "finished"
@@ -179,13 +174,6 @@ class Sprint(StateMixin, models.Model):
     finished = models.DateTimeField(_("Finished"), editable=False, null=True, blank=True)
 
     tasks = models.ManyToManyField(Task)
-
-    owner = models.ForeignKey("auth.User", related_name="sprints", on_delete=models.CASCADE)
-
-    created = models.DateTimeField(_("Created"), auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(_("Last Updated"), auto_now=True, editable=False)
-
-    objects = OwnerManager()
 
     def __str__(self):
         return f"{self.title}"

@@ -19,7 +19,7 @@ from googletrans import Translator
 from model_utils.fields import MonitorField
 
 # First Party
-from utils import OwnerManager
+from utils.models import OwnedTimeStampedModel, TimeStampedModel
 
 
 def save_after(func):
@@ -48,10 +48,8 @@ def transition_and_save(*args, **kwargs):
     return decorator
 
 
-class UnitOfMeasure(models.Model):
+class UnitOfMeasure(TimeStampedModel):
     name = models.CharField(max_length=30)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return str(self.name)
@@ -63,7 +61,7 @@ class UnitOfMeasure(models.Model):
         return reverse("food_UnitOfMeasure_update", args=(self.pk,))
 
 
-class Transfer(models.Model):
+class Transfer(OwnedTimeStampedModel):
     origin = models.ForeignKey(
         "food.Stock",
         on_delete=models.CASCADE,
@@ -72,15 +70,6 @@ class Transfer(models.Model):
         related_name="transferred_to",
     )
     destination = models.ForeignKey("food.Stock", on_delete=models.CASCADE, related_name="transferred_from")
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    owner = models.ForeignKey("auth.User", related_name="transfers", on_delete=models.CASCADE)
-
-    objects = OwnerManager()
-
-    class Meta:
-        pass
 
     def __init__(self, *args, **kwargs) -> None:
         if "owner" not in kwargs:
@@ -94,7 +83,7 @@ class Transfer(models.Model):
         return f"{self.origin} to {self.destination}".strip()
 
 
-class Stock(models.Model):
+class Stock(OwnedTimeStampedModel):
     STATE_IN_STOCK = "In Stock"
     STATE_CONSUMED = "Consumed"
     STATE_TRANSFERRED = "Transferred"
@@ -117,13 +106,10 @@ class Stock(models.Model):
         (TEMPERATURE_FROZEN, _(TEMPERATURE_FROZEN)),
     ]
 
-    # Relationships
     location = models.ForeignKey("food.Location", on_delete=models.CASCADE)
     unit_of_measure = models.ForeignKey("food.UnitOfMeasure", on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey("food.Product", related_name="stocks", on_delete=models.CASCADE)
-    owner = models.ForeignKey("auth.User", related_name="stocks", on_delete=models.CASCADE)
 
-    # Fields
     added = models.DateTimeField(auto_now_add=True, editable=False)
     state = FSMField(_("State"), default=STATE_IN_STOCK, choices=list(zip(STATES, STATES)), protected=True)
     state_changed = MonitorField(monitor="state")
@@ -136,13 +122,6 @@ class Stock(models.Model):
     temperature_changed = MonitorField(monitor="temperature")
     expires = models.DateField(blank=True, null=True, editable=False)
     quantity = models.FloatField(blank=True, default=1)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-
-    objects = OwnerManager()
-
-    class Meta:
-        pass
 
     def __str__(self):
         return f"{self.product} - {self.quantity}"
@@ -217,10 +196,8 @@ class Stock(models.Model):
         return f"{self.product.code}"
 
 
-class Category(models.Model):
+class Category(TimeStampedModel):
     name = models.CharField(max_length=50)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):
         return str(self.name)
@@ -232,10 +209,8 @@ class Category(models.Model):
         return reverse("food_Category_update", args=(self.pk,))
 
 
-class Brand(models.Model):
+class Brand(TimeStampedModel):
     name = models.CharField(max_length=50)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return str(self.name)
@@ -247,7 +222,7 @@ class Brand(models.Model):
         return reverse("food_Brand_update", args=(self.pk,))
 
 
-class Location(models.Model):
+class Location(TimeStampedModel):
     TEMPERATURES = Stock.TEMPERATURES
 
     # Fields
@@ -255,8 +230,6 @@ class Location(models.Model):
     name = models.CharField(max_length=30)
     can_move_to = models.BooleanField(default=True)
     default = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return str(self.name)
@@ -284,7 +257,7 @@ class Location(models.Model):
             return location
 
 
-class Product(models.Model):
+class Product(TimeStampedModel):
     categories = models.ManyToManyField("food.Category")
     brand = models.ForeignKey("food.Brand", on_delete=models.CASCADE)
     unit_of_measure = models.ForeignKey(
@@ -296,8 +269,6 @@ class Product(models.Model):
     )
 
     name = models.CharField(max_length=50)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    created = models.DateTimeField(auto_now_add=True, editable=False)
     code = models.CharField(max_length=30, unique=True)
     quantity = models.FloatField(blank=True, null=True, default=None)
     is_pack = models.BooleanField(default=False)
