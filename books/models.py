@@ -14,52 +14,50 @@ from django.utils.text import slugify
 # Third Party
 import requests
 from django_cryptography.fields import encrypt
-from django_oso.models import AuthorizedModel
+
+# First Party
+from utils import OwnerManager
 
 
 class NotFoundError(Exception):
     pass
 
 
-class Author(AuthorizedModel):
-    class Meta:
-        unique_together = ["name", "owner"]
-
-    # Relationships
+class Author(models.Model):
     owner = models.ForeignKey("auth.User", related_name="authors", on_delete=models.CASCADE)
 
-    # Fields
     name = models.CharField(max_length=30)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
+
+    objects = OwnerManager()
+
+    class Meta:
+        unique_together = ["name", "owner"]
 
     def __str__(self):
         return str(self.name)
 
 
-class FailedScan(AuthorizedModel):
-    class Meta:
-        unique_together = ["isbn", "owner"]
-
+class FailedScan(models.Model):
     owner = models.ForeignKey("auth.User", related_name="failedBookScan", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     isbn = models.CharField(max_length=30)
 
+    objects = OwnerManager()
+
+    class Meta:
+        unique_together = ["isbn", "owner"]
+
     def __str__(self) -> str:
         return f"{self.isbn}"
 
 
-class Book(AuthorizedModel):
-    class Meta:
-        unique_together = [["isbn", "owner"], ["title", "owner"]]
-        ordering = ["-pk"]
-
-    # Relationships
+class Book(models.Model):
     authors = models.ManyToManyField("books.Author", related_name="books")
     owner = models.ForeignKey("auth.User", related_name="books", on_delete=models.CASCADE)
 
-    # Fields
     publish_date = models.CharField(max_length=30, blank=True, default="")
     created = models.DateTimeField(auto_now_add=True, editable=False)
     title = models.CharField(max_length=255)
@@ -70,6 +68,15 @@ class Book(AuthorizedModel):
     tmp_cover = models.CharField(max_length=512, blank=True, default="")
 
     requires_refetch = models.BooleanField(default=False)
+
+    objects = OwnerManager()
+
+    class Meta:
+        unique_together = [["isbn", "owner"], ["title", "owner"]]
+        ordering = ["-pk"]
+
+    def __str__(self):
+        return f"{self.title}"
 
     def get_absolute_url(self):
         return reverse("books_book_detail", args=(self.pk,))
@@ -213,20 +220,19 @@ class Book(AuthorizedModel):
         except ObjectDoesNotExist:
             return cls._lookup(code, owner=owner)
 
-    def __str__(self):
-        return f"{self.title}"
 
-
-class SyncSetting(AuthorizedModel):
-    class Meta:
-        unique_together = ["owner", "server", "database"]
-
+class SyncSetting(models.Model):
     owner = models.ForeignKey("auth.User", related_name="sync_settings", on_delete=models.CASCADE)
     server = models.CharField(max_length=255)
     database = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
     password = encrypt(models.CharField(max_length=255))
     last_sync = models.DateTimeField(auto_now=True, editable=False)
+
+    objects = OwnerManager()
+
+    class Meta:
+        unique_together = ["owner", "server", "database"]
 
     def __str__(self):
         return f"{self.server}/{self.database}"
@@ -235,12 +241,14 @@ class SyncSetting(AuthorizedModel):
         return f"https://{self.username}:{self.password}@{self.server}"
 
 
-class SyncMetadata(AuthorizedModel):
+class SyncMetadata(models.Model):
     owner = models.ForeignKey("auth.User", related_name="sync_metadata", on_delete=models.CASCADE)
     server = models.ForeignKey(SyncSetting, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="sync_metadata", null=True, default=None)
     _id = models.CharField(max_length=255)
     _rev = models.CharField(max_length=255, default="")
+
+    objects = OwnerManager()
 
     def __str__(self):
         return f"{self._id} - {self._rev}"
