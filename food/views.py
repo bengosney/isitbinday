@@ -32,7 +32,7 @@ class StockViewSet(viewsets.ModelViewSet):
         """This view should return a list of all stocks for the currently
         authenticated user."""
 
-        return models.Stock.objects.authorize(self.request, action="retrieve")
+        return models.Stock.objects.for_user(self.request.user)
 
     @action(detail=True)
     def consume(self, request, pk: int):

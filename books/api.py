@@ -18,7 +18,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        return models.Author.objects.authorize(self.request, action="retrieve")
+        return models.Author.objects.for_user(self.request.user)
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -34,7 +34,7 @@ class BookViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):
-        return models.Book.objects.authorize(self.request, action="retrieve")
+        return models.Book.objects.for_user(self.request.user)
 
     @action(detail=False, url_path="lookup/(?P<isbn>[^/.]+)")
     def lookup(self, request, isbn=None):
@@ -59,4 +59,4 @@ class SyncSettingsViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        return models.SyncSetting.objects.authorize(self.request, action="retrieve")
+        return models.SyncSetting.objects.for_user(self.request.user)
