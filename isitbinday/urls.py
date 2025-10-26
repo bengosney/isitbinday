@@ -9,7 +9,6 @@ from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 # First Party
-from accounts.urls import urlpatterns as user_urls
 from books.urls import router as book_router
 from food.urls import router as food_router
 from recipes.urls import router as recipes_router
@@ -30,7 +29,7 @@ urlpatterns = [
     path("api/books/", include(book_router.urls)),
     path("api/recipes/", include(recipes_router.urls)),
     path("api/auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/accounts/", include(user_urls)),
+    path("api/accounts/", include(("accounts.urls", "accounts"), namespace="accounts")),
     path("admin/", admin.site.urls),
     path(
         "openapi/",

@@ -194,3 +194,5 @@ if TESTING:
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CSRF_TRUSTED_ORIGINS = ["https://api.isitbinday.com"]
+
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get("GOOGLE_OAUTH_CLIENT_ID")

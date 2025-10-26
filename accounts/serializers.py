@@ -56,3 +56,7 @@ class AcctivateSerializer(serializers.Serializer):
             return user
 
         return {"error": "Could not activate user"}
+
+
+class GoogleJWTLoginSerializer(serializers.Serializer):
+    token = serializers.CharField(help_text="Google JWT token")
