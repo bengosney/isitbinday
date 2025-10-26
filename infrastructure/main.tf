@@ -23,10 +23,6 @@ variable "domain" {
   description = "Domain (no www)"
 }
 
-variable "repo" {
-  description = "Git repository"
-}
-
 variable "email" {
   description = "Email address"
 }
@@ -57,6 +53,10 @@ variable "zoneid" {
 
 variable "git_repository" {
   description = "Git repository for deployment"
+}
+
+variable "google_oauth_client_id" {
+  description = "Client ID "
 }
 
 provider "aws" {
