@@ -16,6 +16,8 @@ resource "dokku_app" "api" {
     SMTP_HOST = "email-smtp.${var.aws_region}.amazonaws.com"
 
     SECRET_KEY = var.secret_key
+
+    GOOGLE_OAUTH_CLIENT_ID = var.google_oauth_client_id
   }
 
   ports = {

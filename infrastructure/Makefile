@@ -24,6 +24,7 @@ help: ## Display this help
 
 .terraform: imports.tf terraform.tfvars
 	$(CMD) init \
+		-migrate-state \
 		-backend-config="key=${TERAFORM_BUCKET_PATH}/state.tfstate" \
 		-backend-config="bucket=${TERAFORM_BUCKET}" \
 		-backend-config="region=${TERAFORM_BUCKET_REGION}"
