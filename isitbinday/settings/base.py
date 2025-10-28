@@ -216,11 +216,11 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO").upper(),
         },
     },
     "root": {
         "handlers": ["console"],
-        "level": os.getenv("LOG_LEVEL", "DEBUG"),
+        "level": os.getenv("LOG_LEVEL", "DEBUG").upper(),
     },
 }
