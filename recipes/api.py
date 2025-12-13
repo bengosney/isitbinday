@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # First Party
-from tasks.permissions import IsOwner
+from utils.permissions import IsOwner
 
 # Locals
 from . import models, serializers
