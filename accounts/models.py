@@ -2,10 +2,14 @@
 from django.contrib.auth.models import User as BaseUser
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
+from django.db import models
 from django.template import Context, Template
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+
+# First Party
+from utils.models import OwnedTimeStampedModel
 
 
 class User(BaseUser):
@@ -32,3 +36,7 @@ class User(BaseUser):
             return True
 
         return False
+
+
+class HomeGroup(OwnedTimeStampedModel):
+    HomeGroups = models.ManyToManyField(User, related_name="homegroups")
