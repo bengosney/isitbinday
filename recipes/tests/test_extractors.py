@@ -1,10 +1,9 @@
-# Django
-from django.contrib.auth.models import User
-from django.test import TestCase
+# Third Party
+import pytest
 
 # Locals
 from ..extrators import Yoast
-from ..models import Recipe, Unit
+from ..models import Recipe
 
 SAMPLE_YOAST_JSON = """
 {
@@ -37,33 +36,34 @@ SAMPLE_YOAST_JSON = """
 """
 
 
-class YoastExtractorTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        Unit.objects.get_or_create(name="of")
-
-    def test_parse_yoast_recipe(self):
-        extractor = Yoast(self.user)
+@pytest.mark.django_db
+class TestYoastExtractor:
+    def test_parse_yoast_recipe(self, user, unit_of):
+        extractor = Yoast(user)
         count = extractor.parse(SAMPLE_YOAST_JSON, url="https://www.example.com/brunede-kartofler/")
-        self.assertEqual(count, 1)
-        recipe = Recipe.objects.get(name="Brunede Kartofler (Danish Caramelized Potatoes)")
-        self.assertEqual(
-            recipe.description,
-            "Buttery potatoes browned in caramelized sugar, Brunede Kartofler are a popular and traditional Danish side dish enjoyed especially at Christmastime.",
-        )
-        self.assertEqual(recipe.ingredients.count(), 3)
-        self.assertEqual(recipe.steps.count(), 2)
-        ingredients = [i.name for i in recipe.ingredients.all()]
-        self.assertIn("firm, waxy potatoes  (, choose small ones that are uniform in size)", ingredients)
-        self.assertIn("granulated sugar", ingredients[1])
-        self.assertIn("butter", ingredients[2])
-        steps = [s.description for s in recipe.steps.all()]
-        self.assertTrue(any("Boil the potatoes" in s for s in steps))
-        self.assertTrue(any("Place the sugar" in s for s in steps))
+        assert count == 1
 
-    def test_parse_yoast_recipe_without_url(self):
-        extractor = Yoast(self.user)
-        count = extractor.parse(SAMPLE_YOAST_JSON)
-        self.assertEqual(count, 1)
         recipe = Recipe.objects.get(name="Brunede Kartofler (Danish Caramelized Potatoes)")
-        self.assertEqual(recipe.link, "")
+        assert recipe.description == (
+            "Buttery potatoes browned in caramelized sugar, Brunede Kartofler are a popular "
+            "and traditional Danish side dish enjoyed especially at Christmastime."
+        )
+        assert recipe.ingredients.count() == 3
+        assert recipe.steps.count() == 2
+
+        ingredients = [i.name for i in recipe.ingredients.all()]
+        assert "firm, waxy potatoes  (, choose small ones that are uniform in size)" in ingredients
+        assert "granulated sugar" in ingredients[1]
+        assert "butter" in ingredients[2]
+
+        steps = [s.description for s in recipe.steps.all()]
+        assert any("Boil the potatoes" in s for s in steps)
+        assert any("Place the sugar" in s for s in steps)
+
+    def test_parse_yoast_recipe_without_url(self, user, unit_of):
+        extractor = Yoast(user)
+        count = extractor.parse(SAMPLE_YOAST_JSON)
+        assert count == 1
+
+        recipe = Recipe.objects.get(name="Brunede Kartofler (Danish Caramelized Potatoes)")
+        assert recipe.link == ""

@@ -27,13 +27,11 @@ def insecure_password(create_insecure_password):
 
 
 @pytest.fixture
-@pytest.mark.django_db
-def user(insecure_password):
+def user(db, insecure_password):
     return User.objects.create_user(username="jacob", password=insecure_password)
 
 
 @pytest.fixture
-@pytest.mark.django_db
 def api_client(user, insecure_password):
     client = APIClient()
     client.login(username=user.username, password=insecure_password)
