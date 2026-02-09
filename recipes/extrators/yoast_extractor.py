@@ -37,7 +37,7 @@ class Yoast:
             defaults={
                 "description": recipe_node.get("description", ""),
                 "time": cook_time + prep_time,
-                "link": url,
+                "link": url or "",
             },
         )
         ingredient_regex = re.compile(r"^(([0-9\.\/]+)\s*([\w,\.]+))\s+(.+)$")

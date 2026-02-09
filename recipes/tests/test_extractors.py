@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 # Locals
-from .extrators import YoastExtractor
-from .models import Recipe, Unit
+from ..extrators import Yoast
+from ..models import Recipe, Unit
 
 SAMPLE_YOAST_JSON = """
 {
@@ -12,11 +12,11 @@ SAMPLE_YOAST_JSON = """
     "@graph": [
         {"@type": "Recipe",
          "name": "Brunede Kartofler (Danish Caramelized Potatoes)",
-         "author": {"@id": "https://www.daringgourmet.com/#/schema/person/c70659949ef702685a6dfd260dae11ac"},
+         "author": {"@id": "https://www.example.com/#/schema/person/c70639949ef702685a6dfd260dae11ac"},
          "description": "Buttery potatoes browned in caramelized sugar, Brunede Kartofler are a popular and traditional Danish side dish enjoyed especially at Christmastime.",
          "datePublished": "2023-07-25T08:55:43+00:00",
          "image": [
-             "https://www.daringgourmet.com/wp-content/uploads/2021/12/Brunede-Kartofler-3.jpg"
+             "https://www.example.com/wp-content/uploads/2021/12/photo.jpg"
          ],
          "recipeYield": ["4"],
          "prepTime": "PT20M",
@@ -43,8 +43,8 @@ class YoastExtractorTest(TestCase):
         Unit.objects.get_or_create(name="of")
 
     def test_parse_yoast_recipe(self):
-        extractor = YoastExtractor(self.user)
-        count = extractor.parse(SAMPLE_YOAST_JSON)
+        extractor = Yoast(self.user)
+        count = extractor.parse(SAMPLE_YOAST_JSON, url="https://www.example.com/brunede-kartofler/")
         self.assertEqual(count, 1)
         recipe = Recipe.objects.get(name="Brunede Kartofler (Danish Caramelized Potatoes)")
         self.assertEqual(
@@ -60,3 +60,10 @@ class YoastExtractorTest(TestCase):
         steps = [s.description for s in recipe.steps.all()]
         self.assertTrue(any("Boil the potatoes" in s for s in steps))
         self.assertTrue(any("Place the sugar" in s for s in steps))
+
+    def test_parse_yoast_recipe_without_url(self):
+        extractor = Yoast(self.user)
+        count = extractor.parse(SAMPLE_YOAST_JSON)
+        self.assertEqual(count, 1)
+        recipe = Recipe.objects.get(name="Brunede Kartofler (Danish Caramelized Potatoes)")
+        self.assertEqual(recipe.link, "")
