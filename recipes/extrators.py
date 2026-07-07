@@ -41,7 +41,7 @@ def get_isosplit(s, split):
 def parse_isoduration(s: str) -> timedelta:
     try:
         s = s.split("P")[-1]
-    except (IndexError, AttributeError):
+    except IndexError, AttributeError:
         return timedelta()
 
     days, s = get_isosplit(s, "D")

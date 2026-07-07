@@ -22,7 +22,6 @@ class ArchiveTaskListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         """This view should return a list of archived tasks for the currently
         authenticated user."""
-
         return Task.objects.for_user(self.request.user)
 
 
@@ -38,7 +37,6 @@ class TaskViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """This view should return a list of all tasks for the currently
         authenticated user."""
-
         return (
             Task.objects.for_user(self.request.user)
             .exclude(archived=Task.ARCHIVE_STATE_ARCHIVED)
@@ -179,5 +177,4 @@ class SprintViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """This view should return a list of all tasks for the currently
         authenticated user."""
-
         return Sprint.objects.for_user(self.request.user).order_by("-created")

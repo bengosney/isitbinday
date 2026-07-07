@@ -1,9 +1,6 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = [
-  "setuptools",
-  "wheel",
-]
+requires = [ "setuptools" ]
 
 [project]
 name = "is-it-bin-day"
@@ -18,18 +15,16 @@ authors = [
 #   version = f.read().strip()
 # cog.outl(f"requires-python = \">={version}\"")
 # ]]]
-requires-python = ">=3.12"
-# [[[end]]] (sum: ChWHeFtwKI)
-
+requires-python = ">=3.14"
+# [[[end]]] (sum: Vc9kRGWPzK)
 classifiers = [
   # [[[cog
   # cog.outl(f"\"Programming Language :: Python :: {version.split('.')[0]} :: Only\",")
   # cog.outl(f"\"Programming Language :: Python :: {version}\",")
   # ]]]
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-  # [[[end]]] (sum: yhtPaRlYFD)
+  "Programming Language :: Python :: 3.14",
+  # [[[end]]] (sum: 7gn4d5+oKr)
 ]
 dependencies = [
   "boto3",
@@ -67,7 +62,6 @@ dependencies = [
   "uritemplate",
   "whitenoise[brotli]",
 ]
-
 optional-dependencies.dev = [
   "cogapp",
   "commitizen",
@@ -100,24 +94,22 @@ optional-dependencies.dev = [
 ]
 
 [tool.black]
-line-length = 128
 # [[[cog
 # cog.outl(f"target-version = [ 'py{version.replace('.','')}' ]")
 # ]]]
-target-version = [ 'py312' ]
-# [[[end]]] (sum: DVAsLwqtuF)
+target-version = [ "py314" ]
 
+# [[[end]]] (sum: 54IFtGW93x)
 [tool.ruff]
 # [[[cog
 # cog.outl(f"target-version = \"py{version.replace('.','')}\"")
 # ]]]
-target-version = "py312"
-# [[[end]]] (sum: 6J60Wrv/IC)
+target-version = "py314"
+# [[[end]]] (sum: 0xk3kDfGuA)
 line-length = 120
 exclude = [
   "migrations",
 ]
-
 lint.select = [
   "C90",
   "DJ",
@@ -134,7 +126,7 @@ all = true
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-tag_format = "$version"
 version_scheme = "pep440"
 version_provider = "pep621"
+tag_format = "$version"
 update_changelog_on_bump = true

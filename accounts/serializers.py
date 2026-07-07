@@ -49,7 +49,7 @@ class AcctivateSerializer(serializers.Serializer):
         try:
             uid = force_str(urlsafe_base64_decode(validated_data["uid"]))
             user = User.objects.get(id=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        except TypeError, ValueError, OverflowError, User.DoesNotExist:
             user = None
 
         if user is not None and user.activate(validated_data["token"]):
