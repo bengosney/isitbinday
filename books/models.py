@@ -120,7 +120,7 @@ class Book(OwnedTimeStampedModel):
 
         try:
             defaults["tmp_cover"] = data["imageLinks"]["thumbnail"]
-        except (AttributeError, KeyError):
+        except AttributeError, KeyError:
             pass
 
         book, _ = Book.objects.update_or_create(isbn=code, owner=owner, defaults=defaults)
@@ -155,7 +155,7 @@ class Book(OwnedTimeStampedModel):
 
         try:
             defaults["tmp_cover"] = data["covers"]["large"]
-        except (AttributeError, KeyError):
+        except AttributeError, KeyError:
             pass
 
         book, _ = Book.objects.update_or_create(

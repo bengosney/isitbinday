@@ -31,7 +31,6 @@ class StockViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """This view should return a list of all stocks for the currently
         authenticated user."""
-
         return models.Stock.objects.for_user(self.request.user)
 
     @action(detail=True)

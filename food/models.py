@@ -2,7 +2,6 @@
 # Standard Library
 import functools
 from copy import copy
-from typing import Optional
 
 # Django
 from django.contrib.auth.models import User
@@ -163,7 +162,7 @@ class Stock(OwnedTimeStampedModel):
 
         return new_stock, stock_left
 
-    def _split(self, quantity: float | None = None) -> Optional["Stock"]:
+    def _split(self, quantity: float | None = None) -> Stock | None:
         quantity = self.quantity if quantity is None else float(quantity)
         if quantity > self.quantity:
             raise Exception("Can not effect more than you have")
@@ -292,7 +291,7 @@ class Product(TimeStampedModel):
         quantity=None,
         unit_of_measure=None,
         is_pack=False,
-    ) -> "Product":
+    ) -> Product:
         if isinstance(brand, str):
             brand = Brand.objects.get_or_create(name=brand.split(",")[0])[0]
 

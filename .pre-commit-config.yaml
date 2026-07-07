@@ -1,16 +1,16 @@
 exclude: migrations/.*\.py|Procfile|[aw]sgi\.py|node_modules|.git|\.polar|inputs/.*
 repos:
 - repo: https://github.com/adamchainz/django-upgrade
-  rev: 1.25.0
+  rev: 1.31.1
   hooks:
   - id: django-upgrade
-    args: [--target-version, '5.0']
+    args: [--target-version, '6.0']
 - repo: https://github.com/reallyliri/relativize-imports
   rev: v0.0.6
   hooks:
   - id: relativize-imports
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
@@ -25,27 +25,27 @@ repos:
   - id: mixed-line-ending
     args: [--fix, lf]
 - repo: https://github.com/myint/docformatter
-  rev: v1.7.7
+  rev: v1.7.8
   hooks:
   - id: docformatter
     args: [--in-place]
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.12.1
+  rev: v0.15.20
   hooks:
   - id: ruff
     args: [--fix]
   - id: ruff-format
 - repo: https://github.com/pycqa/isort
-  rev: 6.0.1
+  rev: 9.0.0a3
   hooks:
   - id: isort
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.15.0
+  rev: v2.16.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix]
 - repo: https://github.com/mrtazz/checkmake
-  rev: 0.2.2
+  rev: v0.3.0
   hooks:
   - id: checkmake
 - repo: https://github.com/pre-commit/mirrors-prettier
@@ -55,11 +55,11 @@ repos:
     types_or: [css, javascript]
     exclude: .min.
 - repo: https://github.com/rtts/djhtml
-  rev: 3.0.8
+  rev: 3.0.11
   hooks:
   - id: djhtml
 - repo: https://github.com/tox-dev/pyproject-fmt
-  rev: v2.6.0
+  rev: v2.25.1
   hooks:
   - id: pyproject-fmt
 - repo: https://github.com/rstcheck/rstcheck
@@ -67,6 +67,11 @@ repos:
   hooks:
   - id: rstcheck
 - repo: https://github.com/commitizen-tools/commitizen
-  rev: v4.8.3
+  rev: v4.16.4
   hooks:
   - id: commitizen
+- repo: https://github.com/asottile/pyupgrade
+  rev: v3.21.2
+  hooks:
+  - id: pyupgrade
+    args: [--py314-plus]
