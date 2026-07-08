@@ -11,7 +11,7 @@ from tasks.permissions import IsOwner
 
 # Locals
 from . import models, serializers
-from .extrators import SchemaOrg
+from .extrators import SchemaOrg, YoastSchemaGraph
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -47,8 +47,12 @@ class RecipeViewSet(BaseViewSet):
         serializer = serializers.RecipeURLSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        extractor = SchemaOrg(user)
-        found = extractor.extract(serializer.validated_data["url"])
+        url = serializer.validated_data["url"]
+        found = 0
+        for extractor_class in [SchemaOrg, YoastSchemaGraph]:
+            found = extractor_class(user).extract(url)
+            if found:
+                break
 
         return Response({"found": found})
 
