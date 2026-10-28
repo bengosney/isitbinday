@@ -24,7 +24,7 @@ class StateMixin:
         raise NotImplementedError("Subclasses must implement get_available_state_transitions()")
 
     @property
-    def available_state_transitions(self):
+    def available_state_transitions(self) -> list[str]:
         return [i.name for i in self.get_available_state_transitions()]
 
 
@@ -98,7 +98,7 @@ class Task(StateMixin, OwnedTimeStampedModel, SaveContextManagerMixin):
         return len(tasks)
 
     @property
-    def previous_state(self):
+    def previous_state(self) -> str | None:
         type_id = ContentType.objects.get_for_model(self)
         state_log = StateLog.objects.all().filter(object_id=self.pk, content_type_id=type_id).order_by("-timestamp")
 

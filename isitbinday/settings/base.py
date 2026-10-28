@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
     "corsheaders",
     "adminsortable2",
     "django_fsm",
@@ -122,12 +124,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-]
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
 ]
 
 STORAGES = {
@@ -155,6 +152,19 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Is it bin day",
+    "DESCRIPTION": "Help organise what you need to do",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # Self-host the Swagger UI / ReDoc assets (via drf-spectacular-sidecar)
+    # instead of pulling them from a CDN at runtime.
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
 }
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
