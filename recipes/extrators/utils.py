@@ -45,5 +45,6 @@ def parse_isoduration(s: str) -> timedelta:
 
 @lru_cache
 def get_raw_html(url: str) -> str:
-    r = requests.get(url)
+    r = requests.get(url, headers={"User-Agent": "isitbinday"}, timeout=30)
+    r.raise_for_status()
     return r.text
